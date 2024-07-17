@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0wewlor2hl5b"]
+
+[ext_resource type="SpriteFrames" uid="uid://cop4ba7jr4pxl" path="res://Assets/Animations/Player.tres" id="1_sttlx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o2kg6"]
+size = Vector2(32, 32)
+
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+texture_filter = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_o2kg6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.25, 0.25)
+sprite_frames = ExtResource("1_sttlx")
