@@ -1,0 +1,107 @@
+[gd_resource type="VisualShader" load_steps=9 format=3 uid="uid://37u5sucr26ev"]
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_s6f0p"]
+output_port_for_preview = 0
+default_input_values = [0, 1.414, 1, 0.5]
+operator = 3
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_c2o3n"]
+output_port_for_preview = 0
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+operator = 1
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_v03pj"]
+output_port_for_preview = 0
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_qqlrm"]
+output_port_for_preview = 0
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_1ng4k"]
+input_name = "texture"
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_mx1vh"]
+output_port_for_preview = 0
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_t4vxy"]
+source = 5
+texture_type = 1
+
+[sub_resource type="VisualShaderNodeVectorDistance" id="VisualShaderNodeVectorDistance_leox8"]
+output_port_for_preview = 0
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+
+[resource]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+
+
+void fragment() {
+// Input:3
+	vec2 n_out3p0 = UV;
+
+
+// VectorOp:12
+	vec2 n_in12p1 = vec2(0.50000, 0.50000);
+	vec2 n_out12p0 = n_out3p0 - n_in12p1;
+
+
+// Distance:9
+	vec2 n_in9p1 = vec2(0.00000, 0.00000);
+	float n_out9p0 = distance(n_out12p0, n_in9p1);
+
+
+// FloatOp:10
+	float n_in10p1 = 0.50000;
+	float n_out10p0 = n_out9p0 / n_in10p1;
+
+
+// VectorOp:13
+	vec2 n_out13p0 = vec2(n_out10p0) * n_out12p0;
+
+
+// VectorOp:15
+	vec2 n_in15p1 = vec2(0.50000, 0.50000);
+	vec2 n_out15p0 = n_out13p0 + n_in15p1;
+
+
+	vec4 n_out4p0;
+// Texture2D:4
+	n_out4p0 = texture(TEXTURE, n_out15p0);
+
+
+// Output:0
+	COLOR.rgb = vec3(n_out4p0.xyz);
+
+
+}
+"
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(1500, 220)
+nodes/fragment/2/node = SubResource("VisualShaderNodeInput_1ng4k")
+nodes/fragment/2/position = Vector2(1020, 400)
+nodes/fragment/3/node = SubResource("VisualShaderNodeInput_mx1vh")
+nodes/fragment/3/position = Vector2(-620, 160)
+nodes/fragment/4/node = SubResource("VisualShaderNodeTexture_t4vxy")
+nodes/fragment/4/position = Vector2(1220, 200)
+nodes/fragment/9/node = SubResource("VisualShaderNodeVectorDistance_leox8")
+nodes/fragment/9/position = Vector2(40, -40)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatOp_s6f0p")
+nodes/fragment/10/position = Vector2(240, -40)
+nodes/fragment/12/node = SubResource("VisualShaderNodeVectorOp_c2o3n")
+nodes/fragment/12/position = Vector2(-300, 160)
+nodes/fragment/13/node = SubResource("VisualShaderNodeVectorOp_v03pj")
+nodes/fragment/13/position = Vector2(620, 160)
+nodes/fragment/15/node = SubResource("VisualShaderNodeVectorOp_qqlrm")
+nodes/fragment/15/position = Vector2(820, 160)
+nodes/fragment/connections = PackedInt32Array(2, 0, 4, 2, 9, 0, 10, 0, 3, 0, 12, 0, 12, 0, 9, 0, 13, 0, 15, 0, 15, 0, 4, 0, 12, 0, 13, 1, 10, 0, 13, 0, 4, 0, 0, 0)

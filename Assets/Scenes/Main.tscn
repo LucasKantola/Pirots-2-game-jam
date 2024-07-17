@@ -412,6 +412,7 @@ layer_0/tile_data = PackedInt32Array(720896, 0, 0, 720897, 0, 0, 720898, 0, 0, 7
 
 [node name="Player" parent="." instance=ExtResource("2_w1t2q")]
 position = Vector2(69, 151)
+swollenShaderPath = "res://Assets/Shaders/Swollen.tres"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(287, 163)
