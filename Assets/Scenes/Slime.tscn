@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://7gmy4iiwnaru"]
+
+[ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="1_mrr3u"]
+[ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_n8khh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txcix"]
+size = Vector2(48, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d277n"]
+atlas = ExtResource("1_mrr3u")
+region = Rect2(144, 96, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7ft5y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d277n")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qt00p"]
+size = Vector2(10, 3)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
+size = Vector2(16, 12)
+
+[node name="Slime" type="CharacterBody2D"]
+texture_filter = 1
+position = Vector2(0, -2)
+script = ExtResource("1_n8khh")
+
+[node name="Hitbox Area" type="Area2D" parent="."]
+
+[node name="Hitbox" type="CollisionShape2D" parent="Hitbox Area"]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_txcix")
+debug_color = Color(1, 0, 0, 0.458824)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_7ft5y")
+
+[node name="Hurtbox Area" type="Area2D" parent="."]
+
+[node name="Hurtbox" type="CollisionShape2D" parent="Hurtbox Area"]
+position = Vector2(0, -4.5)
+shape = SubResource("RectangleShape2D_qt00p")
+debug_color = Color(0, 1, 0, 0.419608)
+
+[node name="WorldCollision" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_5thef")
+
+[connection signal="body_shape_entered" from="Hitbox Area" to="." method="hitbox_area_entered"]
+[connection signal="body_shape_entered" from="Hurtbox Area" to="." method="hurtbox_area_entered"]

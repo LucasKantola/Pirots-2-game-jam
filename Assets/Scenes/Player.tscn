@@ -9,6 +9,7 @@ size = Vector2(32, 32)
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 texture_filter = 1
 script = ExtResource("1_a2euo")
+swollenShaderPath = "res://Assets/Shaders/Swollen.tres"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_o2kg6")
