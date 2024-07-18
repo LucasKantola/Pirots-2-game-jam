@@ -245,7 +245,7 @@ texture = ExtResource("3_kxc3c")
 position = Vector2(7, -9)
 amount = 200
 process_material = SubResource("ParticleProcessMaterial_rqe11")
-visibility_rect = Rect2(-4.07683, -31.3164, 141.413, 150.496)
+visibility_rect = Rect2(-1.34873, -28.0804, 144.663, 239.822)
 trail_enabled = true
 trail_lifetime = 0.1
 

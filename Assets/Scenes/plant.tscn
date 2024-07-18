@@ -1,23 +1,28 @@
-[gd_scene load_steps=4 format=3 uid="uid://dngnfi8yrwdev"]
+[gd_scene load_steps=5 format=3 uid="uid://dngnfi8yrwdev"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/plant.gd" id="1_la7jf"]
+[ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="2_2yoat"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tnyb6"]
+size = Vector2(20, 11)
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5uwmq"]
-size = Vector2(16, 16)
+[sub_resource type="AtlasTexture" id="AtlasTexture_77pw8"]
+atlas = ExtResource("2_2yoat")
+region = Rect2(80, 48, 16, 48)
 
 [node name="Plant" type="Node2D"]
 script = ExtResource("1_la7jf")
 
 [node name="Area2D" type="Area2D" parent="."]
-collision_layer = 0
+collision_layer = 2147483648
 collision_mask = 2147483648
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 18.5)
 shape = SubResource("RectangleShape2D_tnyb6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = SubResource("PlaceholderTexture2D_5uwmq")
+texture_filter = 1
+texture = SubResource("AtlasTexture_77pw8")
 
 [connection signal="body_entered" from="Area2D" to="." method="bodyEntered"]

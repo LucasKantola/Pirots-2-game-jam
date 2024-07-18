@@ -20,7 +20,9 @@ func _ready():
 func _physics_process(delta):
     velocity.y += gravity * delta
     velocity.x -= velocity.x * dragPercentage * delta
-    move_and_collide(velocity * delta)
+    var col = move_and_collide(velocity * delta)
+    if col:
+        queue_free()
 
 func _onTimerTimeout():
     queue_free()
