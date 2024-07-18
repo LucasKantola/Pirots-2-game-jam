@@ -1,11 +1,11 @@
-[gd_scene load_steps=22 format=3 uid="uid://b0wewlor2hl5b"]
+[gd_scene load_steps=33 format=3 uid="uid://b0wewlor2hl5b"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
 [ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
-[ext_resource type="Texture2D" uid="uid://mvfdnrwo8bmv" path="res://Assets/Shaders/lightTexture.png" id="3_b6e2h"]
+[ext_resource type="Texture2D" uid="uid://cx7kp72ywkbas" path="res://Assets/Sprites/PointLight.png" id="3_kxc3c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o2kg6"]
-size = Vector2(20, 70)
+size = Vector2(16, 29)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lflea"]
 atlas = ExtResource("2_oktc3")
@@ -38,6 +38,38 @@ region = Rect2(96, 0, 16, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_d8snc"]
 atlas = ExtResource("2_oktc3")
 region = Rect2(112, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5brtk"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(0, 160, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_la3j3"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(16, 160, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ahxy"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(32, 160, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6y8ra"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(48, 160, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fw53n"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(64, 160, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_prd7x"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(80, 160, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_32kba"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(96, 160, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_toa87"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(112, 160, 16, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cmn0y"]
 atlas = ExtResource("2_oktc3")
@@ -104,6 +136,35 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_5brtk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_la3j3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ahxy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6y8ra")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fw53n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_prd7x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_32kba")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_toa87")
+}],
+"loop": false,
+"name": &"Transform-fish",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_cmn0y")
 }, {
 "duration": 1.0,
@@ -132,27 +193,60 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="Gradient" id="Gradient_d5v32"]
+colors = PackedColorArray(0.0431373, 0.368627, 0.396078, 1, 0.560784, 0.972549, 0.886275, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hl6mv"]
+gradient = SubResource("Gradient_d5v32")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rqe11"]
+particle_flag_disable_z = true
+particle_flag_damping_as_friction = true
+emission_shape_scale = Vector3(1, 0.5, 1)
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.5, 0)
+direction = Vector3(1, -1, 0)
+spread = 11.0
+flatness = 0.3
+initial_velocity_min = 300.0
+initial_velocity_max = 350.0
+gravity = Vector3(0, 982, 0)
+damping_min = 0.1
+damping_max = 0.1
+scale_min = 0.8
+scale_max = 2.8
+color_ramp = SubResource("GradientTexture1D_hl6mv")
+turbulence_noise_strength = 0.1
+collision_mode = 2
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 texture_filter = 1
+collision_layer = 2
 script = ExtResource("1_a2euo")
 swollenShaderPath = "res://Assets/Shaders/Swollen.tres"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -17.5)
-scale = Vector2(1, 0.5)
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1.5)
 shape = SubResource("RectangleShape2D_o2kg6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-position = Vector2(1.00974e-28, -20)
-scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_6v0dd")
 animation = &"Idle"
 autoplay = "Idle"
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-position = Vector2(0, -26)
-color = Color(0.591281, 0.590473, 0, 1)
-energy = 2.65
+position = Vector2(0, -5)
+color = Color(0.796078, 0.717647, 0, 1)
 shadow_enabled = true
-texture = ExtResource("3_b6e2h")
+texture = ExtResource("3_kxc3c")
+
+[node name="WaterGun" type="GPUParticles2D" parent="."]
+position = Vector2(7, -9)
+amount = 200
+process_material = SubResource("ParticleProcessMaterial_rqe11")
+visibility_rect = Rect2(-4.07683, -31.3164, 141.413, 150.496)
+trail_enabled = true
+trail_lifetime = 0.1
+
+[node name="collisionChecker" type="Node2D" parent="WaterGun"]

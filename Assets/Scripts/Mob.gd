@@ -10,7 +10,7 @@ enum PlayerEffect {
 	FIRE,
 }
 
-#region Player Variables
+#region Variables
 @export var HP := 5
 #region Physics Variables
 @export var JUMP_VELOCITY := -300.0

@@ -3,8 +3,14 @@ extends Mob
 class_name Player
 
 #region Player Variables
+var hflipped = false
 @export var isStomping = false
 @export var stopInput = false
+var hitbox: CollisionShape2D
+var waterParticle: GPUParticles2D
+@export var drop: PackedScene
+var spawnEveryXFrames = 5
+var framesSinceSpawn = 0
 #region Physics Variables
 var timeSinceGround = INF
 var timeSinceJumpPressed = INF
@@ -19,11 +25,38 @@ var timeSinceJumpPressed = INF
 func _ready():
 	world = get_node("/root/World")
 	tileMap = get_node("/root/World/TileMap")
+	hitbox = get_node("Hitbox")
+	waterParticle = get_node("WaterGun")
+	drop = load("res://Assets/Scenes/Drop.tscn")
+	#ifall skumma saker händer så säger vi fuck det här
+	if not world or not TileMap or not sprite or not hitbox or not waterParticle:
+		print("WARNING: Could not find world, tilemap or sprite")
+		get_tree().quit() 
 
 func _physics_process(delta):
+	if Input.is_action_pressed("shoot"):
+		if currentEffect == PlayerEffect.FISH:
+			waterParticle.emitting = true
+			if framesSinceSpawn >= spawnEveryXFrames:	
+				var dropInstance = drop.instantiate()
+				dropInstance.speed = 300
+				dropInstance.gravity = 200
+				if not hflipped:
+					dropInstance.position = position + Vector2(7, -9)
+					dropInstance.direction = Vector2(1, -0.5)
+				else:
+					dropInstance.position = position + Vector2(-7, -9)
+					dropInstance.direction = Vector2(-1, -0.5)
+				get_parent().add_child(dropInstance)
+				framesSinceSpawn = 0
+			else:
+				framesSinceSpawn += 1
+	else:
+		waterParticle.emitting = false
+
 	addGravity(delta)
 
-	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("up"):
+	if Input.is_action_just_pressed("up"):
 		if not stopInput:
 			timeSinceJumpPressed = 0.0
 	else:
@@ -50,8 +83,14 @@ func _physics_process(delta):
 		
 		if direction == 1:
 				sprite.flip_h = false
+				hflipped = false
+				waterParticle.process_material.set("direction", Vector2(1, -0.5))
+				waterParticle.position = Vector2(7, -9)
 		elif direction == -1:
 				sprite.flip_h = true
+				hflipped = true
+				waterParticle.process_material.set("direction", Vector2(-1, -0.5))
+				waterParticle.position = Vector2(-7, -9)
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
@@ -59,7 +98,7 @@ func _physics_process(delta):
 		velocity.x = 0
 	move_and_slide()
 
-func _input(event):
+func _unhandled_input(event):
 	if event.is_action_pressed("debug_none"):
 		transformTo(PlayerEffect.NONE)
 	if event.is_action_pressed("debug_slime"):
@@ -71,8 +110,10 @@ func _input(event):
 	if event.is_action_pressed("debug_fire"):
 		transformTo(PlayerEffect.FIRE)
 
+
 ### tranform funkar inte att ha som namn på funktionen då det är en refenrens till en bodyns transform så den fick ett finare namn
 func transformTo(effect: PlayerEffect):
+	var tween: Tween
 	if currentEffect == effect:
 		# Player already has effect, do nothing
 		return
@@ -81,10 +122,13 @@ func transformTo(effect: PlayerEffect):
 		match currentEffect:
 			PlayerEffect.SLIME:
 				sprite.play_backwards("Transform-slime")
+				hitbox.shape.size = Vector2(16, 29)
+				hitbox.position = Vector2(0, 1.15)
 			PlayerEffect.FISH:
-				pass
+				sprite.play_backwards("Transform-fish")
 			PlayerEffect.SWOLLEN:
-				scale = Vector2(1.0, 1.0)
+				tween = create_tween()
+				tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.8)
 				sprite.material = null
 			PlayerEffect.FIRE:
 				pass
@@ -95,15 +139,20 @@ func transformTo(effect: PlayerEffect):
 			print("transformTo slime")
 			sprite.play("Transform-slime")
 			await sprite.animation_finished
+			hitbox.shape.size = Vector2(16, 13)
+			hitbox.position = Vector2(0, 9.5)
 			stopInput = false
 		PlayerEffect.FISH:
 			stopInput = true
 			print("transformTo fish")
+			sprite.play("Transform-fish")
+			await sprite.animation_finished
 			stopInput = false
 		PlayerEffect.SWOLLEN:
 			stopInput = true
 			print("transformTo swollen")
-			scale = Vector2(2.0, 2.0)
+			tween = create_tween()
+			tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.8)
 			var shader = load(swollenShaderPath)
 			if not shader:
 				print("WARNING: Could not find swollen shader")
@@ -116,6 +165,9 @@ func transformTo(effect: PlayerEffect):
 			stopInput = true
 			print("transformTo fire")
 			stopInput = false
+	if tween:
+		await tween.finished
+		tween.kill()
 	currentEffect = effect
 
 func kill() -> void:
