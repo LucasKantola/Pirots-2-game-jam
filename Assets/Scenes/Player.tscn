@@ -243,6 +243,7 @@ texture = ExtResource("3_kxc3c")
 
 [node name="WaterGun" type="GPUParticles2D" parent="."]
 position = Vector2(7, -9)
+emitting = false
 amount = 200
 process_material = SubResource("ParticleProcessMaterial_rqe11")
 visibility_rect = Rect2(-1.34873, -28.0804, 144.663, 239.822)

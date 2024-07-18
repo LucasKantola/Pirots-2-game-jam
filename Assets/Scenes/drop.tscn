@@ -1,19 +1,19 @@
 [gd_scene load_steps=5 format=3 uid="uid://ciashg2xtq41g"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/Drop.gd" id="1_41sel"]
-[ext_resource type="Texture2D" uid="uid://bnd0v3lthfwkm" path="res://Assets/Sprites/Sprite-0006.png" id="1_q7b4e"]
+[ext_resource type="Script" path="res://Assets/Scripts/Drop.gd" id="1_t5vut"]
+[ext_resource type="Texture2D" uid="uid://bnd0v3lthfwkm" path="res://Assets/Sprites/Sprite-0006.png" id="2_37f3u"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s21a3"]
 size = Vector2(16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oud2v"]
-atlas = ExtResource("1_q7b4e")
+atlas = ExtResource("2_37f3u")
 region = Rect2(0, 16, 16, 16)
 
 [node name="Particle" type="RigidBody2D" groups=["Drop"]]
 texture_filter = 1
 collision_layer = 2147483648
-script = ExtResource("1_41sel")
+script = ExtResource("1_t5vut")
 direction = Vector2(1, -1)
 speed = 200.0
 gravity = 200.0

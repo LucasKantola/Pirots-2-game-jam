@@ -1,10 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://dngnfi8yrwdev"]
+[gd_scene load_steps=7 format=3 uid="uid://dngnfi8yrwdev"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/plant.gd" id="1_la7jf"]
 [ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="2_2yoat"]
+[ext_resource type="Shader" path="res://Assets/Shaders/Plant.gdshader" id="2_8oa7u"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tnyb6"]
 size = Vector2(20, 11)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vf3n7"]
+shader = ExtResource("2_8oa7u")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_77pw8"]
 atlas = ExtResource("2_2yoat")
@@ -23,6 +27,8 @@ shape = SubResource("RectangleShape2D_tnyb6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
+material = SubResource("ShaderMaterial_vf3n7")
+scale = Vector2(1.00069, 1.07271)
 texture = SubResource("AtlasTexture_77pw8")
 
 [connection signal="body_entered" from="Area2D" to="." method="bodyEntered"]

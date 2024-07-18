@@ -2,14 +2,43 @@ extends Node2D
 
 @onready var sprite = $Sprite2D
 @onready var collider = $Area2D/CollisionShape2D
-var maxHeight = 100
+@export var maxHeight = 100
+@export var growthRate = 1.1
+
+var currentHeight
+
+@export var platforms: Array = [
+    {
+        "position": Vector2(10, 20),
+        "size": Vector2(20, 10),
+        "texture": "res://Assets/Sprites/Sprite-0006.png",
+        "rendered": false
+    },
+    {
+        "position": Vector2(-10, 40),
+        "size": Vector2(20, 10),
+        "texture": "res://Assets/Sprites/Sprite-0006.png",
+        "rendered": false
+    }
+]
+
+
+func _ready():
+    currentHeight = sprite.get_rect().size.y
 
 func bodyEntered(body: Node2D) -> void:
-    print_debug("bodyEntered" + body.name)
-    print(str(body))
+    if body.is_in_group("Drop"):
+        if currentHeight < maxHeight:
+            currentHeight *= growthRate
+            sprite.scale.y *= growthRate
+            sprite.position.y -= currentHeight * (growthRate - 1)
 
-    if body.is_in_group("Drop"):        
-        if sprite.get_rect().size.y < maxHeight:
-            sprite.position.y -= sprite.get_rect().size.y / 2
-            sprite.scale.y += 1
-            collider.position.y -= collider.shape.size.y / 2
+        for platform in platforms:
+            if currentHeight >= platform["position"].y:
+                if not platform["rendered"]:
+                    platform["rendered"] = true
+                    var platformSprite = Sprite2D.new()
+                    platformSprite.texture = load(platform["texture"])
+                    platformSprite.position = platform["position"]
+                    platformSprite.scale = platform["size"]
+                    add_child(platformSprite)
