@@ -54,21 +54,31 @@ func hitbox_area_entered(_body_rid:RID, body:Node2D, _body_shape_index:int, _loc
 	if body is Mob:
 		body = body as Mob
 		if body.name == "Player":
-			body = body as Player
+			var player = body as Player
 			print("Player hit by enemy")
-			body.HP -= damage
-			body.transformTo(currentEffect)
+			player.HP -= damage
+			if player.HP > 0:
+				player.transformTo(currentEffect)
+			else:
+				player.kill()
 
 func hurtbox_area_entered(_body_rid:RID, body:Node2D, _body_shape_index:int, _local_shape_index:int) -> void:
 	print("Hurtbox area entered")
 	if body is Mob:
 		body = body as Mob
-		if body.currentEffect in effectiveTypes:
+		if body.currentEffect in effectiveTypes and body.name == "Player":
+			var player = body as Player
 			print("Enemy killed by player")
-			body.velocity.y = stompForce
+			player.velocity.y = stompForce
+			player.HP -= damage
+			if player.HP < 0:
+				player.kill()
 			kill()
 		elif body.name == "Player":
-			body = body as Player
+			var player = body as Player
 			print(body.name + " hit by enemy")
-			body.HP -= damage
-			body.transformTo(currentEffect)
+			player.HP -= damage
+			if player.HP > 0:
+				player.transformTo(currentEffect)
+			else:
+				player.kill()

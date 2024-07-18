@@ -4,6 +4,7 @@ class_name Player
 
 #region Player Variables
 @export var isStomping = false
+@export var stopInput = false
 #region Physics Variables
 var timeSinceGround = INF
 var timeSinceJumpPressed = INF
@@ -23,7 +24,8 @@ func _physics_process(delta):
 	addGravity(delta)
 
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("up"):
-		timeSinceJumpPressed = 0.0
+		if not stopInput:
+			timeSinceJumpPressed = 0.0
 	else:
 		timeSinceJumpPressed += delta
 	
@@ -50,10 +52,11 @@ func _physics_process(delta):
 				sprite.flip_h = false
 		elif direction == -1:
 				sprite.flip_h = true
-		
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
+	if stopInput:
+		velocity.x = 0
 	move_and_slide()
 
 func _input(event):
@@ -90,12 +93,18 @@ func transformTo(effect: PlayerEffect):
 	# Add effect
 	match effect:
 		PlayerEffect.SLIME:
+			stopInput = true
 			print("transformTo slime")
 			sprite.play("Transform-slime")
+			await sprite.animation_finished
+			stopInput = false
 			#modulate = Color.GREEN
 		PlayerEffect.FISH:
+			stopInput = true
 			print("transformTo fish")
+			stopInput = false
 		PlayerEffect.SWOLLEN:
+			stopInput = true
 			print("transformTo swollen")
 			scale = Vector2(2.0, 2.0)
 			var shader = load(swollenShaderPath)
@@ -105,7 +114,15 @@ func transformTo(effect: PlayerEffect):
 				var material = ShaderMaterial.new()
 				material.shader = shader
 				sprite.material = material
+			stopInput = false
 		PlayerEffect.FIRE:
+			stopInput = true
 			print("transformTo fire")
+			stopInput = false
 	currentEffect = effect
 
+func kill() -> void:
+	var image = get_parent().get_node("CanvasLayer").get_node("GameOver")
+	image.visible = true
+
+	queue_free()

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
 [ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
-[ext_resource type="Texture2D" uid="uid://bq4sgtc33h240" path="res://icon.svg" id="3_q6d2n"]
+[ext_resource type="Texture2D" uid="uid://mvfdnrwo8bmv" path="res://Assets/Shaders/lightTexture.png" id="3_b6e2h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o2kg6"]
 size = Vector2(20, 70)
@@ -155,4 +155,4 @@ position = Vector2(0, -26)
 color = Color(0.591281, 0.590473, 0, 1)
 energy = 2.65
 shadow_enabled = true
-texture = ExtResource("3_q6d2n")
+texture = ExtResource("3_b6e2h")
