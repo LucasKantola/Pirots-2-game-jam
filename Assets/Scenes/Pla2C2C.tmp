@@ -1,8 +1,7 @@
-[gd_scene load_steps=22 format=3 uid="uid://b0wewlor2hl5b"]
+[gd_scene load_steps=21 format=3 uid="uid://b0wewlor2hl5b"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
-[ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
-[ext_resource type="Texture2D" uid="uid://bq4sgtc33h240" path="res://icon.svg" id="3_q6d2n"]
+[ext_resource type="Texture2D" uid="uid://najrypw1ko4h" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o2kg6"]
 size = Vector2(20, 70)
@@ -135,7 +134,13 @@ animations = [{
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 texture_filter = 1
 script = ExtResource("1_a2euo")
+isStomping = null
+jumpBufferTime = null
+coyoteTime = null
 swollenShaderPath = "res://Assets/Shaders/Swollen.tres"
+HP = null
+JUMP_VELOCITY = null
+SPEED = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -17.5)
@@ -147,12 +152,5 @@ texture_filter = 1
 position = Vector2(1.00974e-28, -20)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_6v0dd")
-animation = &"Idle"
+animation = &"Transform-slime"
 autoplay = "Idle"
-
-[node name="PointLight2D" type="PointLight2D" parent="."]
-position = Vector2(0, -26)
-color = Color(0.591281, 0.590473, 0, 1)
-energy = 2.65
-shadow_enabled = true
-texture = ExtResource("3_q6d2n")
