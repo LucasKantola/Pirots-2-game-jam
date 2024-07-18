@@ -80,9 +80,7 @@ func transformTo(effect: PlayerEffect):
 		# Player has another effect which must be removed first
 		match currentEffect:
 			PlayerEffect.SLIME:
-				modulate = Color.WHITE
 				sprite.play_backwards("Transform-slime")
-
 			PlayerEffect.FISH:
 				pass
 			PlayerEffect.SWOLLEN:
@@ -98,7 +96,6 @@ func transformTo(effect: PlayerEffect):
 			sprite.play("Transform-slime")
 			await sprite.animation_finished
 			stopInput = false
-			#modulate = Color.GREEN
 		PlayerEffect.FISH:
 			stopInput = true
 			print("transformTo fish")
