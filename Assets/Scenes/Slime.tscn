@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://7gmy4iiwnaru"]
+[gd_scene load_steps=8 format=3 uid="uid://bkdgqadng4s36"]
 
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="1_mrr3u"]
 [ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_n8khh"]
