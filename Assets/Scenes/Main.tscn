@@ -1,13 +1,18 @@
-[gd_scene load_steps=16 format=3 uid="uid://bdr041g8ky1xn"]
+[gd_scene load_steps=19 format=3 uid="uid://bdr041g8ky1xn"]
 
 [ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="1_5tgm8"]
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_u7c0f"]
+[ext_resource type="Script" path="res://Assets/Scripts/RoomCamera.gd" id="2_3qqyu"]
 [ext_resource type="PackedScene" uid="uid://b0wewlor2hl5b" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="2_w1yay"]
+[ext_resource type="Script" path="res://Assets/Scripts/SnapArea.gd" id="3_pjvtw"]
 [ext_resource type="PackedScene" uid="uid://bkdgqadng4s36" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
-[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
+[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/plant.tscn" id="6_i4rig"]
 [ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="8_8fdbn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vmoii"]
+size = Vector2(1088, 784)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cfglh"]
 texture = ExtResource("2_w1yay")
@@ -1146,6 +1151,17 @@ sources/1 = SubResource("TileSetAtlasSource_kyo2q")
 [node name="World" type="Node2D"]
 script = ExtResource("1_u7c0f")
 
+[node name="RoomCamera" type="Camera2D" parent="."]
+script = ExtResource("2_3qqyu")
+
+[node name="RoomArea" type="Area2D" parent="."]
+
+[node name="RoomShape" type="CollisionShape2D" parent="RoomArea"]
+position = Vector2(416, 232)
+shape = SubResource("RectangleShape2D_vmoii")
+script = ExtResource("3_pjvtw")
+gridSize = 16
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="GameOver" type="Control" parent="CanvasLayer"]
@@ -1183,10 +1199,6 @@ layer_0/tile_data = PackedInt32Array(1114141, 589825, 2, 983069, 589825, 2, 9175
 
 [node name="Player" parent="." instance=ExtResource("2_w1t2q")]
 position = Vector2(392, 466)
-
-[node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(50, 7)
-zoom = Vector2(3, 3)
 
 [node name="Slime" parent="." instance=ExtResource("4_pshyo")]
 position = Vector2(405, 150)
