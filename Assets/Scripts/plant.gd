@@ -46,7 +46,6 @@ func _draw():
         if currentHeight >= platform["position"].y - defaultOffset:
             var bottomPos = Vector2(0, -platform["position"].y + defaultOffset)
             print("bottomPos: ", bottomPos)
-            var topPos = platform["position"]
             
             # Calculate the direction vector and the maximum distance the line can grow
             var direction = bottomPos.direction_to(platform["position"])

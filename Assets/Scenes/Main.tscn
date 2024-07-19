@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://Assets/Scripts/SnapArea.gd" id="3_pjvtw"]
 [ext_resource type="PackedScene" uid="uid://bkdgqadng4s36" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
-[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/plant.tscn" id="6_i4rig"]
+[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
 [ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="8_8fdbn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vmoii"]

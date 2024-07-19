@@ -62,6 +62,11 @@ func _physics_process(delta):
     else:
         timeSinceJumpPressed += delta
     
+    if Input.is_action_pressed("down"):
+        set_collision_mask_value(5, false)
+    else: 
+        set_collision_mask_value(5, true)
+
     if not is_on_floor():
         timeSinceGround += delta
         isStomping = true

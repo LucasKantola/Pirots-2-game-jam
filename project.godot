@@ -80,4 +80,5 @@ shoot={
 
 2d_physics/layer_1="Ground"
 2d_physics/layer_2="Player"
+2d_physics/layer_5="oneWay"
 2d_physics/layer_32="Water Particle"
