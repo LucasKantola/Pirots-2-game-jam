@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://bkdgqadng4s36" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
 [ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/plant.tscn" id="6_i4rig"]
-[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="8_8fdbn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vmoii"]
 size = Vector2(1088, 784)
@@ -1150,7 +1149,6 @@ sources/1 = SubResource("TileSetAtlasSource_kyo2q")
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_u7c0f")
-down = ExtResource("8_8fdbn")
 
 [node name="RoomCamera" type="Camera2D" parent="."]
 script = ExtResource("2_3qqyu")

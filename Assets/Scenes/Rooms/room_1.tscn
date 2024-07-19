@@ -1,12 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://c4s4lawnojq1e"]
+[gd_scene load_steps=13 format=3 uid="uid://c4s4lawnojq1e"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/SnapArea.gd" id="1_b04ic"]
-[ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_dx04d"]
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="1_tfg18"]
 [ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="2_k4aj4"]
 [ext_resource type="Script" path="res://Assets/Scripts/RoomCamera.gd" id="2_nvwwm"]
-[ext_resource type="PackedScene" uid="uid://c7uho47601j00" path="res://Assets/Scenes/Rooms/room_2.tscn" id="2_wahqv"]
-[ext_resource type="PackedScene" uid="uid://cgwt3ffttqnu8" path="res://Assets/Scenes/Rooms/room_3.tscn" id="3_sed27"]
+[ext_resource type="Script" path="res://Assets/Scripts/RoomArea.gd" id="3_2x4ea"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xr1fm"]
 size = Vector2(288, 160)
@@ -1146,10 +1143,6 @@ sources/0 = SubResource("TileSetAtlasSource_cy3f5")
 sources/1 = SubResource("TileSetAtlasSource_gotfj")
 
 [node name="Room1" type="Node2D"]
-script = ExtResource("1_dx04d")
-right = ExtResource("2_wahqv")
-left = ExtResource("3_sed27")
-down = ExtResource("2_wahqv")
 
 [node name="RoomCamera" type="Camera2D" parent="."]
 script = ExtResource("2_nvwwm")
@@ -1161,8 +1154,21 @@ collision_mask = 2
 [node name="RoomShape" type="CollisionShape2D" parent="RoomArea"]
 position = Vector2(144, -80)
 shape = SubResource("RectangleShape2D_xr1fm")
-script = ExtResource("1_b04ic")
+script = ExtResource("3_2x4ea")
 gridSize = 16
+leftDoors = Array[Vector2i]([Vector2i(7, 1)])
+rightDoors = Array[Vector2i]([Vector2i(2, 1)])
+downDoors = Array[Vector2i]([Vector2i(8, 1)])
+
+[node name="Doors" type="Node2D" parent="RoomArea/RoomShape"]
+
+[node name="Left" type="Node2D" parent="RoomArea/RoomShape/Doors"]
+
+[node name="Right" type="Node2D" parent="RoomArea/RoomShape/Doors"]
+
+[node name="Up" type="Node2D" parent="RoomArea/RoomShape/Doors"]
+
+[node name="Down" type="Node2D" parent="RoomArea/RoomShape/Doors"]
 
 [node name="Bakgrund" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_vsi56")
