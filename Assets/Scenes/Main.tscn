@@ -1,17 +1,14 @@
-[gd_scene load_steps=18 format=3 uid="uid://bdr041g8ky1xn"]
+[gd_scene load_steps=16 format=3 uid="uid://bdr041g8ky1xn"]
 
 [ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="1_5tgm8"]
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_u7c0f"]
-[ext_resource type="PackedScene" uid="uid://cnv08btn54mte" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_lcanb"]
 [ext_resource type="PackedScene" uid="uid://b0wewlor2hl5b" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="2_w1yay"]
 [ext_resource type="Script" path="res://Assets/Scripts/SnapArea.gd" id="3_cooit"]
 [ext_resource type="PackedScene" uid="uid://bkdgqadng4s36" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
-[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/plant.tscn" id="6_i4rig"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cda07"]
-size = Vector2(1088, 784)
+[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
+[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="8_8fdbn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cfglh"]
 texture = ExtResource("2_w1yay")
@@ -1216,3 +1213,6 @@ position = Vector2(256, 536)
 
 [node name="Plant3" parent="." instance=ExtResource("6_i4rig")]
 position = Vector2(1, 536)
+
+[node name="Room1" parent="." instance=ExtResource("8_8fdbn")]
+position = Vector2(1194, 215)
