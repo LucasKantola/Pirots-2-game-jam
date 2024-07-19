@@ -1155,6 +1155,8 @@ down = ExtResource("2_wahqv")
 script = ExtResource("2_nvwwm")
 
 [node name="RoomArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="RoomShape" type="CollisionShape2D" parent="RoomArea"]
 position = Vector2(144, -80)
