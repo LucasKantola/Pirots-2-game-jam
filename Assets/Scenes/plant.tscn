@@ -1,17 +1,23 @@
 [gd_scene load_steps=7 format=3 uid="uid://dngnfi8yrwdev"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/plant.gd" id="1_la7jf"]
-[ext_resource type="Shader" path="res://Assets/Shaders/Plant.gdshader" id="2_8oa7u"]
 [ext_resource type="PackedScene" uid="uid://bhcusxlsgqawr" path="res://Assets/Scenes/Branch.tscn" id="2_hvq7t"]
-[ext_resource type="Texture2D" uid="uid://dj1vxfbqpinmx" path="res://Assets/Sprites/images.png" id="4_28y33"]
+[ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="4_4r2m3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tnyb6"]
 size = Vector2(20, 8)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vf3n7"]
-shader = ExtResource("2_8oa7u")
+[sub_resource type="AtlasTexture" id="AtlasTexture_4jb4w"]
+atlas = ExtResource("4_4r2m3")
+region = Rect2(712, 312, 16, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cscvf"]
+atlas = ExtResource("4_4r2m3")
+region = Rect2(704, 312, 32, 24)
 
 [node name="Plant" type="Node2D"]
+texture_filter = 1
+position = Vector2(0, -16)
 script = ExtResource("1_la7jf")
 branchScene = ExtResource("2_hvq7t")
 
@@ -23,9 +29,15 @@ collision_mask = 2147483648
 position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_tnyb6")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Stalk" type="Sprite2D" parent="."]
+z_index = 2
 texture_filter = 1
-material = SubResource("ShaderMaterial_vf3n7")
-texture = ExtResource("4_28y33")
+position = Vector2(0, 4)
+texture = SubResource("AtlasTexture_4jb4w")
+
+[node name="Roots" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(0, 16)
+texture = SubResource("AtlasTexture_cscvf")
 
 [connection signal="body_entered" from="Area2D" to="." method="bodyEntered"]

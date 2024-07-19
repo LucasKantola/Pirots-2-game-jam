@@ -114,8 +114,12 @@ func _physics_process(delta):
     if stopInput:
         velocity.x = 0
 
-    if is_on_floor_only() and flippedTowardsWall:
-        sprite.rotation = 0
+    if not is_on_wall() and flippedTowardsWall:
+        var tween = create_tween()
+        tween.tween_property(sprite, "rotation", 0, 0.05)
+        if tween:
+            await tween.finished
+            tween.kill()
         sprite.position = Vector2(0, 0)
         flippedTowardsWall = false
 
@@ -133,6 +137,8 @@ func _unhandled_input(event):
         transformTo(PlayerEffect.FISH)
     if event.is_action_pressed("debug_fire"):
         transformTo(PlayerEffect.FIRE)
+    if event.is_action_pressed("reset"):
+        get_tree().reload_current_scene()
 
 
 ### tranform funkar inte att ha som namn på funktionen då det är en refenrens till en bodyns transform så den fick ett finare namn
@@ -202,12 +208,16 @@ func kill() -> void:
 
 func faceWall(direction: float):
     if not flippedTowardsWall:
+        var tween = create_tween()  
         if direction < 0.5:
-            sprite.rotation = PI/2
+            tween.tween_property(sprite, "rotation", PI/2, 0.05)
             sprite.position = Vector2(8, 2)
             
         elif direction > 0.5:
-            sprite.rotation = -PI/2
+            tween.tween_property(sprite, "rotation", -PI/2, 0.05)
             sprite.position = Vector2(-8, 2)
 
+        if tween:
+            await tween.finished
+            tween.kill()
         flippedTowardsWall = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c4lsehi2ir0ql"]
+[gd_scene load_steps=20 format=3 uid="uid://cl5xs8kextntn"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_cuoqx"]
 [ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_grk46"]
@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="5_vs41k"]
 [ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="6_t617k"]
 [ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="8_ywilg"]
-[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/plant.tscn" id="9_4ifuy"]
+[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="9_4ifuy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xr1fm"]
 size = Vector2(384, 240)

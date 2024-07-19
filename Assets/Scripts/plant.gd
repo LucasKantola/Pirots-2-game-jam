@@ -1,36 +1,39 @@
 extends Node2D
 
-@onready var sprite = $Sprite2D
+@onready var stalk = $Stalk
+@onready var roots = $Roots
+
 @onready var collider = $Area2D/CollisionShape2D
 @export var maxHeight = 100
 @export var growthRate = 1.1
 @export var defaultOffset := 10.0
 
-var currentHeight
+var currentHeight: float
 
 @export var branchScene: PackedScene = load("res://Assets/Scenes/Branch.tscn") 
 
 @export var platforms: Array = [
     {
-        "position": Vector2(10, 20),
+        "position": Vector2(30, 90),
         "rendered": false
     },
     {
-        "position": Vector2(-10, 40),
+        "position": Vector2(-40, 40),
         "rendered": false
     }
 ]
 
 func _ready():
-    currentHeight = sprite.get_rect().size.y
+    currentHeight = stalk.get_rect().size.y
 
 func bodyEntered(body: Node2D) -> void:
     if body.is_in_group("Drop"):
         if currentHeight < maxHeight:
             var lastHeight = currentHeight
             currentHeight *= growthRate
-            sprite.scale.y *= growthRate
-            sprite.position.y -= (currentHeight - lastHeight) / 2
+            stalk.position.y -= (currentHeight - lastHeight) / 2
+            stalk.texture.region.size.y += currentHeight-lastHeight
+            stalk.texture.region.position.y -= (currentHeight - lastHeight)
 
         for platform in platforms:
             if currentHeight >= platform["position"].y:
@@ -45,7 +48,6 @@ func _draw():
     for platform in platforms:
         if currentHeight >= platform["position"].y - defaultOffset:
             var bottomPos = Vector2(0, -platform["position"].y + defaultOffset)
-            print("bottomPos: ", bottomPos)
             
             # Calculate the direction vector and the maximum distance the line can grow
             var direction = bottomPos.direction_to(platform["position"])
@@ -53,6 +55,6 @@ func _draw():
             
             # Calculate the end point of the line based on the max distance
             var endPos = bottomPos + direction * maxDistance
-            endPos.y *= -1
+            endPos.y = -endPos.y
             
             draw_line(bottomPos, endPos, Color(1, 1, 1), 1)
