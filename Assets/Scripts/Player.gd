@@ -5,15 +5,14 @@ class_name Player
 #region Player Variables
 var hflipped = false
 var stopInput = false
-@export var wallClimbModifier = 0.5
-var flippedTowardsWall = false
-var wallWasLeft = false
 var hitbox: CollisionShape2D
 var waterParticle: GPUParticles2D
 @export var drop: PackedScene
 var spawnEveryXFrames = 5
 var framesSinceSpawn = 0
 
+@export var wallClimbModifier = 0.5
+var flippedTowardsWall = false
 var wallCheckDistance = 12
 
 #region Physics Variables
@@ -87,14 +86,14 @@ func _physics_process(delta):
     if direction:
         if is_on_wall() and currentEffect == PlayerEffect.SLIME:
             var cellCustom
-            var cellData = tileMap.get_cell_tile_data(0, tileMap.local_to_map(position + Vector2(wallCheckDistance * direction, 12)))
-            print(cellData)
+            #take the global position of the player and translate it for the tilemap
+            var tilePos = tileMap.local_to_map(global_position + Vector2(wallCheckDistance * direction, 16))
+            #get the celldata from the tilemap 
+            var cellData = tileMap.get_cell_tile_data(0, tilePos)
             if cellData:
-                print(cellData)
+                #get the custom data from the cell. These are from the tileset 
                 cellCustom = cellData.get_custom_data("Scalable")
-                print(cellCustom)
             if cellCustom:
-                print(cellCustom)
                 faceWall(direction)
                 velocity.y = -SPEED * wallClimbModifier
 
@@ -116,9 +115,9 @@ func _physics_process(delta):
         velocity.x = 0
 
     if is_on_floor_only() and flippedTowardsWall:
-        self.rotation = 0
+        sprite.rotation = 0
+        sprite.position = Vector2(0, 0)
         flippedTowardsWall = false
-        wallCheckDistance = 12
 
     addGravity(delta)
     move_and_slide()
@@ -203,18 +202,12 @@ func kill() -> void:
 
 func faceWall(direction: float):
     if not flippedTowardsWall:
-        var original_position = position
-        var sprite_offset = Vector2(0, 0)
-
         if direction < 0.5:
-            wallWasLeft = true
-            self.rotation = PI/2
-            sprite_offset = Vector2(-hitbox.shape.extents.y, hitbox.shape.extents.x) / 2
+            sprite.rotation = PI/2
+            sprite.position = Vector2(8, 2)
+            
         elif direction > 0.5:
-            wallWasLeft = false
-            self.rotation = -PI/2
-            sprite_offset = Vector2(hitbox.shape.extents.y, -hitbox.shape.extents.x) / 2
+            sprite.rotation = -PI/2
+            sprite.position = Vector2(-8, 2)
 
-        position = original_position + sprite_offset
         flippedTowardsWall = true
-        wallCheckDistance = 28
