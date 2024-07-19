@@ -1,6 +1,7 @@
-[gd_scene load_steps=33 format=3 uid="uid://b0wewlor2hl5b"]
+[gd_scene load_steps=34 format=3 uid="uid://b0wewlor2hl5b"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
+[ext_resource type="PackedScene" uid="uid://ciashg2xtq41g" path="res://Assets/Scenes/Drop.tscn" id="2_h4gn0"]
 [ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
 [ext_resource type="Texture2D" uid="uid://cx7kp72ywkbas" path="res://Assets/Sprites/PointLight.png" id="3_kxc3c"]
 
@@ -224,6 +225,7 @@ texture_filter = 1
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_a2euo")
+drop = ExtResource("2_h4gn0")
 swollenShaderPath = "res://Assets/Shaders/Swollen.tres"
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]

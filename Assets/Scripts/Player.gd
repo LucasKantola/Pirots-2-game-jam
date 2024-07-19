@@ -4,13 +4,18 @@ class_name Player
 
 #region Player Variables
 var hflipped = false
-@export var isStomping = false
-@export var stopInput = false
+var stopInput = false
+@export var wallClimbModifier = 0.5
+var flippedTowardsWall = false
+var wallWasLeft = false
 var hitbox: CollisionShape2D
 var waterParticle: GPUParticles2D
 @export var drop: PackedScene
 var spawnEveryXFrames = 5
 var framesSinceSpawn = 0
+
+var wallCheckDistance = 12
+
 #region Physics Variables
 var timeSinceGround = INF
 var timeSinceJumpPressed = INF
@@ -24,7 +29,7 @@ var timeSinceJumpPressed = INF
 
 func _ready():
     world = get_node("/root/World")
-    tileMap = get_node("/root/World/TileMap")
+    tileMap = get_node("/root/World/Teräng")
     hitbox = get_node("Hitbox")
     waterParticle = get_node("WaterGun")
     drop = load("res://Assets/Scenes/Drop.tscn")
@@ -54,8 +59,6 @@ func _physics_process(delta):
     else:
         waterParticle.emitting = false
 
-    addGravity(delta)
-
     if Input.is_action_just_pressed("up"):
         if not stopInput:
             timeSinceJumpPressed = 0.0
@@ -69,11 +72,8 @@ func _physics_process(delta):
 
     if not is_on_floor():
         timeSinceGround += delta
-        isStomping = true
     else:
         timeSinceGround = 0.0
-        isStomping = false
-
     
     if timeSinceJumpPressed < jumpBufferTime:
         if (is_on_floor() and timeSinceJumpPressed < jumpBufferTime) or is_on_floor() or timeSinceGround < coyoteTime:
@@ -82,10 +82,23 @@ func _physics_process(delta):
             timeSinceJumpPressed = INF
             timeSinceGround = INF
 
+    #Left right movement from the axis
     var direction = Input.get_axis("left", "right")
     if direction:
+        if is_on_wall() and currentEffect == PlayerEffect.SLIME:
+            var cellCustom
+            var cellData = tileMap.get_cell_tile_data(0, tileMap.local_to_map(position + Vector2(wallCheckDistance * direction, 12)))
+            print(cellData)
+            if cellData:
+                print(cellData)
+                cellCustom = cellData.get_custom_data("Scalable")
+                print(cellCustom)
+            if cellCustom:
+                print(cellCustom)
+                faceWall(direction)
+                velocity.y = -SPEED * wallClimbModifier
+
         velocity.x = direction * SPEED
-        
         if direction == 1:
                 sprite.flip_h = false
                 hflipped = false
@@ -101,6 +114,13 @@ func _physics_process(delta):
 
     if stopInput:
         velocity.x = 0
+
+    if is_on_floor_only() and flippedTowardsWall:
+        self.rotation = 0
+        flippedTowardsWall = false
+        wallCheckDistance = 12
+
+    addGravity(delta)
     move_and_slide()
 
 func _unhandled_input(event):
@@ -180,3 +200,21 @@ func kill() -> void:
     image.visible = true
 
     queue_free()
+
+func faceWall(direction: float):
+    if not flippedTowardsWall:
+        var original_position = position
+        var sprite_offset = Vector2(0, 0)
+
+        if direction < 0.5:
+            wallWasLeft = true
+            self.rotation = PI/2
+            sprite_offset = Vector2(-hitbox.shape.extents.y, hitbox.shape.extents.x) / 2
+        elif direction > 0.5:
+            wallWasLeft = false
+            self.rotation = -PI/2
+            sprite_offset = Vector2(hitbox.shape.extents.y, -hitbox.shape.extents.x) / 2
+
+        position = original_position + sprite_offset
+        flippedTowardsWall = true
+        wallCheckDistance = 28
