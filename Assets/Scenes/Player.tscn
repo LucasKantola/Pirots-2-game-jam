@@ -239,7 +239,7 @@ sprite_frames = SubResource("SpriteFrames_6v0dd")
 animation = &"Idle"
 autoplay = "Idle"
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="Light" type="PointLight2D" parent="."]
 position = Vector2(0, -5)
 color = Color(0.796078, 0.717647, 0, 1)
 shadow_enabled = true

@@ -154,11 +154,15 @@ func transformTo(effect: PlayerEffect):
                 sprite.play_backwards("Transform-slime")
                 hitbox.shape.size = Vector2(16, 29)
                 hitbox.position = Vector2(0, 1.15)
+                tween = create_tween()
+                tween.tween_property($Light, "position", Vector2(0, -5), 0.8)
+                killTween(tween)
             PlayerEffect.FISH:
                 sprite.play_backwards("Transform-fish")
             PlayerEffect.SWOLLEN:
                 tween = create_tween()
                 tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.8)
+                killTween(tween)
                 sprite.material = null
             PlayerEffect.FIRE:
                 pass
@@ -168,7 +172,10 @@ func transformTo(effect: PlayerEffect):
             stopInput = true
             print("transformTo slime")
             sprite.play("Transform-slime")
+            tween = create_tween()
+            tween.tween_property($Light, "position", Vector2(0, 11), 0.8)
             await sprite.animation_finished
+            killTween(tween)
             hitbox.shape.size = Vector2(16, 13)
             hitbox.position = Vector2(0, 9.5)
             stopInput = false
@@ -183,6 +190,7 @@ func transformTo(effect: PlayerEffect):
             print("transformTo swollen")
             tween = create_tween()
             tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.8)
+            killTween(tween)
             var shader = load(swollenShaderPath)
             if not shader:
                 print("WARNING: Could not find swollen shader")
@@ -195,9 +203,7 @@ func transformTo(effect: PlayerEffect):
             stopInput = true
             print("transformTo fire")
             stopInput = false
-    if tween:
-        await tween.finished
-        tween.kill()
+    killTween(tween)
     currentEffect = effect
 
 func kill() -> void:
@@ -205,6 +211,11 @@ func kill() -> void:
     image.visible = true
 
     queue_free()
+
+func killTween(tween: Tween) -> void:
+    if tween:
+        await tween.finished
+        tween.kill()
 
 func faceWall(direction: float):
     if not flippedTowardsWall:

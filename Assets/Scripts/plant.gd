@@ -56,5 +56,5 @@ func _draw():
             # Calculate the end point of the line based on the max distance
             var endPos = bottomPos + direction * maxDistance
             endPos.y = -endPos.y
-            
-            draw_line(bottomPos, endPos, Color(1, 1, 1), 1)
+        
+            draw_dashed_line(bottomPos, endPos, Color(11, 88, 110, 1), 3)
