@@ -1150,6 +1150,7 @@ sources/1 = SubResource("TileSetAtlasSource_kyo2q")
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_u7c0f")
+down = ExtResource("8_8fdbn")
 
 [node name="RoomCamera" type="Camera2D" parent="."]
 script = ExtResource("2_3qqyu")
