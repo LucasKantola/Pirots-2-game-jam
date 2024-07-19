@@ -1,8 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://c7uho47601j00"]
+[gd_scene load_steps=14 format=3 uid="uid://wfi7way66561"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_gsa5l"]
 [ext_resource type="Script" path="res://Assets/Scripts/SnapArea.gd" id="2_375ro"]
-[ext_resource type="PackedScene" uid="uid://cnv08btn54mte" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_h06lw"]
+[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_h06lw"]
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="3_pmfbr"]
 [ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="4_a3uro"]
 

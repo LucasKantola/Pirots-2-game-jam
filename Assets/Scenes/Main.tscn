@@ -1196,13 +1196,20 @@ position = Vector2(68, 146)
 EnemyType = 1
 
 [node name="Plant" parent="." instance=ExtResource("6_i4rig")]
-position = Vector2(173, 87)
+position = Vector2(171, 87)
 
 [node name="Plant2" parent="." instance=ExtResource("6_i4rig")]
-position = Vector2(256, 536)
+position = Vector2(252, 535)
+platforms = [{
+"position": Vector2(50, 90),
+"rendered": false
+}, {
+"position": Vector2(-40, 50),
+"rendered": false
+}]
 
 [node name="Plant3" parent="." instance=ExtResource("6_i4rig")]
 position = Vector2(1, 536)
 
 [node name="Room1" parent="." instance=ExtResource("8_8fdbn")]
-position = Vector2(1194, 215)
+position = Vector2(1211, 156)
