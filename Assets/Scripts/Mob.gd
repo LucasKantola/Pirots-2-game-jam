@@ -3,11 +3,11 @@ extends CharacterBody2D
 class_name Mob
 
 enum PlayerEffect {
-	NONE,
-	SLIME,
-	FISH,
-	SWOLLEN,
-	FIRE,
+    NONE,
+    SLIME,
+    FISH,
+    SWOLLEN,
+    FIRE,
 }
 
 #region Variables
@@ -28,13 +28,13 @@ var tileMap: TileMap
 #endregion
 
 func _ready():
-	world = get_node("/root/World")
-	tileMap = get_node("/root/World/TileMap")
+    world = get_node("/root/World")
+    tileMap = get_node("/root/World/TileMap")
 
 func addGravity(delta: float) -> void:
-	if not is_on_floor():
-		velocity.y += gravity * delta
+    if not is_on_floor():
+        velocity.y += gravity * delta
 
 ### Det är bara queue_free() som är skriven i finare text. Det tar bort objectet
 func kill() -> void:
-	queue_free()
+    queue_free()
