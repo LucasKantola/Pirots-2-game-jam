@@ -4,7 +4,6 @@
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_u7c0f"]
 [ext_resource type="PackedScene" uid="uid://b0wewlor2hl5b" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="2_w1yay"]
-[ext_resource type="Script" path="res://Assets/Scripts/SnapArea.gd" id="3_cooit"]
 [ext_resource type="PackedScene" uid="uid://bkdgqadng4s36" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
 [ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
@@ -1146,15 +1145,6 @@ sources/1 = SubResource("TileSetAtlasSource_kyo2q")
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_u7c0f")
-down = ExtResource("2_lcanb")
-
-[node name="RoomArea" type="Area2D" parent="."]
-
-[node name="RoomShape" type="CollisionShape2D" parent="RoomArea"]
-position = Vector2(416, 232)
-shape = SubResource("RectangleShape2D_cda07")
-script = ExtResource("3_cooit")
-gridSize = 16
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
