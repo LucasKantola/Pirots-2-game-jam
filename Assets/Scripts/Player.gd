@@ -15,6 +15,8 @@ var framesSinceSpawn = 0
 var flippedTowardsWall = false
 var wallCheckDistance = 12
 
+var wasInAirLastFrame = false
+
 #region Physics Variables
 var timeSinceGround = INF
 var timeSinceJumpPressed = INF
@@ -38,6 +40,17 @@ func _ready():
         get_tree().quit() 
 
 func _physics_process(delta):
+    if currentEffect == PlayerEffect.SWOLLEN:
+        if wasInAirLastFrame and is_on_floor():
+            var checkPositions = [
+                Vector2(-8, 24),
+                Vector2(8, 24)
+            ]
+            for pos in checkPositions:
+                if getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Breakable"):
+                    tileMap.set_cell(0, tileMap.local_to_map(global_position + pos), -1)
+                    velocity.y = JUMP_VELOCITY * 0.7
+
     if Input.is_action_pressed("shoot"):
         if currentEffect == PlayerEffect.FISH:
             waterParticle.emitting = true
@@ -85,19 +98,13 @@ func _physics_process(delta):
     var direction = Input.get_axis("left", "right")
     if direction:
         if is_on_wall() and currentEffect == PlayerEffect.SLIME:
-            var cellCustom
-            #take the global position of the player and translate it for the tilemap
-            var tilePos = tileMap.local_to_map(global_position + Vector2(wallCheckDistance * direction, 16))
-            #get the celldata from the tilemap 
-            var cellData = tileMap.get_cell_tile_data(0, tilePos)
-            if cellData:
-                #get the custom data from the cell. These are from the tileset 
-                cellCustom = cellData.get_custom_data("Scalable")
+            var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + Vector2(wallCheckDistance * direction, 16), "Scalable")
             if cellCustom:
                 faceWall(direction)
                 velocity.y = -SPEED * wallClimbModifier
 
         velocity.x = direction * SPEED
+
         if direction == 1:
                 sprite.flip_h = false
                 hflipped = false
@@ -110,6 +117,7 @@ func _physics_process(delta):
                 waterParticle.position = Vector2(-7, -9)
     else:
         velocity.x = move_toward(velocity.x, 0, SPEED)
+
 
     if stopInput:
         velocity.x = 0
@@ -124,6 +132,7 @@ func _physics_process(delta):
         flippedTowardsWall = false
 
     addGravity(delta)
+    wasInAirLastFrame = true if not is_on_floor() else false
     move_and_slide()
 
 func _unhandled_input(event):
@@ -232,3 +241,17 @@ func faceWall(direction: float):
             await tween.finished
             tween.kill()
         flippedTowardsWall = true
+
+### The getCustomDataFromTileMap function retrieves custom data from a specific tile in the tilemap. It converts the global position to a tile position and retrieves the cell data. If the cell data exists, it retrieves the custom data with the specified name. If the custom data exists, it is returned; otherwise, null is returned.
+func getCustomDataFromTileMap(tileMapOfChoice: TileMap, tileMapLayer: int, globalPositon: Vector2, dataName: String):
+    var cellCustom
+    var tilePos = tileMapOfChoice.local_to_map(globalPositon)
+    #get the celldata from the tilemap 
+    var cellData = tileMapOfChoice.get_cell_tile_data(tileMapLayer, tilePos)
+    if cellData:
+        #get the custom data from the cell
+        cellCustom = cellData.get_custom_data(dataName)
+    if cellCustom:
+        return cellCustom
+    
+    return null

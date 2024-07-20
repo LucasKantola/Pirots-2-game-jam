@@ -11,10 +11,14 @@ enum EnemyTypings {
 
 @export var EnemyType: EnemyTypings
 
+@onready var hitbox = $"Hitbox Area"
+@onready var hurtbox = $"Hurtbox Area"
+@onready var worldCol = $"WorldCollision"
+
 var damage = 1
 var effectiveTypes: Array = []
 
-var stompForce = 0
+var isDead = false
 
 func _ready():
     self.name = str(EnemyType)
@@ -25,7 +29,7 @@ func _ready():
             SPEED = 100
             currentEffect = PlayerEffect.SLIME
             effectiveTypes = [PlayerEffect.SWOLLEN]
-            stompForce = JUMP_VELOCITY * 0.8
+
         EnemyTypings.FISH:
             sprite.play("fish")
             damage = 1
@@ -50,31 +54,32 @@ func _physics_process(delta):
     move_and_slide()
 
 func hitbox_area_entered(_body_rid:RID, body:Node2D, _body_shape_index:int, _local_shape_index:int) -> void:
-    print("Hitbox area entered")
-    if body is Mob:
-        body = body as Mob
-        if body.name == "Player":
-            var player = body as Player
-            print("Player hit by enemy")
-            player.HP -= damage
-            if player.HP > 0:
-                player.transformTo(currentEffect)
-            else:
-                player.kill()
+    if not isDead:
+        print("Hitbox area entered")
+        if body is Mob:
+            body = body as Mob
+            if body is Player:
+                var player = body as Player
+                print("Player hit by enemy")
+                player.HP -= damage
+                if player.HP > 0:
+                    player.transformTo(currentEffect)
+                else:
+                    player.kill()
 
 func hurtbox_area_entered(_body_rid:RID, body:Node2D, _body_shape_index:int, _local_shape_index:int) -> void:
     print("Hurtbox area entered")
     if body is Mob:
         body = body as Mob
-        if body.currentEffect in effectiveTypes and body.name == "Player":
+        if body.currentEffect in effectiveTypes and body is Player:
             var player = body as Player
             print("Enemy killed by player")
-            player.velocity.y = stompForce
+            player.velocity.y = JUMP_VELOCITY
             player.HP -= damage
             if player.HP < 0:
                 player.kill()
             kill()
-        elif body.name == "Player":
+        elif body is Player:
             var player = body as Player
             print(body.name + " hit by enemy")
             player.HP -= damage
