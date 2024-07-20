@@ -235,6 +235,7 @@ shape = SubResource("RectangleShape2D_o2kg6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
+texture_repeat = 1
 sprite_frames = SubResource("SpriteFrames_6v0dd")
 animation = &"Idle"
 autoplay = "Idle"

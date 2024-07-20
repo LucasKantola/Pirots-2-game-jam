@@ -5,8 +5,7 @@ extends Node2D
 
 @onready var collider = $Area2D/CollisionShape2D
 @export var maxHeight = 100
-@export var growthRate = 1.1
-@export var defaultOffset := 10.0
+@export var growthRate = 5.0
 
 var currentHeight: float
 
@@ -30,10 +29,12 @@ func bodyEntered(body: Node2D) -> void:
     if body.is_in_group("Drop"):
         if currentHeight < maxHeight:
             var lastHeight = currentHeight
-            currentHeight *= growthRate
-            stalk.position.y -= (currentHeight - lastHeight) / 2
+            currentHeight += growthRate
+
             stalk.texture.region.size.y += currentHeight-lastHeight
             stalk.texture.region.position.y -= (currentHeight - lastHeight)
+
+            stalk.position.y = (roots.texture.get_size().y / 2) - (stalk.texture.get_size().y / 2) - 0.5
 
         for platform in platforms:
             if currentHeight >= platform["position"].y:
@@ -46,8 +47,8 @@ func bodyEntered(body: Node2D) -> void:
 
 func _draw():
     for platform in platforms:
-        if currentHeight >= platform["position"].y - defaultOffset:
-            var bottomPos = Vector2(0, -platform["position"].y + defaultOffset)
+        if currentHeight >= platform["position"].y - abs(platform["position"].y):
+            var bottomPos = Vector2(0, -platform["position"].y + abs(platform["position"].y))
             
             # Calculate the direction vector and the maximum distance the line can grow
             var direction = bottomPos.direction_to(platform["position"])
@@ -56,5 +57,5 @@ func _draw():
             # Calculate the end point of the line based on the max distance
             var endPos = bottomPos + direction * maxDistance
             endPos.y = -endPos.y
-        
-            draw_dashed_line(bottomPos, endPos, Color(11, 88, 110, 1), 3)
+            
+            draw_dashed_line(bottomPos, endPos, Color("#1cb099"), 3)
