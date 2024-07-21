@@ -20,12 +20,12 @@ autostart = true
 position = Vector2(0, -144)
 
 [node name="Room2" parent="." instance=ExtResource("3_p18dm")]
-position = Vector2(347, -10)
+position = Vector2(48, 128)
 
 [node name="Room3" parent="." instance=ExtResource("4_4pqwf")]
-position = Vector2(500, 407)
+position = Vector2(432, -112)
 
 [node name="Player" parent="." instance=ExtResource("5_sj4lu")]
-position = Vector2(64, -16)
+position = Vector2(16, -80)
 
 [connection signal="timeout" from="MainCamera/TempTimer" to="MainCamera" method="debug_switch_room"]
