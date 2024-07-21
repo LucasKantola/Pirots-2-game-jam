@@ -9,7 +9,7 @@ var oldFit: Vector3
 
 func _ready():
     var fit = get_room_fit(currentRoom)
-    position = Vector2(fit.x, fit.y)
+    global_position = Vector2(fit.x, fit.y)
     zoom = Vector2(fit.z, fit.z)
     oldFit = fit
 
@@ -19,7 +19,7 @@ func _process(delta):
     if diffFit != Vector3.ZERO:
         t = clamp(t + delta / transitionTimeSeconds, 0, 1)
         var midFit = oldFit + diffFit * ease(t, -2.0)
-        position = Vector2(midFit.x, midFit.y)
+        global_position = Vector2(midFit.x, midFit.y)
         zoom = Vector2(midFit.z, midFit.z)
         
         if t >= 1:
@@ -35,8 +35,8 @@ func debug_switch_room():
         currentRoom = $"../Room1"
 
 func get_room_fit(room: Node2D) -> Vector3:
-    var position: Vector2 = room.position + room.get_node("RoomArea/RoomShape").position
-    var shape = room.get_node("RoomArea/RoomShape").shape as RectangleShape2D
-    var zoom: float = min(get_viewport().get_visible_rect().size.x / shape.get_rect().size.x,
-            get_viewport().get_visible_rect().size.y / shape.get_rect().size.y)
+    var size = room.get_node("RoomShape").size as Vector2
+    var position: Vector2 = room.get_node("RoomShape").global_position + size / 2
+    var zoom: float = min(get_viewport().get_visible_rect().size.x / size.x,
+            get_viewport().get_visible_rect().size.y / size.y)
     return Vector3(position.x, position.y, zoom)
