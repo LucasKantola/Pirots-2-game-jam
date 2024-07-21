@@ -73,7 +73,6 @@ func _on_door_entered(body_rid, body, body_shape_index, local_shape_index):
     if disabled:
         return
     if body.name == "Player":
-        print("Entering room " + destinationScenePath + " " + ("1" if disabled else "0"))
         get_node("/root/World").enter_door($".")
 
 func _on_door_exited(body_rid, body, body_shape_index, local_shape_index):

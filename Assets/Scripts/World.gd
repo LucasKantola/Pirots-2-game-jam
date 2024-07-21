@@ -32,6 +32,8 @@ func _process(delta):
             room.modulate = modulate
 
 func enter_door(door: Door) -> void:
+    print("Entering room " + door.destinationScenePath)
+    # Intantiate scene
     var scene = load(door.destinationScenePath)
     if not scene is PackedScene:
         print("Failed to load scene: " + door.destinationScenePath)
@@ -47,17 +49,17 @@ func enter_door(door: Door) -> void:
             destinationFaceDoors.append(d)
     var destinationDoor = destinationFaceDoors[door.destinationIndex]
     destinationDoor.disabled = true
-    print("Disabled " + destinationDoor.to_string())
     # Position new room
     newRoom.position = currentRoom.position + door.position - destinationDoor.position
     # Disable current room's doors
     for d in get_tree().get_nodes_in_group("door"):
         if currentRoom.is_ancestor_of(d):
-            print("Disabling " + d.to_string())
             d.disabled = true
-    
+    # Start fading current room
     fadingRooms.append(currentRoom)
+    # Set new room to current room
     currentRoom = newRoom
 
 func exit_door(door: Door) -> void:
-    pass
+    if currentRoom.is_ancestor_of(door):
+        door.disabled = false
