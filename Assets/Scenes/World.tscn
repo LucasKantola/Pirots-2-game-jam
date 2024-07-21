@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxawn4jxmsupm"]
+
+[ext_resource type="Script" path="res://Assets/Scenes/MainCamera.gd" id="1_eu8hu"]
+[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_3p137"]
+[ext_resource type="PackedScene" uid="uid://c7uho47601j00" path="res://Assets/Scenes/Rooms/room_2.tscn" id="3_p18dm"]
+[ext_resource type="PackedScene" uid="uid://cgwt3ffttqnu8" path="res://Assets/Scenes/Rooms/room_3.tscn" id="4_4pqwf"]
+
+[node name="World" type="Node2D"]
+
+[node name="MainCamera" type="Camera2D" parent="." node_paths=PackedStringArray("currentRoom")]
+script = ExtResource("1_eu8hu")
+currentRoom = NodePath("../Room1")
+
+[node name="TempTimer" type="Timer" parent="MainCamera"]
+wait_time = 5.0
+autostart = true
+
+[node name="Room1" parent="." instance=ExtResource("2_3p137")]
+
+[node name="Room2" parent="." instance=ExtResource("3_p18dm")]
+position = Vector2(347, -10)
+
+[node name="Room3" parent="." instance=ExtResource("4_4pqwf")]
+position = Vector2(500, 407)
+
+[connection signal="timeout" from="MainCamera/TempTimer" to="MainCamera" method="debug_switch_room"]
