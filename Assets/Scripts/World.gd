@@ -11,6 +11,7 @@ var currentRoom: Node2D
 var fadingRooms: Array[Node2D]
 
 func _ready():
+    print("World ready")
     currentRoom = $Rooms.get_children()[0]
 
 func _process(delta):

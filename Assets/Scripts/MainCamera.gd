@@ -1,7 +1,6 @@
 extends Camera2D
 
 #region Public variables
-@export var currentRoom: Node2D
 @export var transitionDurationSeconds: float = 1.0
 #region Debug variables
 @export_group("Debug")
@@ -9,21 +8,25 @@ extends Camera2D
 #endregion
 #endregion
 
+#region References
+@onready var world = $".."
+@onready var player = $"../Player"
+#endregion
+
 var t := 0.0
 var oldFit: Vector3
 
-func _ready():
-    if not followPlayer:
-        var fit = get_room_fit(currentRoom)
-        global_position = Vector2(fit.x, fit.y)
-        zoom = Vector2(fit.z, fit.z)
-        oldFit = fit
+func snap_to_room():
+    var fit = get_room_fit(world.currentRoom)
+    global_position = Vector2(fit.x, fit.y)
+    zoom = Vector2(fit.z, fit.z)
+    oldFit = fit
 
 func _process(delta):
     if followPlayer:
-        position = $"../Player".position
+        position = player.position
     else:
-        var fit = get_room_fit(currentRoom)
+        var fit = get_room_fit(world.currentRoom)
         var diffFit = fit - oldFit
         if diffFit != Vector3.ZERO:
             t = clamp(t + delta / transitionDurationSeconds, 0, 1)
