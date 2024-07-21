@@ -2,9 +2,10 @@
 extends SnapPosition
 
 ## A door will send the player to another room when touched.
+class_name Door
 
 #region Exported variables
-@export var enabled: bool = true
+@export var disabled: bool = false
 #region Position variables
 @export_group("Position")
 ## Which face of the room this door is on. Doors will always lead to doors
@@ -29,55 +30,56 @@ extends SnapPosition
 #endregion
 #endregion
 
-func _on_door_area_body_entered(body):
-    if not enabled:
-        return
-    
-    if body.name == "Player":
-        # Load new room
-        var newRoom = load(destinationScenePath)
-        if not newRoom is PackedScene:
-            print("Failed to load scene: " + destinationScenePath)
-            return
-        newRoom = newRoom as PackedScene
-        newRoom.instantiate()
-        # Position new room
-        # TODO
-        # Disable door
-        enabled = false
+func _ready():
+    if not Engine.is_editor_hint():
+        update_shape()
 
 func _process(delta):
     super._process(delta)
     if Engine.is_editor_hint():
-        # Create rect
-        var collision = $DoorArea/CollisionShape2D as CollisionShape2D
-        var rect = RectangleShape2D.new()
-        
-        # Set rect extents
-        rect.extents = Vector2(1, 1)
-        if face == Face.LEFT or face == Face.RIGHT:
-            rect.extents.y *= size
-        else:
-            rect.extents.x *= size
-        rect.extents *= gridSize / 2
-        collision.shape = rect
-        
-        # Set collision position
-        var direction: Vector2
-        match face:
-            Face.LEFT:
-                direction = Vector2(-1, -1)
-            Face.RIGHT:
-                direction = Vector2(1, -1)
-            Face.UP:
-                direction = Vector2(1, -1)
-            Face.DOWN:
-                direction = Vector2(1, 1)
-        collision.position = direction * rect.extents
-        
-        # Set debug color
-        collision.debug_color = debugColor
-        
+        update_shape()
+
+func update_shape():
+    # Create rect
+    var collision = $DoorArea/CollisionShape2D as CollisionShape2D
+    var rect = RectangleShape2D.new()
+    
+    # Set rect extents
+    rect.extents = Vector2(1, 1)
+    if face == Face.LEFT or face == Face.RIGHT:
+        rect.extents.y *= size
+    else:
+        rect.extents.x *= size
+    rect.extents *= gridSize / 2
+    collision.shape = rect
+    
+    # Set collision position
+    var direction: Vector2
+    match face:
+        Face.LEFT:
+            direction = Vector2(-1, -1)
+        Face.RIGHT:
+            direction = Vector2(1, -1)
+        Face.UP:
+            direction = Vector2(1, -1)
+        Face.DOWN:
+            direction = Vector2(1, 1)
+    collision.position = direction * rect.extents
+    
+    # Set debug color
+    collision.debug_color = debugColor 
+
+func _on_door_entered(body_rid, body, body_shape_index, local_shape_index):
+    if disabled:
+        return
+    if body.name == "Player":
+        print("Entering room " + destinationScenePath + " " + ("1" if disabled else "0"))
+        get_node("/root/World").enter_door($".")
+
+func _on_door_exited(body_rid, body, body_shape_index, local_shape_index):
+    if body.name == "Player":
+        get_node("/root/World").exit_door($".")
+
 
 enum Face {
     LEFT,
@@ -85,3 +87,16 @@ enum Face {
     UP,
     DOWN,
 }
+
+var opposite_face: Face:
+    get:
+        match face:
+            Face.LEFT:
+                return Face.RIGHT
+            Face.RIGHT:
+                return Face.LEFT
+            Face.UP:
+                return Face.DOWN
+            Face.DOWN:
+                return Face.UP
+        return Face.LEFT
