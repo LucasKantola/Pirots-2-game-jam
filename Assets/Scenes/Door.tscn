@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3slqhwogcge4"]
+[gd_scene load_steps=3 format=3 uid="uid://b3slqhwogcge4"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Door.gd" id="1_yfg6p"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wyv7v"]
+size = Vector2(16, 32)
 
 [node name="Door" type="Node2D"]
 script = ExtResource("1_yfg6p")
@@ -8,5 +11,8 @@ script = ExtResource("1_yfg6p")
 [node name="DoorArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea"]
+position = Vector2(8, -16)
+shape = SubResource("RectangleShape2D_wyv7v")
+debug_color = Color(0.96, 0.6, 0.26, 0.5)
 
 [connection signal="body_entered" from="DoorArea" to="." method="_on_door_area_body_entered"]
