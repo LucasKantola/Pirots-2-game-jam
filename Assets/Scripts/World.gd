@@ -3,36 +3,77 @@ extends Node2D
 #region Public variables
 #region Rooms variables
 @export_group("Rooms")
-@export_range(0, 10, 0.1, "or_greater") var fadeDurationSeconds := 1.0
+@export_range(0, 1, 0.1, "or_greater") var transitionDurationSeconds := 1.0
 #endregion
+#endregion
+
+#region References
+@onready var player = $Player
 #endregion
 
 var currentRoom: Node2D
 var fadingRooms: Array[Node2D]
+var appearingRooms: Array[Node2D]
 
 func _ready():
-    print("World ready")
     currentRoom = $Rooms.get_children()[0]
 
 func _process(delta):
-    for i in range(fadingRooms.size()):
-        if i >= fadingRooms.size():
-            break
-        var room = fadingRooms[i]
+    # Fading rooms
+    for room in fadingRooms:
         var modulate: Color = room.modulate
-        if fadeDurationSeconds == 0:
+        if transitionDurationSeconds == 0:
             modulate.a = 0
         else:
-            modulate.a -= delta / fadeDurationSeconds
-        if modulate.a <= 0:
-            print("Deleting " + room.to_string())
-            fadingRooms.remove_at(i)
-            room.queue_free()
+            modulate.a = clamp(modulate.a - delta / transitionDurationSeconds, 0, 1)
+        room.modulate = modulate
+        if modulate.a == 0:
+            fadingRooms.erase(room)
+            
+    # Appearing rooms
+    for room in appearingRooms:
+        var modulate: Color = room.modulate
+        if transitionDurationSeconds == 0:
+            modulate.a = 1
         else:
-            room.modulate = modulate
+            modulate.a = clamp(modulate.a + delta / transitionDurationSeconds, 0, 1)
+        room.modulate = modulate
+        if modulate.a == 1:
+            appearingRooms.erase(room)
 
 func enter_door(door: Door) -> void:
     print("Entering room " + door.destinationScenePath)
+    # Create room if needed
+    var destinationExists: bool = not not door.destinationRoom
+    if not destinationExists:
+        print("Instantiating room")
+        createDoorDestination(door)
+    # Get destination door
+    var destinationRoom = door.destinationRoom
+    var destinationDoor = door.destinationDoor
+    # Transition to new room
+    destinationDoor.disabled = true
+    destinationRoom.process_mode = PROCESS_MODE_INHERIT
+    currentRoom.process_mode = PROCESS_MODE_DISABLED
+    
+    fade(currentRoom)
+    if not destinationExists:
+        destinationRoom.modulate.a = 0
+    appear(destinationRoom)
+    
+    currentRoom = destinationRoom
+
+func fade(x: Node2D):
+    fadingRooms.append(x)
+    if x in appearingRooms:
+        appearingRooms.erase(x)
+
+func appear(x: Node2D):
+    appearingRooms.append(x)
+    if x in fadingRooms:
+        fadingRooms.erase(x)
+
+func createDoorDestination(door: Door) -> void:
     # Intantiate scene
     var scene = load(door.destinationScenePath)
     if not scene is PackedScene:
@@ -51,15 +92,9 @@ func enter_door(door: Door) -> void:
     destinationDoor.disabled = true
     # Position new room
     newRoom.position = currentRoom.position + door.position - destinationDoor.position
-    # Disable current room's doors
-    for d in get_tree().get_nodes_in_group("door"):
-        if currentRoom.is_ancestor_of(d):
-            d.disabled = true
-    # Start fading current room
-    fadingRooms.append(currentRoom)
-    # Set new room to current room
-    currentRoom = newRoom
+    
+    door.destinationRoom = newRoom
+    door.destinationDoor = destinationDoor
 
 func exit_door(door: Door) -> void:
-    if currentRoom.is_ancestor_of(door):
-        door.disabled = false
+    door.disabled = false

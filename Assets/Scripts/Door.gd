@@ -30,6 +30,9 @@ class_name Door
 #endregion
 #endregion
 
+var destinationRoom: Node2D
+var destinationDoor: Door
+
 func _ready():
     if not Engine.is_editor_hint():
         update_shape()
