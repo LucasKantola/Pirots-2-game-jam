@@ -11,17 +11,25 @@ var waterParticle: GPUParticles2D
 var spawnEveryXFrames = 5
 var framesSinceSpawn = 0
 
-@export var wallClimbModifier = 0.5
+var wallClimbModifier = 0.5
 var flippedTowardsWall = false
 var wallCheckDistance = 12
 
 var wasInAirLastFrame = false
+var fallenFromY = 0
+
+#region Sound Effects
+var jumpSound: AudioStreamPlayer
+var slimeWalkSound: AudioStreamPlayer
+var slimeTranformSound: AudioStreamPlayer
+var landSound: AudioStreamPlayer
+#endregion
 
 #region Physics Variables
 var timeSinceGround = INF
 var timeSinceJumpPressed = INF
-@export var jumpBufferTime = 0.1
-@export var coyoteTime = 0.1
+var jumpBufferTime = 0.1
+var coyoteTime = 0.1
 #endregion
 #region Effect Variables
 @export var swollenShaderPath: String
@@ -34,6 +42,10 @@ func _ready():
     hitbox = get_node("Hitbox")
     waterParticle = get_node("WaterGun")
     drop = load("res://Assets/Scenes/Drop.tscn")
+    jumpSound = get_node("Jump")
+    slimeWalkSound = get_node("Slime walk")
+    slimeTranformSound = get_node("Slime transform")
+    landSound = get_node("Land")
     #ifall skumma saker händer så säger vi fuck det här
     if not world or not TileMap or not sprite or not hitbox or not waterParticle:
         print("WARNING: Could not find world, tilemap or sprite")
@@ -50,6 +62,11 @@ func _physics_process(delta):
                 if getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Breakable"):
                     tileMap.set_cell(0, tileMap.local_to_map(global_position + pos), -1)
                     velocity.y = JUMP_VELOCITY * 0.7
+
+
+    # Sound effect for landing
+    if is_on_floor() and (position.y - fallenFromY) > 20:
+        landSound.play()
 
     if Input.is_action_pressed("shoot"):
         if currentEffect == PlayerEffect.FISH:
@@ -91,6 +108,7 @@ func _physics_process(delta):
         if (is_on_floor() and timeSinceJumpPressed < jumpBufferTime) or is_on_floor() or timeSinceGround < coyoteTime:
             if currentEffect != PlayerEffect.SLIME:
                 velocity.y = JUMP_VELOCITY
+                jumpSound.play()
             timeSinceJumpPressed = INF
             timeSinceGround = INF
 
@@ -131,8 +149,17 @@ func _physics_process(delta):
         sprite.position = Vector2(0, 0)
         flippedTowardsWall = false
 
+    if velocity != Vector2() and currentEffect == PlayerEffect.SLIME:
+        if not slimeWalkSound.playing:
+            slimeWalkSound.playing = true
+    else:
+        slimeWalkSound.playing = false
+
     addGravity(delta)
-    wasInAirLastFrame = true if not is_on_floor() else false
+    if is_on_floor() and not wasInAirLastFrame:
+        fallenFromY = position.y
+
+    wasInAirLastFrame = !is_on_floor()
     move_and_slide()
 
 func _unhandled_input(event):
@@ -170,7 +197,7 @@ func transformTo(effect: PlayerEffect):
                 sprite.play_backwards("Transform-fish")
             PlayerEffect.SWOLLEN:
                 tween = create_tween()
-                tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.8)
+                tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.8)
                 killTween(tween)
                 sprite.material = null
             PlayerEffect.FIRE:
@@ -183,6 +210,7 @@ func transformTo(effect: PlayerEffect):
             sprite.play("Transform-slime")
             tween = create_tween()
             tween.tween_property($Light, "position", Vector2(0, 11), 0.8)
+            slimeTranformSound.play()
             await sprite.animation_finished
             killTween(tween)
             hitbox.shape.size = Vector2(16, 13)

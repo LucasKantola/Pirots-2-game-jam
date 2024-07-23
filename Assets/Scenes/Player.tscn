@@ -1,13 +1,16 @@
-[gd_scene load_steps=35 format=3 uid="uid://b0wewlor2hl5b"]
+[gd_scene load_steps=38 format=3 uid="uid://b0wewlor2hl5b"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
-[ext_resource type="PackedScene" uid="uid://ciashg2xtq41g" path="res://Assets/Scenes/Drop.tscn" id="2_h4gn0"]
 [ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
 [ext_resource type="Texture2D" uid="uid://cx7kp72ywkbas" path="res://Assets/Sprites/PointLight.png" id="3_kxc3c"]
 [ext_resource type="AudioStream" uid="uid://c362battdachl" path="res://Assets/Sound/Music/untitled.wav" id="5_aa2bu"]
+[ext_resource type="AudioStream" uid="uid://bobpkiqcijur4" path="res://Assets/Sound/SFX/Jump.wav" id="6_72huq"]
+[ext_resource type="AudioStream" uid="uid://chwjimf5nxvly" path="res://Assets/Sound/SFX/Slime walk.wav" id="7_eu0uy"]
+[ext_resource type="AudioStream" uid="uid://beyvv3jbvlf6y" path="res://Assets/Sound/SFX/Land.wav" id="8_10gcx"]
+[ext_resource type="AudioStream" uid="uid://bwx3e538d35f2" path="res://Assets/Sound/SFX/Slime transform.wav" id="8_dxxay"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o2kg6"]
-size = Vector2(16, 29)
+size = Vector2(14, 28)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lflea"]
 atlas = ExtResource("2_oktc3")
@@ -224,14 +227,14 @@ collision_mode = 2
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 z_index = 1
 texture_filter = 1
+scale = Vector2(0.9, 0.9)
 collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_a2euo")
-drop = ExtResource("2_h4gn0")
 swollenShaderPath = "res://Assets/Shaders/Swollen.tres"
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
-position = Vector2(0, 1.5)
+position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_o2kg6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -256,9 +259,19 @@ visibility_rect = Rect2(-1.34873, -28.0804, 144.663, 239.822)
 trail_enabled = true
 trail_lifetime = 0.1
 
-[node name="collisionChecker" type="Node2D" parent="WaterGun"]
-
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_aa2bu")
 autoplay = true
 mix_target = 1
+
+[node name="Jump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_72huq")
+
+[node name="Slime walk" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_eu0uy")
+
+[node name="Slime transform" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_dxxay")
+
+[node name="Land" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_10gcx")
