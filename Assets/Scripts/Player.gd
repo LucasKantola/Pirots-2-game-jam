@@ -23,6 +23,8 @@ var jumpSound: AudioStreamPlayer
 var slimeWalkSound: AudioStreamPlayer
 var slimeTranformSound: AudioStreamPlayer
 var landSound: AudioStreamPlayer
+var waterSound: AudioStreamPlayer
+var explosionSound: AudioStreamPlayer
 #endregion
 
 #region Physics Variables
@@ -42,10 +44,12 @@ func _ready():
     hitbox = get_node("Hitbox")
     waterParticle = get_node("WaterGun")
     drop = load("res://Assets/Scenes/Drop.tscn")
-    jumpSound = get_node("Jump")
-    slimeWalkSound = get_node("Slime walk")
-    slimeTranformSound = get_node("Slime transform")
-    landSound = get_node("Land")
+    jumpSound = get_node("SFX/Jump")
+    slimeWalkSound = get_node("SFX/Slime walk")
+    slimeTranformSound = get_node("SFX/Slime transform")
+    landSound = get_node("SFX/Land")
+    waterSound = get_node("SFX/Water")
+    explosionSound = get_node("SFX/Explosion")
     #ifall skumma saker händer så säger vi fuck det här
     if not world or not TileMap or not sprite or not hitbox or not waterParticle:
         print("WARNING: Could not find world, tilemap or sprite")
@@ -62,6 +66,7 @@ func _physics_process(delta):
                 if getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Breakable"):
                     tileMap.set_cell(0, tileMap.local_to_map(global_position + pos), -1)
                     velocity.y = JUMP_VELOCITY * 0.7
+                    explosionSound.play()
 
 
     # Sound effect for landing
@@ -83,10 +88,13 @@ func _physics_process(delta):
                     dropInstance.direction = Vector2(-1, -0.5)
                 get_parent().add_child(dropInstance)
                 framesSinceSpawn = 0
+                if not waterSound.playing:
+                    waterSound.playing = true
             else:
                 framesSinceSpawn += 1
     else:
         waterParticle.emitting = false
+        waterSound.playing = false
 
     if Input.is_action_just_pressed("up"):
         if not stopInput:
@@ -116,7 +124,7 @@ func _physics_process(delta):
     var direction = Input.get_axis("left", "right")
     if direction:
         if is_on_wall() and currentEffect == PlayerEffect.SLIME:
-            var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + Vector2(wallCheckDistance * direction, 16), "Scalable")
+            var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + Vector2(wallCheckDistance * direction, 12), "Scalable")
             if cellCustom:
                 faceWall(direction)
                 velocity.y = -SPEED * wallClimbModifier
@@ -279,6 +287,7 @@ func getCustomDataFromTileMap(tileMapOfChoice: TileMap, tileMapLayer: int, globa
     if cellData:
         #get the custom data from the cell
         cellCustom = cellData.get_custom_data(dataName)
+        print(cellCustom)
     if cellCustom:
         return cellCustom
     
