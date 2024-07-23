@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dngnfi8yrwdev"]
+[gd_scene load_steps=8 format=3 uid="uid://dngnfi8yrwdev"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/plant.gd" id="1_la7jf"]
 [ext_resource type="PackedScene" uid="uid://bhcusxlsgqawr" path="res://Assets/Scenes/Branch.tscn" id="2_hvq7t"]
@@ -7,8 +7,12 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tnyb6"]
 size = Vector2(20, 8)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4jb4w"]
-atlas = ExtResource("4_4r2m3")
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_aoug2"]
+load_path = "res://.godot/imported/Updated_Tilesheet.png-000fd6e9779f8da053ae1a3de1114703.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_88fu0"]
+resource_local_to_scene = true
+atlas = SubResource("CompressedTexture2D_aoug2")
 region = Rect2(712, 312, 16, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cscvf"]
@@ -33,7 +37,7 @@ shape = SubResource("RectangleShape2D_tnyb6")
 z_index = 2
 texture_filter = 1
 position = Vector2(0, 4)
-texture = SubResource("AtlasTexture_4jb4w")
+texture = SubResource("AtlasTexture_88fu0")
 
 [node name="Roots" type="Sprite2D" parent="."]
 z_index = 2

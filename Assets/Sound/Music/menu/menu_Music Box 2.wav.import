@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bt78nyh3y7law"
+path="res://.godot/imported/menu_Music Box 2.wav-70e19043015cf5125f817dd5ea71254e.sample"
+
+[deps]
+
+source_file="res://Assets/Sound/Music/menu/menu_Music Box 2.wav"
+dest_files=["res://.godot/imported/menu_Music Box 2.wav-70e19043015cf5125f817dd5ea71254e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

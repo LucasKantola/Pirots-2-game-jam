@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://t4f74jggt6jn"
+path="res://.godot/imported/untitled_Spinnarette.wav-efd8bb0e3ab1105f25001e314c85a774.sample"
+
+[deps]
+
+source_file="res://Assets/Sound/Music/untitled project/untitled_Spinnarette.wav"
+dest_files=["res://.godot/imported/untitled_Spinnarette.wav-efd8bb0e3ab1105f25001e314c85a774.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -22,6 +22,11 @@ var currentHeight: float
     }
 ]
 
+var platformScenes: Array = []
+
+func _process(delta):
+    stalk.position.y = (roots.texture.get_size().y / 2) - (stalk.texture.get_size().y / 2) - 0.5
+
 func _ready():
     currentHeight = stalk.get_rect().size.y
 
@@ -34,14 +39,12 @@ func bodyEntered(body: Node2D) -> void:
             stalk.texture.region.size.y += currentHeight-lastHeight
             stalk.texture.region.position.y -= (currentHeight - lastHeight)
 
-            stalk.position.y = (roots.texture.get_size().y / 2) - (stalk.texture.get_size().y / 2) - 0.5
-
         for platform in platforms:
             if currentHeight >= platform["position"].y:
                 if not platform["rendered"]:
                     platform["rendered"] = true
                     var platformScene = branchScene.instantiate()
-                    platformScene.position = Vector2(platform["position"].x, platform["position"].y * -1)
+                    platformScene.set_deferred("position", Vector2(platform["position"].x, platform["position"].y * -1))
                     add_child(platformScene)
     queue_redraw()
 

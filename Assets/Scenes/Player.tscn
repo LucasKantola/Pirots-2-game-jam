@@ -1,9 +1,10 @@
-[gd_scene load_steps=34 format=3 uid="uid://b0wewlor2hl5b"]
+[gd_scene load_steps=35 format=3 uid="uid://b0wewlor2hl5b"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
 [ext_resource type="PackedScene" uid="uid://ciashg2xtq41g" path="res://Assets/Scenes/Drop.tscn" id="2_h4gn0"]
 [ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
 [ext_resource type="Texture2D" uid="uid://cx7kp72ywkbas" path="res://Assets/Sprites/PointLight.png" id="3_kxc3c"]
+[ext_resource type="AudioStream" uid="uid://c362battdachl" path="res://Assets/Sound/Music/untitled.wav" id="5_aa2bu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o2kg6"]
 size = Vector2(16, 29)
@@ -256,3 +257,8 @@ trail_enabled = true
 trail_lifetime = 0.1
 
 [node name="collisionChecker" type="Node2D" parent="WaterGun"]
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_aa2bu")
+autoplay = true
+mix_target = 1
