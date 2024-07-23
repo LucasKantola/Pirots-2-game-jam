@@ -60,13 +60,13 @@ func update_shape():
     var direction: Vector2
     match face:
         Face.LEFT:
-            direction = Vector2(-1, -1)
+            direction = Vector2(-.9, -1)
         Face.RIGHT:
-            direction = Vector2(1, -1)
+            direction = Vector2(.9, -1)
         Face.UP:
-            direction = Vector2(1, -1)
+            direction = Vector2(1, -.9)
         Face.DOWN:
-            direction = Vector2(1, 1)
+            direction = Vector2(1, .9)
     collision.position = direction * rect.extents
     
     # Set debug color
@@ -82,6 +82,17 @@ func _on_door_exited(body_rid, body, body_shape_index, local_shape_index):
     if body.name == "Player":
         get_node("/root/World").exit_door($".")
 
+func check_for_destination() -> bool:
+    if destinationRoom and destinationDoor:
+        return true
+    
+    for area in $DoorArea.get_overlapping_areas():
+        var parent = area.get_parent()
+        if parent is Door:
+            destinationDoor = parent
+            destinationRoom = parent.get_parent()
+            return true
+    return false
 
 enum Face {
     LEFT,

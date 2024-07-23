@@ -19,12 +19,12 @@ func _ready():
     $MainCamera.snap_to_room()
 
 func enter_door(door: Door) -> void:
-    print("Entering room " + door.destinationScenePath)
+    print("\nEntering room " + door.destinationScenePath)
     # Create room if needed
-    var destinationExists: bool = not not door.destinationRoom
+    var destinationExists: bool = door.check_for_destination()
     if not destinationExists:
         print("Instantiating room")
-        createDoorDestination(door)
+        generate_door_destination(door)
     # Get destination door
     var destinationRoom = door.destinationRoom
     var destinationDoor = door.destinationDoor
@@ -34,8 +34,10 @@ func enter_door(door: Door) -> void:
     
     currentRoom = destinationRoom
     $MainCamera.targetRoom = currentRoom
+    
+    print("Total rooms: %s" % $Rooms.get_children().size())
 
-func createDoorDestination(door: Door) -> void:
+func generate_door_destination(door: Door) -> void:
     # Intantiate scene
     var scene = load(door.destinationScenePath)
     if not scene is PackedScene:
