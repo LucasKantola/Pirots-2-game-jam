@@ -24,6 +24,10 @@ func _process(delta):
             # Done appearing
             transitionState = TransitionState.NONE
             t = 1.0
+            # Enable doors
+            for door in get_tree().get_nodes_in_group("door"):
+                if $".".is_ancestor_of(door):
+                    door.disabled = false
     elif transitionState == TransitionState.DISAPPEARING:
         if transitionDurationSeconds == 0:
             t = 0.0
@@ -31,20 +35,26 @@ func _process(delta):
             t -= delta / transitionDurationSeconds
         if t <= 0.0:
             # Done disappearing
-            process_mode = PROCESS_MODE_DISABLED
             transitionState = TransitionState.NONE
             t = 0.0
+            process_mode = PROCESS_MODE_DISABLED
     
     set_deferred("modulate", Color(modulate, t))
     
 func disappear():
+    if t == 0.0:
+        t = 1.0
     transitionState = TransitionState.DISAPPEARING
-    # TODO: Disable colliders
+    # Disable doors
+    for door in get_tree().get_nodes_in_group("door"):
+        if $".".is_ancestor_of(door):
+            door.disabled = true
 
 func appear():
+    if t == 1.0:
+        t = 0.0
     process_mode = PROCESS_MODE_INHERIT
     transitionState = TransitionState.APPEARING
-    # TODO: Enable colliders
 
 enum TransitionState {
     NONE,

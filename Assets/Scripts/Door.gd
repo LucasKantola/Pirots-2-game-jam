@@ -54,19 +54,19 @@ func update_shape():
     else:
         rect.extents.x *= size
     rect.extents *= gridSize / 2
-    collision.shape = rect
+    collision.set_deferred("shape", rect)
     
     # Set collision position
     var direction: Vector2
     match face:
         Face.LEFT:
-            direction = Vector2(-.9, -1)
+            direction = Vector2(-1, -1)
         Face.RIGHT:
-            direction = Vector2(.9, -1)
+            direction = Vector2(1, -1)
         Face.UP:
-            direction = Vector2(1, -.9)
+            direction = Vector2(1, -1)
         Face.DOWN:
-            direction = Vector2(1, .9)
+            direction = Vector2(1, 1)
     collision.position = direction * rect.extents
     
     # Set debug color
