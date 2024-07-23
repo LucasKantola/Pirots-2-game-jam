@@ -1,12 +1,11 @@
 @tool
-extends Node2D
+extends SnapPosition
 
-@export var gridSize: int = 1
-
-var previousExtents
+class_name SnapArea
 
 func _process(delta):
     if Engine.is_editor_hint():
+        # Snap to grid
         var rect = $".".shape as RectangleShape2D
         var position = $".".position
         
@@ -19,16 +18,7 @@ func _process(delta):
         var centerX = (a.x + b.x) / 2
         var centerY = (a.y + b.y) / 2
         
-        if previousExtents != rect.extents:
-            rect.extents = Vector2(width / 2, height / 2)
-        previousExtents = rect.extents
+        rect.extents = Vector2(width / 2, height / 2)
         $".".shape = rect
-        $".".position = Vector2(centerX, centerY)
-    
-func snap_vector_to_grid(value: Vector2) -> Vector2:
-    return Vector2(snap_to_grid(value.x), snap_to_grid(value.y))
-    
-func snap_to_grid(value: float) -> float:
-    var fract = fmod(value, gridSize)
-    var t = floor(value / gridSize) + round(fract / gridSize)
-    return t * gridSize
+        position = Vector2(centerX, centerY)
+        $".".position = position

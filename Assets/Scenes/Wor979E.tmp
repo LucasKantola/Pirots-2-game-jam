@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1jppi031k6d5"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/World.gd" id="1_3haea"]
+[ext_resource type="Script" path="res://Assets/Scripts/MainCamera.gd" id="1_eu8hu"]
+[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_3p137"]
+[ext_resource type="PackedScene" uid="uid://b0wewlor2hl5b" path="res://Assets/Scenes/Player.tscn" id="5_sj4lu"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_3haea")
+
+[node name="Rooms" type="Node2D" parent="."]
+
+[node name="Room1" parent="Rooms" instance=ExtResource("2_3p137")]
+position = Vector2(0, -144)
+
+[node name="Player" parent="." instance=ExtResource("5_sj4lu")]
+position = Vector2(65, -16)
+
+[node name="MainCamera" type="Camera2D" parent="."]
+script = ExtResource("1_eu8hu")
+
+[connection signal="ready" from="." to="MainCamera" method="snap_to_room"]
