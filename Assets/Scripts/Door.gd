@@ -30,7 +30,7 @@ class_name Door
 #endregion
 #endregion
 
-var destinationRoom: Node2D
+var destinationRoom: Room
 var destinationDoor: Door
 
 func _ready():

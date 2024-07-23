@@ -11,35 +11,10 @@ extends Node2D
 @onready var player = $Player
 #endregion
 
-var currentRoom: Node2D
-var fadingRooms: Array[Node2D]
-var appearingRooms: Array[Node2D]
+var currentRoom: Room
 
 func _ready():
-    currentRoom = $Rooms.get_children()[0]
-
-func _process(delta):
-    # Fading rooms
-    for room in fadingRooms:
-        var modulate: Color = room.modulate
-        if transitionDurationSeconds == 0:
-            modulate.a = 0
-        else:
-            modulate.a = clamp(modulate.a - delta / transitionDurationSeconds, 0, 1)
-        room.modulate = modulate
-        if modulate.a == 0:
-            fadingRooms.erase(room)
-            
-    # Appearing rooms
-    for room in appearingRooms:
-        var modulate: Color = room.modulate
-        if transitionDurationSeconds == 0:
-            modulate.a = 1
-        else:
-            modulate.a = clamp(modulate.a + delta / transitionDurationSeconds, 0, 1)
-        room.modulate = modulate
-        if modulate.a == 1:
-            appearingRooms.erase(room)
+    currentRoom = $Rooms.get_children()[0] as Room
 
 func enter_door(door: Door) -> void:
     print("Entering room " + door.destinationScenePath)
@@ -52,26 +27,10 @@ func enter_door(door: Door) -> void:
     var destinationRoom = door.destinationRoom
     var destinationDoor = door.destinationDoor
     # Transition to new room
-    destinationDoor.disabled = true
-    destinationRoom.process_mode = PROCESS_MODE_INHERIT
-    currentRoom.process_mode = PROCESS_MODE_DISABLED
-    
-    fade(currentRoom)
-    if not destinationExists:
-        destinationRoom.modulate.a = 0
-    appear(destinationRoom)
+    currentRoom.disappear()
+    destinationRoom.appear()
     
     currentRoom = destinationRoom
-
-func fade(x: Node2D):
-    fadingRooms.append(x)
-    if x in appearingRooms:
-        appearingRooms.erase(x)
-
-func appear(x: Node2D):
-    appearingRooms.append(x)
-    if x in fadingRooms:
-        fadingRooms.erase(x)
 
 func createDoorDestination(door: Door) -> void:
     # Intantiate scene
