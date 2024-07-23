@@ -48,3 +48,8 @@ destinationScenePath = "res://Assets/Scenes/Rooms/room_2.tscn"
 position = Vector2(128, 160)
 face = 3
 destinationScenePath = "res://Assets/Scenes/Rooms/room_2.tscn"
+
+[node name="UpDoor" parent="." instance=ExtResource("5_kkj2g")]
+position = Vector2(32, 0)
+face = 2
+destinationScenePath = "res://Assets/Scenes/Rooms/room_2.tscn"

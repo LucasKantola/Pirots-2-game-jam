@@ -15,6 +15,8 @@ var currentRoom: Room
 
 func _ready():
     currentRoom = $Rooms.get_children()[0] as Room
+    $MainCamera.targetRoom = currentRoom
+    $MainCamera.snap_to_room()
 
 func enter_door(door: Door) -> void:
     print("Entering room " + door.destinationScenePath)
@@ -31,6 +33,7 @@ func enter_door(door: Door) -> void:
     destinationRoom.appear()
     
     currentRoom = destinationRoom
+    $MainCamera.targetRoom = currentRoom
 
 func createDoorDestination(door: Door) -> void:
     # Intantiate scene

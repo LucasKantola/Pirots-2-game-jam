@@ -18,5 +18,3 @@ position = Vector2(65, -16)
 
 [node name="MainCamera" type="Camera2D" parent="."]
 script = ExtResource("1_eu8hu")
-
-[connection signal="ready" from="." to="MainCamera" method="snap_to_room"]
