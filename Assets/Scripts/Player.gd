@@ -63,86 +63,90 @@ func _physics_process(delta):
                 Vector2(8, 24)
             ]
             for pos in checkPositions:
-                draw_line(Vector2(0,0), pos, Color.BLUE, 5)
                 if getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Breakable"):
                     tileMap.set_cell(0, tileMap.local_to_map(global_position + pos), -1)
                     velocity.y = JUMP_VELOCITY * 0.7
                     explosionSound.play()
 
+
     # Sound effect for landing
     if is_on_floor() and (position.y - fallenFromY) > 20:
         landSound.play()
-    if not stopInput:
-        if Input.is_action_pressed("shoot"):
-            if currentEffect == PlayerEffect.FISH:
-                waterParticle.emitting = true
-                if framesSinceSpawn >= spawnEveryXFrames:	
-                    var dropInstance = drop.instantiate()
-                    dropInstance.speed = 300
-                    dropInstance.gravity = 200
-                    if not hflipped:
-                        dropInstance.position = position + Vector2(7, -9)
-                        dropInstance.direction = Vector2(1, -0.5)
-                    else:
-                        dropInstance.position = position + Vector2(-7, -9)
-                        dropInstance.direction = Vector2(-1, -0.5)
-                    get_parent().add_child(dropInstance)
-                    framesSinceSpawn = 0
-                    if not waterSound.playing:
-                        waterSound.playing = true
+
+    if Input.is_action_pressed("shoot"):
+        if currentEffect == PlayerEffect.FISH:
+            waterParticle.emitting = true
+            if framesSinceSpawn >= spawnEveryXFrames:	
+                var dropInstance = drop.instantiate()
+                dropInstance.speed = 300
+                dropInstance.gravity = 200
+                if not hflipped:
+                    dropInstance.position = position + Vector2(7, -9)
+                    dropInstance.direction = Vector2(1, -0.5)
                 else:
-                    framesSinceSpawn += 1
-        else:
-            waterParticle.emitting = false
-            waterSound.playing = false
+                    dropInstance.position = position + Vector2(-7, -9)
+                    dropInstance.direction = Vector2(-1, -0.5)
+                get_parent().add_child(dropInstance)
+                framesSinceSpawn = 0
+                if not waterSound.playing:
+                    waterSound.playing = true
+            else:
+                framesSinceSpawn += 1
+    else:
+        waterParticle.emitting = false
+        waterSound.playing = false
 
-        if Input.is_action_just_pressed("up"):
-            if not stopInput:
-                timeSinceJumpPressed = 0.0
-        else:
-            timeSinceJumpPressed += delta
-        
-        if Input.is_action_pressed("down"):
-            set_collision_mask_value(5, false)
-        else: 
-            set_collision_mask_value(5, true)
+    if Input.is_action_just_pressed("up"):
+        if not stopInput:
+            timeSinceJumpPressed = 0.0
+    else:
+        timeSinceJumpPressed += delta
+    
+    if Input.is_action_pressed("down"):
+        set_collision_mask_value(5, false)
+    else: 
+        set_collision_mask_value(5, true)
 
-        if not is_on_floor():
-            timeSinceGround += delta
-        else:
-            timeSinceGround = 0.0
-        
-        if timeSinceJumpPressed < jumpBufferTime:
-            if (is_on_floor() and timeSinceJumpPressed < jumpBufferTime) or is_on_floor() or timeSinceGround < coyoteTime:
-                if currentEffect != PlayerEffect.SLIME:
-                    velocity.y = JUMP_VELOCITY
-                    jumpSound.play()
-                timeSinceJumpPressed = INF
-                timeSinceGround = INF
+    if not is_on_floor():
+        timeSinceGround += delta
+    else:
+        timeSinceGround = 0.0
+    
+    if timeSinceJumpPressed < jumpBufferTime:
+        if (is_on_floor() and timeSinceJumpPressed < jumpBufferTime) or is_on_floor() or timeSinceGround < coyoteTime:
+            if currentEffect != PlayerEffect.SLIME:
+                velocity.y = JUMP_VELOCITY
+                jumpSound.play()
+            timeSinceJumpPressed = INF
+            timeSinceGround = INF
 
-        #Left right movement from the axis
-        var direction = Input.get_axis("left", "right")
-        if direction != 0:
-            if is_on_wall() and currentEffect == PlayerEffect.SLIME:
-                var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + Vector2(wallCheckDistance * direction, 12), "Scalable")
-                if cellCustom:
-                    faceWall(direction)
-                    velocity.y = -SPEED * wallClimbModifier
+    #Left right movement from the axis
+    var direction = Input.get_axis("left", "right")
+    if direction:
+        if is_on_wall() and currentEffect == PlayerEffect.SLIME:
+            var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + Vector2(wallCheckDistance * direction, 12), "Scalable")
+            if cellCustom:
+                faceWall(direction)
+                velocity.y = -SPEED * wallClimbModifier
 
-            velocity.x = direction * SPEED
+        velocity.x = direction * SPEED
 
-            if direction == 1:
-                    sprite.flip_h = false
-                    hflipped = false
-                    waterParticle.process_material.set("direction", Vector2(1, -0.5))
-                    waterParticle.position = Vector2(7, -9)
-            elif direction == -1:
-                    sprite.flip_h = true
-                    hflipped = true
-                    waterParticle.process_material.set("direction", Vector2(-1, -0.5))
-                    waterParticle.position = Vector2(-7, -9)
-        else:
-            velocity.x = move_toward(velocity.x, 0, SPEED)
+        if direction == 1:
+                sprite.flip_h = false
+                hflipped = false
+                waterParticle.process_material.set("direction", Vector2(1, -0.5))
+                waterParticle.position = Vector2(7, -9)
+        elif direction == -1:
+                sprite.flip_h = true
+                hflipped = true
+                waterParticle.process_material.set("direction", Vector2(-1, -0.5))
+                waterParticle.position = Vector2(-7, -9)
+    else:
+        velocity.x = move_toward(velocity.x, 0, SPEED)
+
+
+    if stopInput:
+        velocity.x = 0
 
     if not is_on_wall() and flippedTowardsWall:
         var tween = create_tween()
