@@ -38,13 +38,6 @@ var coyoteTime = 0.1
 #endregion
 #endregion
 
-var checkPositions = [
-    Vector2(-8, 24),
-    Vector2(8, 24)
-]
-
-var checkedPositions = []
-
 func _ready():
     world = get_node("/root/World")
     tileMap = get_node("/root/World/Teräng")
@@ -69,6 +62,10 @@ func _physics_process(delta):
         #Landed?
         if wasInAirLastFrame and is_on_floor():
             #Check the preset offsets for a block that has the breakanble custom data
+            var checkPositions = [
+                Vector2(-6, 32),
+                Vector2(6, 32)
+            ]
             for pos in checkPositions:
                 if getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Breakable"):
                     tileMap.set_cell(0, tileMap.local_to_map(global_position + pos), -1)
@@ -296,7 +293,6 @@ func faceWall(direction: float):
 ### The getCustomDataFromTileMap function retrieves custom data from a specific tile in the tilemap. It converts the global position to a tile position and retrieves the cell data. If the cell data exists, it retrieves the custom data with the specified name. If the custom data exists, it is returned; otherwise, null is returned.
 func getCustomDataFromTileMap(tileMapOfChoice: TileMap, tileMapLayer: int, globalPositon: Vector2, dataName: String):
     var cellCustom
-    checkedPositions.append(globalPositon)
     var tilePos = tileMapOfChoice.local_to_map(globalPositon)
     #get the celldata from the tilemap 
     var cellData = tileMapOfChoice.get_cell_tile_data(tileMapLayer, tilePos)
@@ -307,3 +303,7 @@ func getCustomDataFromTileMap(tileMapOfChoice: TileMap, tileMapLayer: int, globa
         return cellCustom
     
     return null
+
+
+func _draw():
+    draw_rect(Rect2(hitbox.position.x - hitbox.shape.size.x / 2, hitbox.position.y - hitbox.shape.size.y / 2, hitbox.shape.size.x, hitbox.shape.size.y), Color(0, 1, 0, 0.5))
