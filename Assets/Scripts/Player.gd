@@ -150,6 +150,9 @@ func _physics_process(delta):
 
     if stopInput:
         velocity.x = 0
+        
+    if Input.is_action_pressed("debug_sprint"):
+        velocity.x *= 3
 
     if not is_on_wall() and flippedTowardsWall:
         var tween = create_tween()
