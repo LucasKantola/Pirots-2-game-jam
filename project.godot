@@ -93,7 +93,3 @@ reset={
 2d_physics/layer_3="Doors"
 2d_physics/layer_5="oneWay"
 2d_physics/layer_32="Water Particle"
-
-[rendering]
-
-environment/defaults/default_clear_color=Color(0.180392, 0.133333, 0.184314, 1)

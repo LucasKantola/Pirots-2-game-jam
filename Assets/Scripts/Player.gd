@@ -3,6 +3,7 @@ extends Mob
 class_name Player
 
 #region Player Variables
+var direction = 0
 var hflipped = false
 var stopInput = false
 var hitbox: CollisionShape2D
@@ -51,7 +52,7 @@ func _ready():
     waterSound = get_node("SFX/Water")
     explosionSound = get_node("SFX/Explosion")
     #ifall skumma saker händer så säger vi fuck det här
-    if not world or not TileMap or not sprite or not hitbox or not waterParticle:
+    if not world or not sprite or not hitbox or not waterParticle:
         print("WARNING: Could not find world, tilemap or sprite")
         get_tree().quit() 
 
@@ -125,7 +126,7 @@ func _physics_process(delta):
             timeSinceGround = INF
 
     #Left right movement from the axis
-    var direction = Input.get_axis("left", "right")
+    direction = Input.get_axis("left", "right")
     if direction and not stopInput:
         if is_on_wall() and currentEffect == PlayerEffect.SLIME:
             var xPos = wallCheckDistance * direction
