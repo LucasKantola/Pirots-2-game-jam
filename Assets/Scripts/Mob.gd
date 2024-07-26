@@ -15,6 +15,8 @@ enum PlayerEffect {
 #region Physics Variables
 @export var JUMP_VELOCITY := -300.0
 @export var SPEED := 200.0
+@export var floorFriction := 2.0
+@export var airFriction := 0.05
 #endregion
 #region Effect Variables
 var currentEffect := PlayerEffect.NONE

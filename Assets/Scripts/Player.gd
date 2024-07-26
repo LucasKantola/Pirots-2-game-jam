@@ -141,8 +141,12 @@ func _physics_process(delta):
                 hflipped = true
                 waterParticle.process_material.set("direction", Vector2(-1, -0.5))
                 waterParticle.position = Vector2(-7, -9)
+        
+        velocity.x = clamp(velocity.x, -SPEED, SPEED)
+    elif is_on_floor():
+        velocity.x /= 1 + floorFriction
     else:
-        velocity.x = move_toward(velocity.x, 0, SPEED)
+        velocity.x /= 1 + airFriction
 
 
     if stopInput:
