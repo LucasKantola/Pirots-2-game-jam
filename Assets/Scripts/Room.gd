@@ -7,6 +7,16 @@ class_name Room
 @export_group("Transition")
 @export_range(0, 3, 0.1, "or_greater") var transitionDurationSeconds: float = 1.0
 #endregion
+#region Camera variables
+@export_group("Camera")
+### If the camera should follow the player instead of the room.
+@export var followPlayer := false
+### How much to zoom in when the followPlayer is true. 1.0 means the room will
+### fill the viewport.
+@export_range(0.1, 3, 0.1, "or_greater") var followZoom: float = 1.0
+### If the camera should be limited to the edges of the room.
+@export var followLimitByRoomShape := true
+#endregion
 #endregion
 
 var transitionState := TransitionState.NONE
