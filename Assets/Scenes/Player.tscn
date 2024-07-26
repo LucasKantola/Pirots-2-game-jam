@@ -11,7 +11,8 @@
 [ext_resource type="AudioStream" uid="uid://st52al50h05t" path="res://Assets/Sound/SFX/Water flowing.wav" id="9_sh38a"]
 [ext_resource type="AudioStream" uid="uid://b1j2r0jf3axi7" path="res://Assets/Sound/SFX/explosion.wav" id="10_kjvnr"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_o2kg6"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ym5u1"]
+resource_local_to_scene = true
 size = Vector2(14, 28)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lflea"]
@@ -237,7 +238,7 @@ swollenShaderPath = "res://Assets/Shaders/Swollen.tres"
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
-shape = SubResource("RectangleShape2D_o2kg6")
+shape = SubResource("RectangleShape2D_ym5u1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1

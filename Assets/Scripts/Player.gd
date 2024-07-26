@@ -38,6 +38,13 @@ var coyoteTime = 0.1
 #endregion
 #endregion
 
+var checkPositions = [
+    Vector2(-8, 24),
+    Vector2(8, 24)
+]
+
+var checkedPositions = []
+
 func _ready():
     world = get_node("/root/World")
     tileMap = get_node("/root/World/Teräng")
@@ -56,12 +63,12 @@ func _ready():
         get_tree().quit() 
 
 func _physics_process(delta):
+    queue_redraw()
+    #Logic for stomping blocks in the swollen form
     if currentEffect == PlayerEffect.SWOLLEN:
+        #Landed?
         if wasInAirLastFrame and is_on_floor():
-            var checkPositions = [
-                Vector2(-8, 24),
-                Vector2(8, 24)
-            ]
+            #Check the preset offsets for a block that has the breakanble custom data
             for pos in checkPositions:
                 if getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Breakable"):
                     tileMap.set_cell(0, tileMap.local_to_map(global_position + pos), -1)
@@ -124,10 +131,16 @@ func _physics_process(delta):
     var direction = Input.get_axis("left", "right")
     if direction and not stopInput:
         if is_on_wall() and currentEffect == PlayerEffect.SLIME:
-            var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + Vector2(wallCheckDistance * direction, 12), "Scalable")
-            if cellCustom:
-                faceWall(direction)
-                velocity.y = -SPEED * wallClimbModifier
+            var xPos = wallCheckDistance * direction
+            var checkPositionsSlime = [
+                Vector2(xPos, 14),
+                Vector2(xPos, 8),
+            ]
+            for pos in checkPositionsSlime:
+                var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Scalable")
+                if cellCustom:
+                    faceWall(direction)
+                    velocity.y = -SPEED * wallClimbModifier
         velocity.x = direction * SPEED
 
         if direction == 1:
@@ -148,9 +161,6 @@ func _physics_process(delta):
         velocity.x /= 1 + airFriction
 
 
-    if stopInput:
-        velocity.x = 0
-        
     if Input.is_action_pressed("debug_sprint"):
         velocity.x *= 3
 
@@ -273,12 +283,11 @@ func faceWall(direction: float):
         var tween = create_tween()  
         if direction < 0.5:
             tween.tween_property(sprite, "rotation", PI/2, 0.05)
-            sprite.position = Vector2(8, 2)
+            sprite.position = Vector2(8, 9)
             
         elif direction > 0.5:
             tween.tween_property(sprite, "rotation", -PI/2, 0.05)
-            sprite.position = Vector2(-8, 2)
-
+            sprite.position = Vector2(-8, 9)
         if tween:
             await tween.finished
             tween.kill()
@@ -287,13 +296,13 @@ func faceWall(direction: float):
 ### The getCustomDataFromTileMap function retrieves custom data from a specific tile in the tilemap. It converts the global position to a tile position and retrieves the cell data. If the cell data exists, it retrieves the custom data with the specified name. If the custom data exists, it is returned; otherwise, null is returned.
 func getCustomDataFromTileMap(tileMapOfChoice: TileMap, tileMapLayer: int, globalPositon: Vector2, dataName: String):
     var cellCustom
+    checkedPositions.append(globalPositon)
     var tilePos = tileMapOfChoice.local_to_map(globalPositon)
     #get the celldata from the tilemap 
     var cellData = tileMapOfChoice.get_cell_tile_data(tileMapLayer, tilePos)
     if cellData:
         #get the custom data from the cell
         cellCustom = cellData.get_custom_data(dataName)
-        print(cellCustom)
     if cellCustom:
         return cellCustom
     
