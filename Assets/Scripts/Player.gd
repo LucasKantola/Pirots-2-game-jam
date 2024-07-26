@@ -12,7 +12,7 @@ var waterParticle: GPUParticles2D
 var spawnEveryXFrames = 5
 var framesSinceSpawn = 0
 
-var wallClimbModifier = 0.5
+var wallClimbModifier = 0.8
 var flippedTowardsWall = false
 var wallCheckDistance = 12
 
