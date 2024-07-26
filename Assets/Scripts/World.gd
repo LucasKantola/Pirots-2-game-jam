@@ -69,7 +69,6 @@ func enter_door(door: Door) -> void:
     
     player.stopInput = false
     if door.face == Door.Face.UP:
-        # TODO: Does not work because player movement script overrides x velocity every frame
         velocity = Vector2(upExitForwardVelocity * (-1 if player.hflipped else 1), upExitVelocity)
     player.velocity = velocity
     player.move_and_slide()

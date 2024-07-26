@@ -122,13 +122,12 @@ func _physics_process(delta):
 
     #Left right movement from the axis
     var direction = Input.get_axis("left", "right")
-    if direction:
+    if direction and not stopInput:
         if is_on_wall() and currentEffect == PlayerEffect.SLIME:
             var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + Vector2(wallCheckDistance * direction, 12), "Scalable")
             if cellCustom:
                 faceWall(direction)
                 velocity.y = -SPEED * wallClimbModifier
-
         velocity.x = direction * SPEED
 
         if direction == 1:
