@@ -19,6 +19,8 @@ var currentRoom: Room
 
 func _ready():
     currentRoom = $Rooms.get_children()[0] as Room
+    for room in $Rooms.get_children().slice(1):
+        (room as Room).disappear_instant()
     playerHitbox = player.get_node("Hitbox")
     $MainCamera.targetRoom = currentRoom
     $MainCamera.snap_to_room()

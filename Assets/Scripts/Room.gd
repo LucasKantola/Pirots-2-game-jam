@@ -56,6 +56,14 @@ func appear():
     process_mode = PROCESS_MODE_INHERIT
     transitionState = TransitionState.APPEARING
 
+func disappear_instant():
+    disappear()
+    t = 0.0
+
+func appear_instant():
+    appear()
+    t = 1.0
+
 enum TransitionState {
     NONE,
     APPEARING,
