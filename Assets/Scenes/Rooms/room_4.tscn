@@ -1,9 +1,7 @@
-[gd_scene load_steps=20 format=3 uid="uid://cl5xs8kextntn"]
+[gd_scene load_steps=18 format=3 uid="uid://cl5xs8kextntn"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_cuoqx"]
-[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_grk46"]
 [ext_resource type="PackedScene" uid="uid://b0wewlor2hl5b" path="res://Assets/Scenes/Player.tscn" id="3_qniiw"]
-[ext_resource type="Script" path="res://Assets/Scripts/RoomCamera.gd" id="3_ys7dx"]
 [ext_resource type="Script" path="res://Assets/Scripts/SnapArea.gd" id="4_gvtr6"]
 [ext_resource type="Texture2D" uid="uid://c7k6ojhpnmrk3" path="res://Assets/Sprites/TileSheet.png" id="5_vs41k"]
 [ext_resource type="Texture2D" uid="uid://fq6s30jbt68e" path="res://Assets/Sprites/brackeys_platformer_assets/sprites/world_tileset.png" id="6_t617k"]
@@ -1887,10 +1885,6 @@ sources/2 = SubResource("TileSetAtlasSource_2ajxg")
 [node name="World" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_cuoqx")
-right = ExtResource("2_grk46")
-
-[node name="RoomCamera" type="Camera2D" parent="."]
-script = ExtResource("3_ys7dx")
 
 [node name="RoomArea" type="Area2D" parent="."]
 
@@ -1898,7 +1892,6 @@ script = ExtResource("3_ys7dx")
 position = Vector2(-144, -216)
 shape = SubResource("RectangleShape2D_xr1fm")
 script = ExtResource("4_gvtr6")
-gridSize = 16
 
 [node name="Bakgrund" type="TileMap" parent="."]
 z_index = -1
@@ -1918,6 +1911,9 @@ layer_0/tile_data = PackedInt32Array(-524309, 1507330, 27, -524308, 1572866, 27,
 
 [node name="Player" parent="." instance=ExtResource("3_qniiw")]
 position = Vector2(-194, -206)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(3, 3)
 
 [node name="Plant" parent="." instance=ExtResource("9_4ifuy")]
 position = Vector2(-48, -157)

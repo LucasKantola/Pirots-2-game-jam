@@ -6,6 +6,13 @@ extends RigidBody2D
 @export var gravity: float = 1000.0
 @export var dragPercentage: float = 63.0
 @export var lifetime: float = 1.0
+@export var gravityDisabled: bool = false
+@export var dropType: DropType
+
+enum DropType {
+    WATER,
+    LAVA
+}
 
 var timer: Timer
 
@@ -16,6 +23,7 @@ func _ready():
     timer.wait_time = lifetime
     timer.connect("timeout", Callable(self, "_onTimerTimeout"))
     timer.start()
+    gravity_scale = 0 if gravityDisabled else 1
 
 func _physics_process(delta):
     velocity.y += gravity * delta

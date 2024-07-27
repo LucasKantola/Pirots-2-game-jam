@@ -8,6 +8,7 @@ var hflipped = false
 var stopInput = false
 var hitbox: CollisionShape2D
 var waterParticle: GPUParticles2D
+var fireParticle: GPUParticles2D
 @export var drop: PackedScene
 var spawnEveryXFrames = 5
 var framesSinceSpawn = 0
@@ -18,6 +19,9 @@ var wallCheckDistance = 12
 
 var wasInAirLastFrame = false
 var fallenFromY = 0
+
+var slowdownWhileShooting = 0.5
+var slowedDown = false
 
 #region Sound Effects
 var jumpSound: AudioStreamPlayer
@@ -44,6 +48,7 @@ func _ready():
     tileMap = get_node("/root/World/Teräng")
     hitbox = get_node("Hitbox")
     waterParticle = get_node("WaterGun")
+    fireParticle = get_node("FireGun")
     drop = load("res://Assets/Scenes/Drop.tscn")
     jumpSound = get_node("SFX/Jump")
     slimeWalkSound = get_node("SFX/Slime walk")
@@ -57,7 +62,6 @@ func _ready():
         get_tree().quit() 
 
 func _physics_process(delta):
-    queue_redraw()
     #Logic for stomping blocks in the swollen form
     if currentEffect == PlayerEffect.SWOLLEN:
         #Landed?
@@ -80,6 +84,7 @@ func _physics_process(delta):
 
     if Input.is_action_pressed("shoot"):
         if currentEffect == PlayerEffect.FISH:
+            slowedDown = true
             waterParticle.emitting = true
             if framesSinceSpawn >= spawnEveryXFrames:	
                 var dropInstance = drop.instantiate()
@@ -97,9 +102,30 @@ func _physics_process(delta):
                     waterSound.playing = true
             else:
                 framesSinceSpawn += 1
+        if currentEffect == PlayerEffect.FIRE:
+            slowedDown = true
+            fireParticle.emitting = true
+            if framesSinceSpawn >= spawnEveryXFrames:
+                var dropInstance = drop.instantiate()
+                dropInstance.speed = 300
+                dropInstance.gravity = 0
+                dropInstance.gravityDisabled = true
+                dropInstance.lifetime = 0.35
+                if not hflipped:
+                    dropInstance.position = position + Vector2(4, -3)
+                    dropInstance.direction = Vector2(1, 0)
+                else:
+                    dropInstance.position = position + Vector2(-4, -3)
+                    dropInstance.direction = Vector2(-1, 0)
+                get_parent().add_child(dropInstance)
+                framesSinceSpawn = 0
+            else:
+                framesSinceSpawn += 1
     else:
         waterParticle.emitting = false
         waterSound.playing = false
+        fireParticle.emitting = false
+        slowedDown = false
 
     if Input.is_action_just_pressed("up"):
         if not stopInput:
@@ -146,11 +172,15 @@ func _physics_process(delta):
                 hflipped = false
                 waterParticle.process_material.set("direction", Vector2(1, -0.5))
                 waterParticle.position = Vector2(7, -9)
+                fireParticle.process_material.set("direction", Vector2(1, 0))
+                fireParticle.position = Vector2(4, -3)
         elif direction == -1:
                 sprite.flip_h = true
                 hflipped = true
                 waterParticle.process_material.set("direction", Vector2(-1, -0.5))
                 waterParticle.position = Vector2(-7, -9)
+                fireParticle.process_material.set("direction", Vector2(-1, 0))
+                fireParticle.position = Vector2(-4, -3)
         
         velocity.x = clamp(velocity.x, -SPEED, SPEED)
     elif is_on_floor():
@@ -161,6 +191,9 @@ func _physics_process(delta):
 
     if Input.is_action_pressed("debug_sprint"):
         velocity.x *= 3
+
+    if slowedDown:
+        velocity.x *= slowdownWhileShooting
 
     if not is_on_wall() and flippedTowardsWall:
         var tween = create_tween()
@@ -183,6 +216,7 @@ func _physics_process(delta):
 
     wasInAirLastFrame = !is_on_floor()
     move_and_slide()
+    queue_redraw()
 
 func _unhandled_input(event):
     if event.is_action_pressed("debug_none"):

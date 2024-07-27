@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://dngnfi8yrwdev"]
+[gd_scene load_steps=7 format=3 uid="uid://dngnfi8yrwdev"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/plant.gd" id="1_la7jf"]
-[ext_resource type="PackedScene" uid="uid://bhcusxlsgqawr" path="res://Assets/Scenes/Branch.tscn" id="2_hvq7t"]
+[ext_resource type="Script" path="res://Assets/Scripts/Plant.gd" id="1_w2v77"]
 [ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="4_4r2m3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tnyb6"]
@@ -22,8 +21,7 @@ region = Rect2(704, 312, 32, 24)
 [node name="Plant" type="Node2D"]
 texture_filter = 1
 position = Vector2(0, -16)
-script = ExtResource("1_la7jf")
-branchScene = ExtResource("2_hvq7t")
+script = ExtResource("1_w2v77")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 2147483648

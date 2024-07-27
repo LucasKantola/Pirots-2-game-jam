@@ -1,8 +1,9 @@
-[gd_scene load_steps=40 format=3 uid="uid://b0wewlor2hl5b"]
+[gd_scene load_steps=43 format=3 uid="uid://b0wewlor2hl5b"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
 [ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
 [ext_resource type="Texture2D" uid="uid://cx7kp72ywkbas" path="res://Assets/Sprites/PointLight.png" id="3_kxc3c"]
+[ext_resource type="Gradient" uid="uid://6oy8aroykat2" path="res://Assets/Colorset/fireColor.tres" id="4_a3xnl"]
 [ext_resource type="AudioStream" uid="uid://c362battdachl" path="res://Assets/Sound/Music/untitled.wav" id="5_aa2bu"]
 [ext_resource type="AudioStream" uid="uid://bobpkiqcijur4" path="res://Assets/Sound/SFX/Jump.wav" id="6_72huq"]
 [ext_resource type="AudioStream" uid="uid://chwjimf5nxvly" path="res://Assets/Sound/SFX/Slime walk.wav" id="7_eu0uy"]
@@ -201,11 +202,34 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="Gradient" id="Gradient_d5v32"]
-colors = PackedColorArray(0.0431373, 0.368627, 0.396078, 1, 0.560784, 0.972549, 0.886275, 1)
-
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_hl6mv"]
-gradient = SubResource("Gradient_d5v32")
+gradient = ExtResource("4_a3xnl")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sp02y"]
+particle_flag_disable_z = true
+particle_flag_damping_as_friction = true
+emission_shape_scale = Vector3(1, 0.5, 1)
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.5, 0)
+direction = Vector3(1, -1, 0)
+spread = 15.0
+flatness = 0.42
+initial_velocity_min = 350.0
+initial_velocity_max = 380.0
+gravity = Vector3(0, 982, 0)
+damping_min = 0.1
+damping_max = 0.1
+scale_max = 3.0
+color_ramp = SubResource("GradientTexture1D_hl6mv")
+turbulence_noise_strength = 0.1
+collision_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_qsr57"]
+resource_local_to_scene = true
+colors = PackedColorArray(0.580392, 0.109804, 0.494118, 1, 1, 0.282353, 0.643137, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b0meo"]
+gradient = SubResource("Gradient_qsr57")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rqe11"]
 particle_flag_disable_z = true
@@ -213,17 +237,14 @@ particle_flag_damping_as_friction = true
 emission_shape_scale = Vector3(1, 0.5, 1)
 emission_shape = 3
 emission_box_extents = Vector3(0.5, 0.5, 0)
-direction = Vector3(1, -1, 0)
-spread = 11.0
-flatness = 0.3
+spread = 15.0
+flatness = 0.42
 initial_velocity_min = 300.0
 initial_velocity_max = 350.0
-gravity = Vector3(0, 982, 0)
 damping_min = 0.1
 damping_max = 0.1
-scale_min = 0.8
-scale_max = 2.8
-color_ramp = SubResource("GradientTexture1D_hl6mv")
+scale_max = 3.0
+color_ramp = SubResource("GradientTexture1D_b0meo")
 turbulence_noise_strength = 0.1
 collision_mode = 2
 
@@ -256,11 +277,18 @@ texture = ExtResource("3_kxc3c")
 [node name="WaterGun" type="GPUParticles2D" parent="."]
 position = Vector2(7, -9)
 emitting = false
-amount = 200
-process_material = SubResource("ParticleProcessMaterial_rqe11")
+amount = 130
+process_material = SubResource("ParticleProcessMaterial_sp02y")
 visibility_rect = Rect2(-1.34873, -28.0804, 144.663, 239.822)
 trail_enabled = true
 trail_lifetime = 0.1
+
+[node name="FireGun" type="GPUParticles2D" parent="."]
+position = Vector2(4, -3)
+emitting = false
+amount = 80
+process_material = SubResource("ParticleProcessMaterial_rqe11")
+lifetime = 0.4
 
 [node name="SFX" type="Node2D" parent="."]
 

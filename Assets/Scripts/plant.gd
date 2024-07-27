@@ -32,20 +32,21 @@ func _ready():
 
 func bodyEntered(body: Node2D) -> void:
     if body.is_in_group("Drop"):
-        if currentHeight < maxHeight:
-            var lastHeight = currentHeight
-            currentHeight += growthRate
+        if body.dropType == body.DropType.WATER:
+            if currentHeight < maxHeight:
+                var lastHeight = currentHeight
+                currentHeight += growthRate
 
-            stalk.texture.region.size.y += currentHeight-lastHeight
-            stalk.texture.region.position.y -= (currentHeight - lastHeight)
+                stalk.texture.region.size.y += currentHeight-lastHeight
+                stalk.texture.region.position.y -= (currentHeight - lastHeight)
 
-        for platform in platforms:
-            if currentHeight >= platform["position"].y:
-                if not platform["rendered"]:
-                    platform["rendered"] = true
-                    var platformScene = branchScene.instantiate()
-                    platformScene.set_deferred("position", Vector2(platform["position"].x, platform["position"].y * -1))
-                    add_child(platformScene)
+            for platform in platforms:
+                if currentHeight >= platform["position"].y:
+                    if not platform["rendered"]:
+                        platform["rendered"] = true
+                        var platformScene = branchScene.instantiate()
+                        platformScene.set_deferred("position", Vector2(platform["position"].x, platform["position"].y * -1))
+                        add_child(platformScene)
     queue_redraw()
 
 func _draw():
