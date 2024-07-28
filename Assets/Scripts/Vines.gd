@@ -1,18 +1,21 @@
 extends Node2D
-# The Plant script is responsible for the growth of the plant. 
-# It listens for the bodyEntered signal and checks if the body is a Drop node and if it is a LAVA drop. 
-# If it is, it starts the timer. The timer is responsible for the burning effect. When the timer finishes, the plant is destroyed. 
 
 
 @export var burnTime := 2.0
 @export var fireNeeded := 10
 var timer: Timer
+var burning: GPUParticles2D
+var smoke: GPUParticles2D
+var dust: GPUParticles2D
 
 func _ready():
     timer = $Timer
+    burning = $BurningParticles
+    smoke = $SmokeParticles
+    dust = $DustParticles
 
-    if not timer: 
-        push_error("Timer node not found")
+    if not timer or not burning or not smoke or not dust: 
+        push_error("Could not find all nodes for the Vines! Check it out")
 
 func bodyEntered(body: Node) -> void:
     if body.is_in_group("Drop"):
@@ -22,6 +25,14 @@ func bodyEntered(body: Node) -> void:
                 if not timer.is_connected("timeout", Callable(self, "burningFinished")):
                     timer.start(burnTime)
                     timer.connect("timeout", Callable(self, "burningFinished"))
+                    burning.emitting = true
+                    dust.emitting = true
 
 func burningFinished():
+    smoke.emitting = true
+    $Sprite2D.visible = false
+    $CollisionShape2D.disabled = true
+    burning.emitting = false
+    dust.emitting = false
+    await smoke.finished
     queue_free()

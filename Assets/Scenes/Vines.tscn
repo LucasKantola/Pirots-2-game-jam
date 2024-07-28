@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://lhi71mhvehu2"]
+[gd_scene load_steps=21 format=3 uid="uid://lhi71mhvehu2"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Vines.gd" id="1_3anow"]
+[ext_resource type="Texture2D" uid="uid://bljxabhpvlqqn" path="res://Assets/Sprites/smoke.png" id="2_f4vd2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6pfxd"]
 size = Vector2(24, 32)
@@ -10,6 +11,82 @@ size = Vector2(16, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jwflq"]
 size = Vector2(16, 32)
+
+[sub_resource type="Gradient" id="Gradient_j7qka"]
+offsets = PackedFloat32Array(0, 0.62963, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.705882, 1, 1, 1, 0.235294)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gvnqd"]
+gradient = SubResource("Gradient_j7qka")
+
+[sub_resource type="Curve" id="Curve_1vjij"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.28237, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_aejah"]
+curve = SubResource("Curve_1vjij")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_411dh"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 25.0
+initial_velocity_max = 35.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_aejah")
+color_ramp = SubResource("GradientTexture1D_gvnqd")
+
+[sub_resource type="Gradient" id="Gradient_hojkk"]
+offsets = PackedFloat32Array(0, 0.537037, 1)
+colors = PackedColorArray(1, 0.282353, 0.643137, 1, 0.580392, 0.109804, 0.494118, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_w6lhy"]
+gradient = SubResource("Gradient_hojkk")
+
+[sub_resource type="Curve" id="Curve_rug3r"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_hson5"]
+curve = SubResource("Curve_rug3r")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_msgiq"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(8, 16, 1)
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 30.0
+gravity = Vector3(0, -98, 0)
+scale_min = 2.0
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_hson5")
+color_ramp = SubResource("GradientTexture1D_w6lhy")
+turbulence_enabled = true
+turbulence_noise_scale = 1.0
+
+[sub_resource type="Gradient" id="Gradient_8wcxu"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6ku2v"]
+gradient = SubResource("Gradient_8wcxu")
+
+[sub_resource type="Curve" id="Curve_33wjm"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.57509, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_5gvex"]
+curve = SubResource("Curve_33wjm")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qycbu"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(8, 16, 1)
+spread = 180.0
+initial_velocity_min = 20.0
+initial_velocity_max = 30.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_5gvex")
+color_ramp = SubResource("GradientTexture1D_6ku2v")
 
 [node name="Vines" type="StaticBody2D"]
 collision_layer = 2147483650
@@ -26,11 +103,35 @@ collision_mask = 2147483648
 shape = SubResource("RectangleShape2D_6pfxd")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.0627451, 0.52549, 1, 1)
 texture = SubResource("PlaceholderTexture2D_uhoad")
 
 [node name="Timer" type="Timer" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_jwflq")
+
+[node name="SmokeParticles" type="GPUParticles2D" parent="."]
+texture_filter = 1
+emitting = false
+amount = 30
+process_material = SubResource("ParticleProcessMaterial_411dh")
+texture = ExtResource("2_f4vd2")
+one_shot = true
+explosiveness = 1.0
+draw_order = 0
+
+[node name="BurningParticles" type="GPUParticles2D" parent="."]
+z_index = 10
+position = Vector2(0, 1)
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_msgiq")
+
+[node name="DustParticles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 10
+process_material = SubResource("ParticleProcessMaterial_qycbu")
+lifetime = 0.5
 
 [connection signal="body_entered" from="Area2D" to="." method="bodyEntered"]
