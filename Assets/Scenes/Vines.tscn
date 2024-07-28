@@ -28,6 +28,8 @@ curve = SubResource("Curve_1vjij")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_411dh"]
 particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(8, 8, 1)
 spread = 180.0
 initial_velocity_min = 25.0
 initial_velocity_max = 35.0
