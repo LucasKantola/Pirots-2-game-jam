@@ -33,4 +33,15 @@ position = Vector2(65, -16)
 
 [node name="MainCamera" type="Camera2D" parent="."]
 script = ExtResource("1_eu8hu")
-followPlayer = true
+
+[node name="WorldBackground" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="WorldBackground"]
+z_as_relative = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)

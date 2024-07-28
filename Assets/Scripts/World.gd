@@ -14,6 +14,7 @@ extends Node2D
 @onready var player := $Player
 @onready var playerHitbox: CollisionShape2D
 @onready var camera := $MainCamera
+@onready var worldBackground := $WorldBackground/ColorRect
 #region Tilemaps
 @onready var background := $Background as TileMap
 @onready var terrain := $Terrain as TileMap
@@ -23,6 +24,9 @@ extends Node2D
 var currentRoom: Room
 
 func _ready():
+    # References
+    playerHitbox = player.get_node("Hitbox")
+    # Pre-generated rooms
     currentRoom = $Rooms.get_children()[0] as Room
     steal_tiles(currentRoom)
     currentRoom.coverColor = backgroundColor
@@ -31,9 +35,11 @@ func _ready():
         steal_tiles(room)
         room.coverColor = backgroundColor
         room.disappear_instant()
-    playerHitbox = player.get_node("Hitbox")
+    # Update camera
     $MainCamera.targetRoom = currentRoom
     $MainCamera.snap_to_room()
+    # Set background color
+    worldBackground.color = backgroundColor
 
 func enter_door(door: Door) -> void:
     print("\nEntering room %s %s" % [door.destinationScenePath, door.name])
