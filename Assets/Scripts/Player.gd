@@ -92,10 +92,10 @@ func _physics_process(delta):
                 dropInstance.gravity = 200
                 dropInstance.dropType = dropInstance.DropType.WATER
                 if not hflipped:
-                    dropInstance.position = position + Vector2(7, -9)
+                    dropInstance.position = position + waterParticle.position
                     dropInstance.direction = Vector2(1, -0.5)
                 else:
-                    dropInstance.position = position + Vector2(-7, -9)
+                    dropInstance.position = position + waterParticle.position
                     dropInstance.direction = Vector2(-1, -0.5)
                 get_parent().add_child(dropInstance)
                 framesSinceSpawn = 0
@@ -114,10 +114,10 @@ func _physics_process(delta):
                 dropInstance.lifetime = 0.35
                 dropInstance.dropType = dropInstance.DropType.LAVA
                 if not hflipped:
-                    dropInstance.position = position + Vector2(4, -3)
+                    dropInstance.position = position + fireParticle.position
                     dropInstance.direction = Vector2(1, 0)
                 else:
-                    dropInstance.position = position + Vector2(-4, -3)
+                    dropInstance.position = position + fireParticle.position
                     dropInstance.direction = Vector2(-1, 0)
                 get_parent().add_child(dropInstance)
                 framesSinceSpawn = 0

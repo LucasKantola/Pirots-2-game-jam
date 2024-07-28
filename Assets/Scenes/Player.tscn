@@ -284,7 +284,7 @@ trail_enabled = true
 trail_lifetime = 0.1
 
 [node name="FireGun" type="GPUParticles2D" parent="."]
-position = Vector2(4, -3)
+position = Vector2(4, -4)
 emitting = false
 amount = 80
 process_material = SubResource("ParticleProcessMaterial_rqe11")
