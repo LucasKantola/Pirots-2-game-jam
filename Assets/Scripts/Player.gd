@@ -45,7 +45,7 @@ var coyoteTime = 0.1
 
 func _ready():
     world = get_node("/root/World")
-    tileMap = get_node("/root/World/Teräng")
+    tileMap = get_node("/root/World/Terrain")
     hitbox = get_node("Hitbox")
     waterParticle = get_node("WaterGun")
     fireParticle = get_node("FireGun")

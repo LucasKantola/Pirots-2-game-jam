@@ -16,11 +16,6 @@ position = Vector2(0, -144)
 
 [node name="Player" parent="." instance=ExtResource("5_sj4lu")]
 position = Vector2(65, -16)
-HP = null
-JUMP_VELOCITY = null
-SPEED = null
-floorFriction = null
-airFriction = null
 
 [node name="MainCamera" type="Camera2D" parent="."]
 script = ExtResource("1_eu8hu")
