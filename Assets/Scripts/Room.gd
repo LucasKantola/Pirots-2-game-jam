@@ -3,6 +3,7 @@ extends Node2D
 class_name Room
 
 #region Public variables
+@export_color_no_alpha var coverColor := Color.BLACK
 #region Transition variables
 @export_group("Transition")
 @export_range(0, 3, 0.1, "or_greater") var transitionDurationSeconds: float = 1.0
@@ -19,8 +20,14 @@ class_name Room
 #endregion
 #endregion
 
+var cover
 var transitionState := TransitionState.NONE
 var t := 1.0
+
+func _ready():
+    cover = $RoomShape
+    cover.material = CanvasItemMaterial.new()
+    cover.set_deferred("modulate", Color(coverColor, 0.0)) 
 
 func _process(delta):
     if transitionState == TransitionState.NONE:
@@ -49,7 +56,7 @@ func _process(delta):
             t = 0.0
             process_mode = PROCESS_MODE_DISABLED
     
-    set_deferred("modulate", Color(modulate, t))
+    cover.set_deferred("modulate", Color(coverColor, 1-t))
     
 func disappear():
     if t == 0.0:

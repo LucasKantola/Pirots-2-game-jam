@@ -1,6 +1,7 @@
 extends Node2D
 
 #region Public variables
+@export_color_no_alpha var backgroundColor := Color.BLACK
 #region Rooms variables
 @export_group("Rooms")
 @export_range(0, 1, 0.1, "or_greater") var transitionDurationSeconds := 1.0
@@ -10,17 +11,24 @@ extends Node2D
 #endregion
 
 #region References
-@onready var player = $Player
+@onready var player := $Player
 @onready var playerHitbox: CollisionShape2D
-@onready var camera = $MainCamera
+@onready var camera := $MainCamera
+#region Tilemaps
+@onready var background := $Background as TileMap
+@onready var terrain := $Terrain as TileMap
+#endregion
 #endregion
 
 var currentRoom: Room
 
 func _ready():
     currentRoom = $Rooms.get_children()[0] as Room
+    steal_tiles(currentRoom)
     for room in $Rooms.get_children().slice(1):
-        (room as Room).disappear_instant()
+        room = room as Room
+        steal_tiles(room)
+        room.disappear_instant()
     playerHitbox = player.get_node("Hitbox")
     $MainCamera.targetRoom = currentRoom
     $MainCamera.snap_to_room()
@@ -33,7 +41,9 @@ func enter_door(door: Door) -> void:
     var destinationExists: bool = door.check_for_destination()
     if not destinationExists:
         print("Instantiating room")
-        generate_door_destination(door)
+        var room = generate_door_destination(door)
+        steal_tiles(room)
+        
     # Get destination door
     var destinationRoom = door.destinationRoom
     var destinationDoor = door.destinationDoor
@@ -75,7 +85,7 @@ func enter_door(door: Door) -> void:
     player.velocity = velocity
     player.move_and_slide()
 
-func generate_door_destination(door: Door) -> void:
+func generate_door_destination(door: Door) -> Room:
     # Intantiate scene
     var scene = load(door.destinationScenePath)
     if not scene is PackedScene:
@@ -97,6 +107,30 @@ func generate_door_destination(door: Door) -> void:
     
     door.destinationRoom = newRoom
     door.destinationDoor = destinationDoor
+    return newRoom
 
 func exit_door(door: Door) -> void:
     pass
+
+func steal_tiles(room: Room) -> void:
+    copy_tilemap(room, "Background", background)
+    copy_tilemap(room, "Terrain", terrain)
+    room.get_node("./RoomShape/Background").queue_free()
+    room.get_node("./RoomShape/Terrain").queue_free()
+
+func copy_tilemap(room: Room, fromTileMapName: String, toTileMap: TileMap) -> void:
+    var gridSize := toTileMap.rendering_quadrant_size
+    var roomTileMap = room.get_node("./RoomShape/%s" % fromTileMapName) as TileMap
+    var size := (room.get_node("./RoomShape") as Control).size
+    var iSize := size / gridSize
+    for layer in range(roomTileMap.get_layers_count()):
+        for x in range(iSize.x):
+            for y in range(iSize.y):
+                var roomCoords = Vector2i(x, y)
+                
+                var sourceId = roomTileMap.get_cell_source_id(layer, roomCoords)
+                var atlasCoords := roomTileMap.get_cell_atlas_coords(layer, roomCoords)
+                
+                var toCoords = toTileMap.to_local(room.to_global(roomCoords * gridSize)) / gridSize
+                if sourceId != -1:
+                    toTileMap.set_cell(layer, toCoords, sourceId, atlasCoords)
