@@ -25,9 +25,11 @@ var currentRoom: Room
 func _ready():
     currentRoom = $Rooms.get_children()[0] as Room
     steal_tiles(currentRoom)
+    currentRoom.coverColor = backgroundColor
     for room in $Rooms.get_children().slice(1):
         room = room as Room
         steal_tiles(room)
+        room.coverColor = backgroundColor
         room.disappear_instant()
     playerHitbox = player.get_node("Hitbox")
     $MainCamera.targetRoom = currentRoom
@@ -107,6 +109,8 @@ func generate_door_destination(door: Door) -> Room:
     
     door.destinationRoom = newRoom
     door.destinationDoor = destinationDoor
+    
+    newRoom.coverColor = backgroundColor
     return newRoom
 
 func exit_door(door: Door) -> void:

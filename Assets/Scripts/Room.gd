@@ -25,7 +25,7 @@ var transitionState := TransitionState.NONE
 var t := 1.0
 
 func _ready():
-    cover = generate_cover_polygon()
+    cover = generate_cover_polygon(0.01)
     $RoomShape.add_child(cover)
 
 func _process(delta):
@@ -86,13 +86,14 @@ enum TransitionState {
     DISAPPEARING,
 }
 
-func generate_cover_polygon() -> Polygon2D:
+func generate_cover_polygon(padding: float = 0.0) -> Polygon2D:
     var terrain: TileMap = $RoomShape/Terrain
     var background: TileMap = $RoomShape/Background
     
     var shapeMap = []
     var shape = $RoomShape
     var dimensions = shape.size / terrain.rendering_quadrant_size
+    var gridSize = $RoomShape/Terrain.rendering_quadrant_size
 
     var startCell: Vector2i
     for x in range(dimensions.x):
@@ -105,19 +106,15 @@ func generate_cover_polygon() -> Polygon2D:
                 startCell = Vector2i(x, y)
             shapeMap[x].append(hasCell)
     
-    var sb = ""
-    for y in range(dimensions.y):
-        for x in range(dimensions.x):
-            sb += 'X' if shapeMap[x][y] else ' '
-        sb += '\n'
-    print(sb)
-    
     # Create perimeter
     var perimeter = []
+    var corners = []
+    var cornerNormals = []
+    
     var currentCell := startCell
     var lastCell: Vector2i
+    
     var neighborOffsets = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
-        
     while true:
         var loneliestNeighbor: Vector2i
         var loneliestNeighborCount: int = 8
@@ -129,13 +126,10 @@ func generate_cover_polygon() -> Polygon2D:
                 continue
             var neighbors = get_neighbor_count(shapeMap, dimensions, coord)
             
-            #print("%d %d" % [neighbors, loneliestNeighborCount])
             if neighbors < loneliestNeighborCount:
                 loneliestNeighbor = coord
-                #print("New loneliest: %s" % loneliestNeighbor)
                 loneliestNeighborCount = neighbors
         
-        #print(currentCell)
         if loneliestNeighborCount == 8:
             print("WARNING: Room perimeter ran into a dead end")
             break
@@ -143,24 +137,27 @@ func generate_cover_polygon() -> Polygon2D:
             print("WARNING: Loop detected in room perimiter!")
             break
         perimeter.append(currentCell)
+        if ((lastCell.x != loneliestNeighbor.x
+                and lastCell.y != loneliestNeighbor.y)):
+            corners.append(currentCell)
+            var diff = lastCell - loneliestNeighbor
+            cornerNormals.append(Vector2i(diff.y, -diff.x))
         lastCell = currentCell
         currentCell = loneliestNeighbor
+        
         if currentCell == startCell:
             break
-        
-    
-    #sb = ""
-    #for y in range(dimensions.y):
-        #for x in range(dimensions.x):
-            #sb += 'P' if (Vector2i(x, y) in perimeter) else ' '
-        #sb += '\n'
-    #print(sb)
     
     var poly = Polygon2D.new()
-    #poly.polygon = PackedVector2Array([Vector2(0, 0), Vector2(128, 0), Vector2(128, 48)])
-    #print(poly.polygon)
+    var polygon = []
+    for i in range(corners.size()):
+        var coord: Vector2 = Vector2(corners[i])
+        var offset: Vector2 = cornerNormals[i] * (0.5 + padding)
+        polygon.append((coord + offset + Vector2(0.5, 0.5)) * gridSize)
+    poly.polygon = PackedVector2Array(polygon)    
     poly.name = "Cover"
     poly.z_index = 1
+    poly.light_mask = 0
     poly.color = Color(coverColor, 0.0)
     return poly
 
