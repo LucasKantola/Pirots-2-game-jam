@@ -20,19 +20,13 @@ class_name Room
 #endregion
 #endregion
 
-var cover: ColorRect
+var cover
 var transitionState := TransitionState.NONE
 var t := 1.0
 
 func _ready():
-    # Create cover
-    var shape = $RoomShape
-    cover = ColorRect.new()
-    cover.name = "Cover"
-    cover.z_index = 1
-    cover.set_anchors_preset(Control.LayoutPreset.PRESET_FULL_RECT)
-    cover.set_deferred("color", Color(coverColor, 0.0))
-    shape.add_child(cover)
+    cover = generate_cover_polygon()
+    $RoomShape.add_child(cover)
 
 func _process(delta):
     if transitionState == TransitionState.NONE:
@@ -91,3 +85,98 @@ enum TransitionState {
     APPEARING,
     DISAPPEARING,
 }
+
+func generate_cover_polygon() -> Polygon2D:
+    var terrain: TileMap = $RoomShape/Terrain
+    var background: TileMap = $RoomShape/Background
+    
+    var shapeMap = []
+    var shape = $RoomShape
+    var dimensions = shape.size / terrain.rendering_quadrant_size
+
+    var startCell: Vector2i
+    for x in range(dimensions.x):
+        shapeMap.append([])
+        for y in range(dimensions.y):
+            var coords = Vector2i(x, y)
+            var hasCell: bool = (terrain.get_cell_source_id(0, coords) != -1
+                    or background.get_cell_source_id(0, coords) != -1)
+            if hasCell and not startCell:
+                startCell = Vector2i(x, y)
+            shapeMap[x].append(hasCell)
+    
+    var sb = ""
+    for y in range(dimensions.y):
+        for x in range(dimensions.x):
+            sb += 'X' if shapeMap[x][y] else ' '
+        sb += '\n'
+    print(sb)
+    
+    # Create perimeter
+    var perimeter = []
+    var currentCell := startCell
+    var lastCell: Vector2i
+    var neighborOffsets = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
+        
+    while true:
+        var loneliestNeighbor: Vector2i
+        var loneliestNeighborCount: int = 8
+        for offset in neighborOffsets:
+            var coord = currentCell + offset
+            if (is_outside_dimensions(dimensions, coord)
+                    or not shapeMap[coord.x][coord.y] 
+                    or coord == lastCell):
+                continue
+            var neighbors = get_neighbor_count(shapeMap, dimensions, coord)
+            
+            #print("%d %d" % [neighbors, loneliestNeighborCount])
+            if neighbors < loneliestNeighborCount:
+                loneliestNeighbor = coord
+                #print("New loneliest: %s" % loneliestNeighbor)
+                loneliestNeighborCount = neighbors
+        
+        #print(currentCell)
+        if loneliestNeighborCount == 8:
+            print("WARNING: Room perimeter ran into a dead end")
+            break
+        if currentCell in perimeter:
+            print("WARNING: Loop detected in room perimiter!")
+            break
+        perimeter.append(currentCell)
+        lastCell = currentCell
+        currentCell = loneliestNeighbor
+        if currentCell == startCell:
+            break
+        
+    
+    #sb = ""
+    #for y in range(dimensions.y):
+        #for x in range(dimensions.x):
+            #sb += 'P' if (Vector2i(x, y) in perimeter) else ' '
+        #sb += '\n'
+    #print(sb)
+    
+    var poly = Polygon2D.new()
+    #poly.polygon = PackedVector2Array([Vector2(0, 0), Vector2(128, 0), Vector2(128, 48)])
+    #print(poly.polygon)
+    poly.name = "Cover"
+    poly.z_index = 1
+    poly.color = Color(coverColor, 0.0)
+    return poly
+
+func is_outside_dimensions(dimensions: Vector2i, cell: Vector2i) -> bool:
+    return (cell.x < 0 or cell.x >= dimensions.x
+            or cell.y < 0 or cell.y >= dimensions.y)
+
+func get_neighbor_count(shapeMap: Array, dimensions: Vector2i, cell: Vector2i) -> int:
+    var neighborOffsets = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
+    if not shapeMap[cell.x][cell.y]:
+        return INF
+    var neighbors = 0
+    for offset in neighborOffsets:
+        var coord = cell + offset
+        if is_outside_dimensions(dimensions, coord):
+            continue
+        if shapeMap[coord.x][coord.y]:
+            neighbors += 1
+    return neighbors
