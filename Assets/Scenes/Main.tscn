@@ -6,7 +6,7 @@
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="4_1iaa4"]
 [ext_resource type="PackedScene" uid="uid://bkdgqadng4s36" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
-[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/plant.tscn" id="6_i4rig"]
+[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
 [ext_resource type="PackedScene" path="res://Assets/Scenes/Vines.tscn" id="9_fjohd"]
 
 [node name="World" type="Node2D"]
