@@ -33,4 +33,4 @@ layer_0/tile_data = PackedInt32Array(0, 393217, 2, 17, 589825, 3, 262160, 655361
 [node name="RightDoor" parent="." instance=ExtResource("4_ekqj1")]
 position = Vector2(624, 64)
 size = 3
-destinationScenePath = "res://Assets/Scenes/Rooms/room_6.tscn"
+destinationScenePath = "res://Assets/Scenes/DemoRooms/room_6.tscn"

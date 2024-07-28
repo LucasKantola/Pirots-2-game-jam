@@ -30,14 +30,14 @@ layer_0/tile_data = PackedInt32Array(0, 393217, 2, 65536, 720897, 2, 131072, 720
 
 [node name="RightDoorA" parent="." instance=ExtResource("5_4dm7h")]
 position = Vector2(384, 208)
-destinationScenePath = "res://Assets/Scenes/Rooms/room_1.tscn"
+destinationScenePath = "res://Assets/Scenes/DemoRooms/room_1.tscn"
 
 [node name="RightDoorB" parent="." instance=ExtResource("5_4dm7h")]
 position = Vector2(384, 160)
 size = 3
-destinationScenePath = "res://Assets/Scenes/Rooms/room_1.tscn"
+destinationScenePath = "res://Assets/Scenes/DemoRooms/room_1.tscn"
 
 [node name="BottomDoor" parent="." instance=ExtResource("5_4dm7h")]
 position = Vector2(320, 272)
 face = 3
-destinationScenePath = "res://Assets/Scenes/Rooms/room_6.tscn"
+destinationScenePath = "res://Assets/Scenes/DemoRooms/room_6.tscn"

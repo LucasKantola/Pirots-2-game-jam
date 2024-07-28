@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.gd" id="1_3haea"]
 [ext_resource type="Script" path="res://Assets/Scripts/MainCamera.gd" id="1_eu8hu"]
-[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/Rooms/room_1.tscn" id="2_3p137"]
+[ext_resource type="PackedScene" uid="uid://c4s4lawnojq1e" path="res://Assets/Scenes/DemoRooms/room_1.tscn" id="2_3p137"]
 [ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="2_oswei"]
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="3_uhwj8"]
 [ext_resource type="PackedScene" uid="uid://b0wewlor2hl5b" path="res://Assets/Scenes/Player.tscn" id="5_sj4lu"]

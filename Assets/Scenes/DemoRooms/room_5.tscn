@@ -34,4 +34,4 @@ layer_0/tile_data = PackedInt32Array(0, 589825, 2, 17, 589825, 2, 393216, 589825
 position = Vector2(0, 80)
 face = 0
 size = 3
-destinationScenePath = "res://Assets/Scenes/Rooms/room_1.tscn"
+destinationScenePath = "res://Assets/Scenes/DemoRooms/room_1.tscn"
