@@ -90,6 +90,7 @@ func _physics_process(delta):
                 var dropInstance = drop.instantiate()
                 dropInstance.speed = 300
                 dropInstance.gravity = 200
+                dropInstance.dropType = dropInstance.DropType.WATER
                 if not hflipped:
                     dropInstance.position = position + Vector2(7, -9)
                     dropInstance.direction = Vector2(1, -0.5)
@@ -111,6 +112,7 @@ func _physics_process(delta):
                 dropInstance.gravity = 0
                 dropInstance.gravityDisabled = true
                 dropInstance.lifetime = 0.35
+                dropInstance.dropType = dropInstance.DropType.LAVA
                 if not hflipped:
                     dropInstance.position = position + Vector2(4, -3)
                     dropInstance.direction = Vector2(1, 0)
