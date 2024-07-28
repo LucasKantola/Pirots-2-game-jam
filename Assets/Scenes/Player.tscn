@@ -315,3 +315,7 @@ mix_target = 2
 
 [node name="Explosion" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("10_kjvnr")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, 0)
+collision_mask = 134217728

@@ -90,8 +90,8 @@ gravity = Vector3(0, 0, 0)
 scale_curve = SubResource("CurveTexture_5gvex")
 color_ramp = SubResource("GradientTexture1D_6ku2v")
 
-[node name="Vines" type="StaticBody2D"]
-collision_layer = 2147483650
+[node name="Vines" type="StaticBody2D" groups=["Climbable"]]
+collision_layer = 2281701378
 collision_mask = 2147483650
 script = ExtResource("1_3anow")
 burnTime = null

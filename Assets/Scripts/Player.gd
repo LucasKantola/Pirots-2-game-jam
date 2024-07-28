@@ -164,7 +164,9 @@ func _physics_process(delta):
             ]
             for pos in checkPositionsSlime:
                 var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Scalable")
-                if cellCustom:
+                $RayCast2D.target_position = global_position + pos
+
+                if cellCustom or $RayCast2D.is_colliding():
                     faceWall(direction)
                     velocity.y = -SPEED * wallClimbModifier
         velocity.x = direction * SPEED
