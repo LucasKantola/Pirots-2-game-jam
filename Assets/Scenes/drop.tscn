@@ -13,7 +13,7 @@ region = Rect2(0, 16, 16, 16)
 [node name="Particle" type="RigidBody2D" groups=["Drop"]]
 texture_filter = 1
 collision_layer = 2147483648
-collision_mask = 17
+collision_mask = 2147483665
 script = ExtResource("1_t5vut")
 direction = Vector2(1, -1)
 speed = 200.0
@@ -24,5 +24,4 @@ dragPercentage = 1.0
 shape = SubResource("RectangleShape2D_s21a3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
 texture = SubResource("AtlasTexture_oud2v")

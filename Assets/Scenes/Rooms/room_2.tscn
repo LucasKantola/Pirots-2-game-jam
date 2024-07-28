@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c7uho47601j00"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_7xenr"]
-[ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="1_nux68"]
+[ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Bakgrund.tres" id="1_nux68"]
 [ext_resource type="TileSet" uid="uid://cujduytkfoa0" path="res://Assets/TileSets/Terrain.tres" id="2_314ne"]
 [ext_resource type="PackedScene" uid="uid://b3slqhwogcge4" path="res://Assets/Scenes/Door.tscn" id="5_gjr8b"]
 
