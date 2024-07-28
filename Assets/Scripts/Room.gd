@@ -20,14 +20,19 @@ class_name Room
 #endregion
 #endregion
 
-var cover
+var cover: ColorRect
 var transitionState := TransitionState.NONE
 var t := 1.0
 
 func _ready():
-    cover = $RoomShape
-    cover.material = CanvasItemMaterial.new()
-    cover.set_deferred("modulate", Color(coverColor, 0.0)) 
+    # Create cover
+    var shape = $RoomShape
+    cover = ColorRect.new()
+    cover.name = "Cover"
+    cover.z_index = 1
+    cover.set_anchors_preset(Control.LayoutPreset.PRESET_FULL_RECT)
+    cover.set_deferred("color", Color(coverColor, 0.0))
+    shape.add_child(cover)
 
 func _process(delta):
     if transitionState == TransitionState.NONE:
@@ -56,7 +61,7 @@ func _process(delta):
             t = 0.0
             process_mode = PROCESS_MODE_DISABLED
     
-    cover.set_deferred("modulate", Color(coverColor, 1-t))
+    cover.set_deferred("color", Color(coverColor, 1-t))
     
 func disappear():
     if t == 0.0:
