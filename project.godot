@@ -19,6 +19,12 @@ config/icon="res://icon.svg"
 
 Global="*res://Assets/Scripts/global.gd"
 
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="viewport"
+
 [input]
 
 debug_none={
@@ -94,3 +100,7 @@ reset={
 2d_physics/layer_5="oneWay"
 2d_physics/layer_28="Climbable"
 2d_physics/layer_32="Particle"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.129412, 0.129412, 0.129412, 1)
