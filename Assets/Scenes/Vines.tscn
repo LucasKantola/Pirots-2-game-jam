@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://lhi71mhvehu2"]
+[gd_scene load_steps=21 format=3 uid="uid://cij2h7vg776l4"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Vines.gd" id="1_3anow"]
 [ext_resource type="Texture2D" uid="uid://bljxabhpvlqqn" path="res://Assets/Sprites/smoke.png" id="2_f4vd2"]
@@ -125,7 +125,6 @@ draw_order = 0
 
 [node name="BurningParticles" type="GPUParticles2D" parent="."]
 z_index = 10
-position = Vector2(0, 1)
 emitting = false
 amount = 50
 process_material = SubResource("ParticleProcessMaterial_msgiq")
