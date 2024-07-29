@@ -1,7 +1,2 @@
 # Godot 4+ specific ignores
-.godot/global_script_class_cache.cfg
-.godot/editor
-.godot/exported
-.godot/imported
-.godot/shader_cache
-.godot/.gdignore
+.godot/
