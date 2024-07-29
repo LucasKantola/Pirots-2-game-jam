@@ -27,7 +27,7 @@ size = Vector2(10, 3)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
 size = Vector2(16, 12)
 
-[node name="Slime" type="CharacterBody2D"]
+[node name="Slime" type="CharacterBody2D" groups=["enemy"]]
 texture_filter = 1
 position = Vector2(0, -2)
 collision_layer = 3

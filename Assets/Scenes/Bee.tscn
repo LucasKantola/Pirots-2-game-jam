@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://iivkkxmgspla"]
+[gd_scene load_steps=7 format=3 uid="uid://j8hu2kklwadg"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_muwkt"]
 [ext_resource type="Texture2D" uid="uid://d0r7lxth3wqx4" path="res://Assets/Sprites/New Piskel (2).png" id="2_13x8b"]
@@ -23,7 +23,7 @@ size = Vector2(10, 3)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
 size = Vector2(16, 15)
 
-[node name="Bee" type="CharacterBody2D"]
+[node name="Bee" type="CharacterBody2D" groups=["enemy"]]
 texture_filter = 1
 position = Vector2(0, -2)
 collision_layer = 3
