@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://re0ew76ofka5"]
+
+[ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="1_6j10i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i6py"]
+atlas = ExtResource("1_6j10i")
+region = Rect2(496, 144, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ay22h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1i6py")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_pym1g"]
+offsets = PackedFloat32Array(0, 0.919355)
+colors = PackedColorArray(0.960452, 0.960452, 0.960452, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ej0al"]
+gradient = SubResource("Gradient_pym1g")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.905983, 0.15812)
+
+[node name="Lantern" type="Node2D"]
+texture_filter = 1
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1, 0)
+sprite_frames = SubResource("SpriteFrames_ay22h")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.806, 1.237, 0.873, 1)
+energy = 1.5
+texture = SubResource("GradientTexture2D_ej0al")

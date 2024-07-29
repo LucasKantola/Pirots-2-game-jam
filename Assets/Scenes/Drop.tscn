@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://ciashg2xtq41g"]
+[gd_scene load_steps=5 format=3 uid="uid://8ee5lm7d43s2"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Drop.gd" id="1_t5vut"]
 [ext_resource type="Texture2D" uid="uid://bnd0v3lthfwkm" path="res://Assets/Sprites/Sprite-0006.png" id="2_37f3u"]

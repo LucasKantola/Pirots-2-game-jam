@@ -1,16 +1,29 @@
-[gd_scene load_steps=9 format=3 uid="uid://bdr041g8ky1xn"]
+[gd_scene load_steps=10 format=3 uid="uid://gypxrp8jv3nk"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_u7c0f"]
-[ext_resource type="PackedScene" uid="uid://b0wewlor2hl5b" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
+[ext_resource type="PackedScene" uid="uid://c75s046wewhan" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
 [ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="3_crxsh"]
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="4_1iaa4"]
-[ext_resource type="PackedScene" uid="uid://bkdgqadng4s36" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
+[ext_resource type="PackedScene" uid="uid://c6qtxdgygbhyg" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
-[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
+[ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/plant.tscn" id="6_i4rig"]
+[ext_resource type="PackedScene" uid="uid://re0ew76ofka5" path="res://Assets/Scenes/Lantern.tscn" id="9_bmjhr"]
 [ext_resource type="PackedScene" path="res://Assets/Scenes/Vines.tscn" id="9_fjohd"]
 
+[sub_resource type="Environment" id="Environment_74dnx"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 1.81
+glow_strength = 1.08
+glow_hdr_scale = 1.27
+
 [node name="World" type="Node2D"]
-script = ExtResource("1_u7c0f")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_74dnx")
+
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
+color = Color(0.85098, 0.85098, 0.85098, 1)
+blend_mode = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -50,11 +63,6 @@ layer_0/tile_data = PackedInt32Array(1114141, 589825, 2, 1114140, 589825, 2, 104
 [node name="Player" parent="." instance=ExtResource("2_w1t2q")]
 z_index = 2
 position = Vector2(299, 150)
-HP = null
-JUMP_VELOCITY = null
-SPEED = null
-floorFriction = null
-airFriction = null
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(3, 3)
@@ -79,3 +87,20 @@ position = Vector2(393, 194)
 
 [node name="Vines" parent="." instance=ExtResource("9_fjohd")]
 position = Vector2(488, 192)
+burnTime = 2.0
+fireNeeded = 10
+
+[node name="Lantern" parent="." instance=ExtResource("9_bmjhr")]
+position = Vector2(546, 173)
+
+[node name="Lantern2" parent="." instance=ExtResource("9_bmjhr")]
+position = Vector2(441, 154)
+
+[node name="Lantern3" parent="." instance=ExtResource("9_bmjhr")]
+position = Vector2(61, -7)
+
+[node name="Lantern4" parent="." instance=ExtResource("9_bmjhr")]
+position = Vector2(-108, 179)
+
+[node name="Lantern5" parent="." instance=ExtResource("9_bmjhr")]
+position = Vector2(-26, 165)

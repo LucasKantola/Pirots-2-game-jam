@@ -82,7 +82,7 @@ func _physics_process(delta):
     if is_on_floor() and (position.y - fallenFromY) > 20:
         landSound.play()
 
-    if Input.is_action_pressed("shoot"):
+    if Input.is_action_pressed("shoot") and not stopInput:
         if currentEffect == PlayerEffect.FISH:
             slowedDown = true
             waterParticle.emitting = true
