@@ -1,0 +1,59 @@
+[gd_scene load_steps=7 format=3 uid="uid://iivkkxmgspla"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_muwkt"]
+[ext_resource type="Texture2D" uid="uid://d0r7lxth3wqx4" path="res://Assets/Sprites/New Piskel (2).png" id="2_13x8b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txcix"]
+size = Vector2(26, 13)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7ft5y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_13x8b")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qt00p"]
+size = Vector2(10, 3)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
+size = Vector2(16, 15)
+
+[node name="Bee" type="CharacterBody2D"]
+texture_filter = 1
+position = Vector2(0, -2)
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_muwkt")
+
+[node name="Hitbox Area" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+
+[node name="Hitbox" type="CollisionShape2D" parent="Hitbox Area"]
+position = Vector2(0, 5.5)
+shape = SubResource("RectangleShape2D_txcix")
+debug_color = Color(1, 0, 0, 0.458824)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_7ft5y")
+
+[node name="Hurtbox Area" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+
+[node name="Hurtbox" type="CollisionShape2D" parent="Hurtbox Area"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_qt00p")
+debug_color = Color(0, 1, 0, 0.419608)
+
+[node name="WorldCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_5thef")
+
+[connection signal="body_entered" from="Hitbox Area" to="." method="hitbox_area_entered"]
+[connection signal="body_exited" from="Hitbox Area" to="." method="hitbox_area_exited"]
+[connection signal="body_entered" from="Hurtbox Area" to="." method="hurtbox_area_entered"]
