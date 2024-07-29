@@ -39,6 +39,7 @@ func _ready():
     $MainCamera.targetRoom = currentRoom
     $MainCamera.snap_to_room()
     # Set background color
+    worldBackground.visible = true
     worldBackground.color = backgroundColor
 
 func enter_door(door: Door) -> void:

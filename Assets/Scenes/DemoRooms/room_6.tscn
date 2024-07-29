@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://b6b03sp7exh6m"]
+[gd_scene load_steps=7 format=3 uid="uid://b6b03sp7exh6m"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Room.gd" id="1_qkxbr"]
-[ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="2_7tovs"]
+[ext_resource type="TileSet" uid="uid://chyq4ldc64ksb" path="res://Assets/TileSets/Background.tres" id="2_7tovs"]
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="3_tf5wl"]
 [ext_resource type="PackedScene" uid="uid://b3slqhwogcge4" path="res://Assets/Scenes/Door.tscn" id="4_f443k"]
+[ext_resource type="PackedScene" uid="uid://j8hu2kklwadg" path="res://Assets/Scenes/Bee.tscn" id="5_qc2wt"]
+[ext_resource type="PackedScene" uid="uid://cck35umwvrnv" path="res://Assets/Scenes/EnemiesClearedGate.tscn" id="6_qxtff"]
 
 [node name="Room6" type="Node2D"]
 script = ExtResource("1_qkxbr")
@@ -44,3 +46,14 @@ position = Vector2(0, 80)
 face = 0
 size = 3
 destinationScenePath = "res://Assets/Scenes/DemoRooms/room_7.tscn"
+
+[node name="Bee" parent="." instance=ExtResource("5_qc2wt")]
+position = Vector2(72, 104)
+
+[node name="RightGate" parent="." instance=ExtResource("6_qxtff")]
+position = Vector2(112, 80)
+size = Vector2i(1, 2)
+
+[node name="LeftGate" parent="." instance=ExtResource("6_qxtff")]
+position = Vector2(0, 32)
+size = Vector2i(1, 3)

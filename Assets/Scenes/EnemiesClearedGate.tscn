@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://cck35umwvrnv"]
+
+[ext_resource type="PackedScene" uid="uid://p7uoyvjxmxly" path="res://Assets/Scenes/ConditionGate.tscn" id="1_h63pd"]
+[ext_resource type="Script" path="res://Assets/Scripts/EnemiesClearedGate.gd" id="2_jfnmn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7l8hj"]
+size = Vector2(16, 16)
+
+[node name="EnemiesClearedGate" instance=ExtResource("1_h63pd")]
+script = ExtResource("2_jfnmn")
+
+[node name="Collision" parent="." index="1"]
+shape = SubResource("RectangleShape2D_7l8hj")
