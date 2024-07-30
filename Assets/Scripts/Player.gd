@@ -38,9 +38,6 @@ var timeSinceJumpPressed = INF
 var jumpBufferTime = 0.1
 var coyoteTime = 0.1
 #endregion
-#region Effect Variables
-@export var swollenShaderPath: String
-#endregion
 #endregion
 
 func _ready():
@@ -256,10 +253,18 @@ func transformTo(effect: PlayerEffect):
             PlayerEffect.FISH:
                 sprite.play_backwards("Transform-fish")
             PlayerEffect.SWOLLEN:
-                tween = create_tween()
-                tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.8)
-                killTween(tween)
-                sprite.material = null
+                # Resize hitbox
+                var tweenHitbox = create_tween()
+                tweenHitbox.tween_property(hitbox.shape, "size", Vector2(14, 28), 0.8)
+                killTween(tweenHitbox)
+                # Move sprite
+                sprite.position = Vector2(0, -2)
+                var tweenPos = create_tween()
+                tweenPos.tween_property(sprite, "position", Vector2(0, -15), 0.75)
+                killTween(tweenPos)
+                
+                sprite.play_backwards("Transform-swollen")
+                sprite.scale = Vector2(1, 1)                
             PlayerEffect.FIRE:
                 pass
     # Add effect
@@ -285,16 +290,17 @@ func transformTo(effect: PlayerEffect):
         PlayerEffect.SWOLLEN:
             stopInput = true
             print("transformTo swollen")
-            tween = create_tween()
-            tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.8)
-            killTween(tween)
-            var shader = load(swollenShaderPath)
-            if not shader:
-                print("WARNING: Could not find swollen shader")
-            else:
-                var material = ShaderMaterial.new()
-                material.shader = shader
-                sprite.material = material
+            # Resize hitbox
+            var tweenHitbox = create_tween()
+            tweenHitbox.tween_property(hitbox.shape, "size", Vector2(28, 56), 0.8)
+            killTween(tweenHitbox)
+            # Move sprite
+            sprite.position = Vector2(0, -16)
+            var tweenPos = create_tween()
+            tweenPos.tween_property(sprite, "position", Vector2(0, -2), 0.8)
+            killTween(tweenPos)
+            
+            sprite.play("Transform-swollen")
             stopInput = false
         PlayerEffect.FIRE:
             stopInput = true
@@ -302,6 +308,12 @@ func transformTo(effect: PlayerEffect):
             stopInput = false
     killTween(tween)
     currentEffect = effect
+    
+    # Stop animiations
+    if currentEffect == PlayerEffect.NONE:
+        await sprite.animation_finished
+        sprite.play("Idle")
+        sprite.position = Vector2(0.0, 0.0)
 
 func kill() -> void:
     var image = get_parent().get_node("CanvasLayer").get_node("GameOver")

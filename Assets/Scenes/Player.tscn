@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://c75s046wewhan"]
+[gd_scene load_steps=51 format=3 uid="uid://c75s046wewhan"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
 [ext_resource type="Texture2D" uid="uid://duah2buqmeomi" path="res://Assets/Sprites/Char-AnimationSheet.png" id="2_oktc3"]
@@ -112,6 +112,38 @@ region = Rect2(96, 128, 16, 32)
 atlas = ExtResource("2_oktc3")
 region = Rect2(112, 128, 16, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ar83"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(0, 192, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4xxsv"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(32, 192, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7c1qv"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(64, 192, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2w70m"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(96, 192, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gr6xs"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(128, 192, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_567od"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(160, 192, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uwknq"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(192, 192, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mewcj"]
+atlas = ExtResource("2_oktc3")
+region = Rect2(224, 192, 32, 64)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_6v0dd"]
 animations = [{
 "frames": [{
@@ -199,6 +231,35 @@ animations = [{
 }],
 "loop": false,
 "name": &"Transform-slime",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ar83")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4xxsv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7c1qv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2w70m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gr6xs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_567od")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uwknq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mewcj")
+}],
+"loop": false,
+"name": &"Transform-swollen",
 "speed": 10.0
 }]
 
