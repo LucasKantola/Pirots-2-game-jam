@@ -43,7 +43,7 @@ position = Vector2(0, -2)
 collision_layer = 0
 collision_mask = 19
 script = ExtResource("1_ndvgu")
-enemyType = 3
+enemyType = 4
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_y5p13")

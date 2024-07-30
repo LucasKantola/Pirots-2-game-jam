@@ -17,6 +17,7 @@ texture_filter = 1
 position = Vector2(0, -2)
 collision_layer = 2
 script = ExtResource("1_n8khh")
+enemyType = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_suiil")

@@ -18,11 +18,12 @@ position = Vector2(0, -2)
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("1_muwkt")
-EnemyType = 2
+enemyType = 3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_87w3a")
-animation = &"TYPE NOT SET"
+animation = &"Bee"
+autoplay = "TYPE NOT SET"
 
 [node name="Hitbox Area" type="Area2D" parent="."]
 collision_layer = 3
