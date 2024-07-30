@@ -17,10 +17,6 @@ config/features=PackedStringArray("4.2", "Forward Plus")
 boot_splash/bg_color=Color(0.0431373, 0.345098, 0.431373, 1)
 config/icon="res://Assets/Sprites/images.png"
 
-[autoload]
-
-Global="*res://Assets/Scripts/global.gd"
-
 [display]
 
 window/size/viewport_width=1280
