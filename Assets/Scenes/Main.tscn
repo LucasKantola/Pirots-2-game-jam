@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://gypxrp8jv3nk"]
+[gd_scene load_steps=11 format=3 uid="uid://gypxrp8jv3nk"]
 
 [ext_resource type="PackedScene" uid="uid://c75s046wewhan" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
 [ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="3_crxsh"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c6qtxdgygbhyg" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
 [ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
+[ext_resource type="PackedScene" uid="uid://g70n3n5srj3p" path="res://Assets/Scenes/Fire.tscn" id="9_5js0i"]
 [ext_resource type="PackedScene" uid="uid://re0ew76ofka5" path="res://Assets/Scenes/Lantern.tscn" id="9_bmjhr"]
 [ext_resource type="PackedScene" uid="uid://cij2h7vg776l4" path="res://Assets/Scenes/Vines.tscn" id="9_fjohd"]
 
@@ -73,11 +74,9 @@ position = Vector2(193, 324)
 
 [node name="Fish" parent="." instance=ExtResource("4_pshyo")]
 position = Vector2(-4, 168)
-EnemyType = 1
 
 [node name="Bee" parent="." instance=ExtResource("4_pshyo")]
 position = Vector2(350, 199)
-EnemyType = 2
 
 [node name="Plant2" parent="." instance=ExtResource("6_i4rig")]
 z_index = 1
@@ -88,8 +87,6 @@ position = Vector2(393, 194)
 
 [node name="Vines" parent="." instance=ExtResource("9_fjohd")]
 position = Vector2(488, 192)
-burnTime = 2.0
-fireNeeded = 10
 
 [node name="Lantern" parent="." instance=ExtResource("9_bmjhr")]
 position = Vector2(546, 173)
@@ -105,3 +102,6 @@ position = Vector2(-108, 179)
 
 [node name="Lantern5" parent="." instance=ExtResource("9_bmjhr")]
 position = Vector2(-26, 165)
+
+[node name="Bee2" parent="." instance=ExtResource("9_5js0i")]
+position = Vector2(249, 162)
