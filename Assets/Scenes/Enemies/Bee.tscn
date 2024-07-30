@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://j8hu2kklwadg"]
+[gd_scene load_steps=8 format=3 uid="uid://j8hu2kklwadg"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_muwkt"]
-[ext_resource type="SpriteFrames" uid="uid://dnu2pv4gswldl" path="res://Assets/Animations/Enemy.tres" id="2_87w3a"]
+[ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_t4yax"]
+[ext_resource type="SpriteFrames" uid="uid://dnu2pv4gswldl" path="res://Assets/Animations/Enemy.tres" id="2_1xcn7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_txcix"]
 size = Vector2(26, 13)
@@ -12,16 +12,25 @@ size = Vector2(10, 3)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
 size = Vector2(16, 15)
 
+[sub_resource type="Gradient" id="Gradient_fnqmt"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_aedr0"]
+gradient = SubResource("Gradient_fnqmt")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.833333, 0.145299)
+
 [node name="Bee" type="CharacterBody2D" groups=["enemy"]]
 texture_filter = 1
 position = Vector2(0, -2)
 collision_layer = 3
 collision_mask = 3
-script = ExtResource("1_muwkt")
+script = ExtResource("1_t4yax")
 enemyType = 3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("2_87w3a")
+sprite_frames = ExtResource("2_1xcn7")
 animation = &"Bee"
 autoplay = "TYPE NOT SET"
 
@@ -45,6 +54,10 @@ debug_color = Color(0, 1, 0, 0.419608)
 
 [node name="WorldCollision" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_5thef")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.21, 0.79, 0.7, 1)
+texture = SubResource("GradientTexture2D_aedr0")
 
 [connection signal="body_entered" from="Hitbox Area" to="." method="hitbox_area_entered"]
 [connection signal="body_exited" from="Hitbox Area" to="." method="hitbox_area_exited"]

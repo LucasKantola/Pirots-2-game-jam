@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c6qtxdgygbhyg"]
+[gd_scene load_steps=8 format=3 uid="uid://c6qtxdgygbhyg"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_n8khh"]
 [ext_resource type="SpriteFrames" uid="uid://dnu2pv4gswldl" path="res://Assets/Animations/Enemy.tres" id="2_suiil"]
@@ -11,6 +11,15 @@ size = Vector2(10, 3)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
 size = Vector2(16, 12)
+
+[sub_resource type="Gradient" id="Gradient_fnqmt"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mlb4u"]
+gradient = SubResource("Gradient_fnqmt")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.833333, 0.145299)
 
 [node name="Slime" type="CharacterBody2D" groups=["enemy"]]
 texture_filter = 1
@@ -44,6 +53,10 @@ debug_color = Color(0, 1, 0, 0.419608)
 [node name="WorldCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_5thef")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.21, 0.79, 0.7, 1)
+texture = SubResource("GradientTexture2D_mlb4u")
 
 [connection signal="body_entered" from="Hitbox Area" to="." method="hitbox_area_entered"]
 [connection signal="body_exited" from="Hitbox Area" to="." method="hitbox_area_exited"]
