@@ -3,19 +3,19 @@
 [ext_resource type="PackedScene" uid="uid://c75s046wewhan" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
 [ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="3_crxsh"]
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="4_1iaa4"]
-[ext_resource type="PackedScene" uid="uid://c6qtxdgygbhyg" path="res://Assets/Scenes/Slime.tscn" id="4_pshyo"]
+[ext_resource type="PackedScene" uid="uid://c6qtxdgygbhyg" path="res://Assets/Scenes/Enemies/Slime.tscn" id="4_pshyo"]
 [ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
 [ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
-[ext_resource type="PackedScene" uid="uid://g70n3n5srj3p" path="res://Assets/Scenes/Fire.tscn" id="9_5js0i"]
+[ext_resource type="PackedScene" uid="uid://g70n3n5srj3p" path="res://Assets/Scenes/Enemies/Fire.tscn" id="9_5js0i"]
 [ext_resource type="PackedScene" uid="uid://re0ew76ofka5" path="res://Assets/Scenes/Lantern.tscn" id="9_bmjhr"]
 [ext_resource type="PackedScene" uid="uid://cij2h7vg776l4" path="res://Assets/Scenes/Vines.tscn" id="9_fjohd"]
 
 [sub_resource type="Environment" id="Environment_74dnx"]
 background_mode = 3
 glow_enabled = true
-glow_intensity = 1.81
-glow_strength = 1.08
-glow_hdr_scale = 1.27
+glow_intensity = 2.15
+glow_blend_mode = 0
+glow_hdr_scale = 1.21
 
 [node name="World" type="Node2D"]
 
@@ -23,7 +23,6 @@ glow_hdr_scale = 1.27
 environment = SubResource("Environment_74dnx")
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
-visible = false
 color = Color(0.85098, 0.85098, 0.85098, 1)
 blend_mode = 1
 

@@ -4,7 +4,7 @@
 [ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="2_7tovs"]
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="3_tf5wl"]
 [ext_resource type="PackedScene" uid="uid://b3slqhwogcge4" path="res://Assets/Scenes/Door.tscn" id="4_f443k"]
-[ext_resource type="PackedScene" uid="uid://j8hu2kklwadg" path="res://Assets/Scenes/Bee.tscn" id="5_qc2wt"]
+[ext_resource type="PackedScene" uid="uid://j8hu2kklwadg" path="res://Assets/Scenes/Enemies/Bee.tscn" id="5_qc2wt"]
 [ext_resource type="PackedScene" uid="uid://cck35umwvrnv" path="res://Assets/Scenes/EnemiesClearedGate.tscn" id="6_qxtff"]
 
 [node name="Room6" type="Node2D"]
