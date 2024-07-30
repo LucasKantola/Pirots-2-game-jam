@@ -6,57 +6,60 @@ enum EnemyTypings {
     SLIME,
     FISH,
     BEE,
-    ANT,
+    FIRE,
 }
 
-@export var EnemyType: EnemyTypings
+@export var enemyType: EnemyTypings
 
-@onready var hitbox = $"Hitbox Area"
-@onready var hurtbox = $"Hurtbox Area"
-@onready var worldCol = $"WorldCollision"
+@onready var hitbox: Area2D = $"Hitbox Area"
+@onready var hurtbox: Area2D = $"Hurtbox Area"
+@onready var worldCol: CollisionShape2D = $"WorldCollision"
+@onready var smokeEffect: GPUParticles2D
 
 var damage = 1
 var effectiveTypes: Array = []
+var hasGravity = true
 
 var isDead = false
 var isPlayerMovingDeadBody = false
 var playerBody: Player
 
 func _ready():
-    self.name = str(EnemyType)
-    match EnemyType:
+    self.name = str(enemyType)
+    match enemyType:
         EnemyTypings.SLIME:
             sprite.play("Slime")
             damage = 1
-            SPEED = 100
             currentEffect = PlayerEffect.SLIME
             effectiveTypes = [PlayerEffect.SWOLLEN]
-
+            hasGravity = true
         EnemyTypings.FISH:
             sprite.play("Fish")
             damage = 1
-            SPEED = 200
             currentEffect = PlayerEffect.FISH
             effectiveTypes = [PlayerEffect.SLIME]
+            hasGravity = true
         EnemyTypings.BEE:
             sprite.play("Bee")
             damage = 1
-            SPEED = 300
             currentEffect = PlayerEffect.SWOLLEN
             effectiveTypes = [PlayerEffect.FIRE]
-        EnemyTypings.ANT:
+            hasGravity = false
+        EnemyTypings.FIRE:
             sprite.play("Fire")
             damage = 1
-            SPEED = 400
             currentEffect = PlayerEffect.FIRE
             effectiveTypes = [PlayerEffect.FISH]
+            hasGravity = false
+            smokeEffect = $"SmokeParticles"
 
 func _physics_process(delta):
     if isPlayerMovingDeadBody:
         var directionCorrect = true if (playerBody.position.x < position.x and playerBody.direction > 0) or (playerBody.position.x > position.x and playerBody.direction < 0) else false
         if directionCorrect:
             velocity.x = SPEED * playerBody.direction
-    addGravity(delta)
+    if hasGravity:
+        addGravity(delta)
     if is_on_floor():
         velocity.x /= 1 + floorFriction
     else:
