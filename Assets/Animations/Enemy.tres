@@ -1,0 +1,63 @@
+[gd_resource type="SpriteFrames" load_steps=7 format=3 uid="uid://dnu2pv4gswldl"]
+
+[ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="1_01rce"]
+[ext_resource type="Texture2D" uid="uid://bq4sgtc33h240" path="res://icon.svg" id="2_3r7k1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ujsxq"]
+atlas = ExtResource("1_01rce")
+region = Rect2(96, 224, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_leep8"]
+atlas = ExtResource("1_01rce")
+region = Rect2(128, 224, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1t1d"]
+atlas = ExtResource("1_01rce")
+region = Rect2(112, 224, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_03xri"]
+atlas = ExtResource("1_01rce")
+region = Rect2(80, 224, 16, 32)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ujsxq")
+}],
+"loop": true,
+"name": &"Bee",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_leep8")
+}],
+"loop": true,
+"name": &"Fire",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k1t1d")
+}],
+"loop": true,
+"name": &"Fish",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_03xri")
+}],
+"loop": true,
+"name": &"Slime",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_3r7k1")
+}],
+"loop": true,
+"name": &"TYPE NOT SET",
+"speed": 5.0
+}]

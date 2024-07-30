@@ -24,7 +24,7 @@ var currentHeight: float
 
 var platformScenes: Array = []
 
-func _process(delta):
+func _process(_delta):
     stalk.position.y = (roots.texture.get_size().y / 2) - (stalk.texture.get_size().y / 2) - 0.5
 
 func _ready():

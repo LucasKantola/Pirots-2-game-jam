@@ -59,6 +59,9 @@ func _ready():
         get_tree().quit() 
 
 func _physics_process(delta):
+    if stopInput:
+        print("Input is stopped")
+
     #Logic for stomping blocks in the swollen form
     if currentEffect == PlayerEffect.SWOLLEN:
         #Landed?
@@ -242,78 +245,49 @@ func transformTo(effect: PlayerEffect):
         return
     if currentEffect != PlayerEffect.NONE:
         # Player has another effect which must be removed first
+        stopInput = true
         match currentEffect:
             PlayerEffect.SLIME:
-                sprite.play_backwards("Transform-slime")
+                sprite.play("Normal")
                 hitbox.shape.size = Vector2(16, 29)
                 hitbox.position = Vector2(0, 1.15)
                 tween = create_tween()
                 tween.tween_property($Light, "position", Vector2(0, -5), 0.8)
                 killTween(tween)
             PlayerEffect.FISH:
-                sprite.play_backwards("Transform-fish")
+                sprite.play("Normal")
             PlayerEffect.SWOLLEN:
-                # Resize hitbox
-                var tweenHitbox = create_tween()
-                tweenHitbox.tween_property(hitbox.shape, "size", Vector2(14, 28), 0.8)
-                killTween(tweenHitbox)
-                # Move sprite
-                sprite.position = Vector2(0, -2)
-                var tweenPos = create_tween()
-                tweenPos.tween_property(sprite, "position", Vector2(0, -15), 0.75)
-                killTween(tweenPos)
-                
-                sprite.play_backwards("Transform-swollen")
-                sprite.scale = Vector2(1, 1)                
+                tween = create_tween()
+                tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.8)
+                killTween(tween)     
             PlayerEffect.FIRE:
-                pass
+                sprite.play("Normal")
     # Add effect
     match effect:
         PlayerEffect.SLIME:
-            stopInput = true
             print("transformTo slime")
-            sprite.play("Transform-slime")
+            sprite.play("Slime")
             tween = create_tween()
             tween.tween_property($Light, "position", Vector2(0, 11), 0.8)
             slimeTranformSound.play()
-            await sprite.animation_finished
             killTween(tween)
             hitbox.shape.size = Vector2(16, 13)
             hitbox.position = Vector2(0, 9.5)
-            stopInput = false
         PlayerEffect.FISH:
-            stopInput = true
             print("transformTo fish")
-            sprite.play("Transform-fish")
-            await sprite.animation_finished
-            stopInput = false
+            sprite.play("Fish")
         PlayerEffect.SWOLLEN:
-            stopInput = true
-            print("transformTo swollen")
-            # Resize hitbox
-            var tweenHitbox = create_tween()
-            tweenHitbox.tween_property(hitbox.shape, "size", Vector2(28, 56), 0.8)
-            killTween(tweenHitbox)
-            # Move sprite
-            sprite.position = Vector2(0, -16)
-            var tweenPos = create_tween()
-            tweenPos.tween_property(sprite, "position", Vector2(0, -2), 0.8)
-            killTween(tweenPos)
-            
-            sprite.play("Transform-swollen")
-            stopInput = false
+            sprite.play("Normal")
+            tween = create_tween()
+            tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.8)
+            killTween(tween)
         PlayerEffect.FIRE:
-            stopInput = true
+            sprite.play("Fire")
             print("transformTo fire")
-            stopInput = false
+
+    stopInput = false
     killTween(tween)
     currentEffect = effect
-    
-    # Stop animiations
-    if currentEffect == PlayerEffect.NONE:
-        await sprite.animation_finished
-        sprite.play("Idle")
-        sprite.position = Vector2(0.0, 0.0)
 
 func kill() -> void:
     var image = get_parent().get_node("CanvasLayer").get_node("GameOver")

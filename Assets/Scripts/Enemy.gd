@@ -26,26 +26,26 @@ func _ready():
     self.name = str(EnemyType)
     match EnemyType:
         EnemyTypings.SLIME:
-            sprite.play("slime")
+            sprite.play("Slime")
             damage = 1
             SPEED = 100
             currentEffect = PlayerEffect.SLIME
             effectiveTypes = [PlayerEffect.SWOLLEN]
 
         EnemyTypings.FISH:
-            sprite.play("fish")
+            sprite.play("Fish")
             damage = 1
             SPEED = 200
             currentEffect = PlayerEffect.FISH
             effectiveTypes = [PlayerEffect.SLIME]
         EnemyTypings.BEE:
-            sprite.play("bee")
+            sprite.play("Bee")
             damage = 1
             SPEED = 300
             currentEffect = PlayerEffect.SWOLLEN
             effectiveTypes = [PlayerEffect.FIRE]
         EnemyTypings.ANT:
-            sprite.play("ant")
+            sprite.play("Fire")
             damage = 1
             SPEED = 400
             currentEffect = PlayerEffect.FIRE
