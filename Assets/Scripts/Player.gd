@@ -3,25 +3,25 @@ extends Mob
 class_name Player
 
 #region Player Variables
+var stopInput = false
 var direction = 0
 var hflipped = false
-var stopInput = false
 var hitbox: CollisionShape2D
-var waterParticle: GPUParticles2D
-var fireParticle: GPUParticles2D
-@export var drop: PackedScene
-var spawnEveryXFrames = 5
-var framesSinceSpawn = 0
+var light: PointLight2D
 
+#region WallClimb Variables
 var wallClimbModifier = 0.8
 var flippedTowardsWall = false
 var wallCheckDistance = 12
+#endregion
 
-var wasInAirLastFrame = false
-var fallenFromY = 0
-
+#region Shooting Variables
 var slowdownWhileShooting = 0.5
 var slowedDown = false
+@export var drop: PackedScene
+var spawnEveryXFrames = 5
+var framesSinceSpawn = 0
+#endregion
 
 #region Sound Effects
 var jumpSound: AudioStreamPlayer
@@ -37,7 +37,20 @@ var timeSinceGround = INF
 var timeSinceJumpPressed = INF
 var jumpBufferTime = 0.1
 var coyoteTime = 0.1
+
+var wasInAirLastFrame = false
+var fallenFromY = 0
 #endregion
+
+#region Effect Variables
+var waterParticle: GPUParticles2D
+var fireParticle: GPUParticles2D
+
+#Predetermined colors for glow based on the colors of the player sprites
+var normalGlowColor: Color = Color(2.259, 2.957, 2.686, 1)
+var fireGlowColor: Color = Color(1.5 + 1, 1.182 + 1, 1.343 + 1, 1)
+var normalLightColor: Color = Color.hex(0x42f4afff)
+var fireLightColor: Color = Color.hex(0xffaed7ff)
 #endregion
 
 func _ready():
@@ -53,12 +66,21 @@ func _ready():
     landSound = get_node("SFX/Land")
     waterSound = get_node("SFX/Water")
     explosionSound = get_node("SFX/Explosion")
+    light = get_node("Light")
     #ifall skumma saker händer så säger vi fuck det här
     if not world or not sprite or not hitbox or not waterParticle:
         print("WARNING: Could not find world, tilemap or sprite")
         get_tree().quit() 
 
 func _physics_process(delta):
+    #Make the color glow in the correct color for the sprite
+    if currentEffect != PlayerEffect.FIRE:
+        modulate = normalGlowColor
+        light.color = normalLightColor
+    else:
+        modulate = fireGlowColor
+        light.color = fireLightColor
+
     if stopInput:
         print("Input is stopped")
 

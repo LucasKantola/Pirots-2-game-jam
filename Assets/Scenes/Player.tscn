@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c75s046wewhan"]
+[gd_scene load_steps=28 format=3 uid="uid://c75s046wewhan"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
 [ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="2_tio1s"]
@@ -114,6 +114,35 @@ color_ramp = SubResource("GradientTexture1D_b0meo")
 turbulence_noise_strength = 0.1
 collision_mode = 2
 
+[sub_resource type="Gradient" id="Gradient_wqkwp"]
+offsets = PackedFloat32Array(0, 0.537037, 1)
+colors = PackedColorArray(1, 0.282353, 0.643137, 1, 0.580392, 0.109804, 0.494118, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_47tct"]
+gradient = SubResource("Gradient_wqkwp")
+
+[sub_resource type="Curve" id="Curve_8o3s1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_o2ap1"]
+curve = SubResource("Curve_8o3s1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mtee5"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(8, 16, 1)
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 30.0
+gravity = Vector3(0, -98, 0)
+scale_min = 2.0
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_o2ap1")
+color_ramp = SubResource("GradientTexture1D_47tct")
+turbulence_enabled = true
+turbulence_noise_scale = 1.0
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 z_index = 1
 texture_filter = 1
@@ -130,17 +159,17 @@ shape = SubResource("RectangleShape2D_ym5u1")
 texture_filter = 1
 texture_repeat = 1
 sprite_frames = SubResource("SpriteFrames_6v0dd")
-animation = &"Normal"
+animation = &"Fire"
 autoplay = "Normal"
 
 [node name="Light" type="PointLight2D" parent="."]
-visible = false
 position = Vector2(0, -5)
-color = Color(0.709804, 0.941176, 0.996078, 1)
-energy = 0.7
+color = Color(1, 0.682353, 0.843137, 1)
+energy = 0.2
 texture = ExtResource("3_jekgo")
 
 [node name="WaterGun" type="GPUParticles2D" parent="."]
+modulate = Color(1.7, 1.7, 2, 1)
 position = Vector2(7, -9)
 emitting = false
 amount = 130
@@ -157,6 +186,12 @@ amount = 80
 process_material = SubResource("ParticleProcessMaterial_teyc1")
 lifetime = 0.4
 fixed_fps = 60
+
+[node name="BurningParticles" type="GPUParticles2D" parent="."]
+z_index = 10
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_mtee5")
 
 [node name="SFX" type="Node2D" parent="."]
 

@@ -41,14 +41,14 @@ color_ramp = SubResource("GradientTexture1D_366a4")
 offsets = PackedFloat32Array(0, 0.537037, 1)
 colors = PackedColorArray(1, 0.282353, 0.643137, 1, 0.580392, 0.109804, 0.494118, 1, 0, 0, 0, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_w6lhy"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_c8ivx"]
 gradient = SubResource("Gradient_hojkk")
 
 [sub_resource type="Curve" id="Curve_rug3r"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_hson5"]
+[sub_resource type="CurveTexture" id="CurveTexture_f3x2f"]
 curve = SubResource("Curve_rug3r")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_msgiq"]
@@ -61,8 +61,8 @@ initial_velocity_max = 30.0
 gravity = Vector3(0, -98, 0)
 scale_min = 2.0
 scale_max = 2.0
-scale_curve = SubResource("CurveTexture_hson5")
-color_ramp = SubResource("GradientTexture1D_w6lhy")
+scale_curve = SubResource("CurveTexture_f3x2f")
+color_ramp = SubResource("GradientTexture1D_c8ivx")
 turbulence_enabled = true
 turbulence_noise_scale = 1.0
 
