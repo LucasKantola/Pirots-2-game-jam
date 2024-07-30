@@ -1,0 +1,84 @@
+[gd_scene load_steps=12 format=3 uid="uid://g70n3n5srj3p"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_ndvgu"]
+[ext_resource type="SpriteFrames" uid="uid://dnu2pv4gswldl" path="res://Assets/Animations/Enemy.tres" id="2_y5p13"]
+[ext_resource type="Texture2D" uid="uid://bljxabhpvlqqn" path="res://Assets/Sprites/smoke.png" id="3_e2cbt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txcix"]
+size = Vector2(26, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qt00p"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
+size = Vector2(12, 20)
+
+[sub_resource type="Gradient" id="Gradient_hk2yi"]
+offsets = PackedFloat32Array(0, 0.62963, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.705882, 1, 1, 1, 0.235294)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gvnqd"]
+gradient = SubResource("Gradient_hk2yi")
+
+[sub_resource type="Curve" id="Curve_pd6pn"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.28237, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_aejah"]
+curve = SubResource("Curve_pd6pn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2c88j"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(8, 8, 1)
+spread = 180.0
+initial_velocity_min = 25.0
+initial_velocity_max = 35.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_aejah")
+color_ramp = SubResource("GradientTexture1D_gvnqd")
+
+[node name="Bee" type="CharacterBody2D" groups=["enemy"]]
+texture_filter = 1
+position = Vector2(0, -2)
+collision_layer = 0
+collision_mask = 19
+script = ExtResource("1_ndvgu")
+enemyType = 3
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_y5p13")
+animation = &"Fire"
+autoplay = "TYPE NOT SET"
+
+[node name="Hitbox Area" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="Hitbox" type="CollisionShape2D" parent="Hitbox Area"]
+shape = SubResource("RectangleShape2D_txcix")
+debug_color = Color(1, 0, 0, 0.458824)
+
+[node name="Hurtbox Area" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2147483650
+
+[node name="Hurtbox" type="CollisionShape2D" parent="Hurtbox Area"]
+shape = SubResource("RectangleShape2D_qt00p")
+debug_color = Color(0, 1, 0, 0.419608)
+
+[node name="WorldCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_5thef")
+
+[node name="SmokeParticles" type="GPUParticles2D" parent="."]
+texture_filter = 1
+emitting = false
+amount = 30
+process_material = SubResource("ParticleProcessMaterial_2c88j")
+texture = ExtResource("3_e2cbt")
+one_shot = true
+explosiveness = 1.0
+draw_order = 0
+
+[connection signal="body_entered" from="Hitbox Area" to="." method="hitbox_area_entered"]
+[connection signal="body_exited" from="Hitbox Area" to="." method="hitbox_area_exited"]
+[connection signal="body_entered" from="Hurtbox Area" to="." method="hurtbox_area_entered"]
