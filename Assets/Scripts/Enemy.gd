@@ -15,6 +15,7 @@ enum EnemyTypings {
 @onready var hitbox: Area2D = $"Hitbox Area"
 @onready var hurtbox: Area2D = $"Hurtbox Area"
 @onready var worldCol: CollisionShape2D = $"WorldCollision"
+@onready var light: PointLight2D = $"PointLight2D"
 @onready var smokeEffect: GPUParticles2D
 
 var damage = 1
@@ -118,6 +119,7 @@ func hurtbox_area_entered(body: Node2D) -> void:
                 hurtbox.monitoring = false
                 hitbox.monitoring = false
                 worldCol.disabled = true
+                light.enabled = false
                 smokeEffect.emitting = true
                 isDead = true
                 await smokeEffect.finished
