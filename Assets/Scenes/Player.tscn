@@ -130,7 +130,8 @@ shape = SubResource("RectangleShape2D_ym5u1")
 texture_filter = 1
 texture_repeat = 1
 sprite_frames = SubResource("SpriteFrames_6v0dd")
-animation = &"Fire"
+animation = &"Normal"
+autoplay = "Normal"
 
 [node name="Light" type="PointLight2D" parent="."]
 visible = false
