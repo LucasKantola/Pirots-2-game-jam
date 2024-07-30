@@ -3,27 +3,27 @@
 [ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="1_01rce"]
 [ext_resource type="Texture2D" uid="uid://bq4sgtc33h240" path="res://icon.svg" id="2_3r7k1"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ujsxq"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_nqubh"]
 atlas = ExtResource("1_01rce")
-region = Rect2(96, 224, 16, 32)
+region = Rect2(96, 240, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_leep8"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_ssfs8"]
 atlas = ExtResource("1_01rce")
-region = Rect2(128, 224, 16, 32)
+region = Rect2(128, 240, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_k1t1d"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_otolt"]
 atlas = ExtResource("1_01rce")
-region = Rect2(112, 224, 16, 32)
+region = Rect2(112, 240, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_03xri"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_liyeb"]
 atlas = ExtResource("1_01rce")
-region = Rect2(80, 224, 16, 32)
+region = Rect2(80, 240, 16, 16)
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ujsxq")
+"texture": SubResource("AtlasTexture_nqubh")
 }],
 "loop": true,
 "name": &"Bee",
@@ -31,7 +31,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_leep8")
+"texture": SubResource("AtlasTexture_ssfs8")
 }],
 "loop": true,
 "name": &"Fire",
@@ -39,7 +39,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_k1t1d")
+"texture": SubResource("AtlasTexture_otolt")
 }],
 "loop": true,
 "name": &"Fish",
@@ -47,7 +47,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_03xri")
+"texture": SubResource("AtlasTexture_liyeb")
 }],
 "loop": true,
 "name": &"Slime",
