@@ -33,7 +33,6 @@ fill_to = Vector2(0.905983, 0.15812)
 texture_filter = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(1, 0)
 sprite_frames = SubResource("SpriteFrames_ay22h")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
