@@ -260,7 +260,10 @@ func _unhandled_input(event):
     if event.is_action_pressed("debug_fire"):
         transformTo(PlayerEffect.FIRE)
     if event.is_action_pressed("reset"):
-        get_tree().reload_current_scene()
+        if world is World:
+            world.reset_room()
+        else:
+            get_tree().reload_current_scene()
 
 
 ### tranform funkar inte att ha som namn på funktionen då det är en refenrens till en bodyns transform så den fick ett finare namn

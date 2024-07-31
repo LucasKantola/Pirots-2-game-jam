@@ -79,6 +79,8 @@ func _on_door_entered(body_rid, body, body_shape_index, local_shape_index):
         get_node("/root/World").enter_door($".")
 
 func _on_door_exited(body_rid, body, body_shape_index, local_shape_index):
+    if body == null:
+        return
     if body.name == "Player":
         get_node("/root/World").exit_door($".")
 

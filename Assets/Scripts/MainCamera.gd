@@ -36,7 +36,8 @@ func _ready():
 
 func _process(delta):
     if followPlayer:
-        position = player.position
+        if is_instance_valid(player):
+            position = player.position
         return
         
     var newFit: Vector3

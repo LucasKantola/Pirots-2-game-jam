@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name World
+
 #region Public variables
 @export_color_no_alpha var backgroundColor := Color.BLACK
 #region Rooms variables
@@ -21,6 +23,10 @@ extends Node2D
 #endregion
 #endregion
 
+var gridSize: int:
+    get:
+        return terrain.rendering_quadrant_size
+
 var currentRoom: Room
 
 func _ready():
@@ -28,16 +34,14 @@ func _ready():
     playerHitbox = player.get_node("Hitbox")
     # Pre-generated rooms
     currentRoom = $Rooms.get_children()[0] as Room
-    steal_tiles(currentRoom)
-    currentRoom.coverColor = backgroundColor
+    setup_room(currentRoom)
     for room in $Rooms.get_children().slice(1):
         room = room as Room
-        steal_tiles(room)
-        room.coverColor = backgroundColor
+        setup_room(room)
         room.disappear_instant()
     # Update camera
-    $MainCamera.targetRoom = currentRoom
-    $MainCamera.snap_to_room()
+    camera.targetRoom = currentRoom
+    camera.snap_to_room()
     # Set background color
     worldBackground.visible = true
     worldBackground.color = backgroundColor
@@ -51,7 +55,7 @@ func enter_door(door: Door) -> void:
     if not destinationExists:
         print("Instantiating room")
         var room = generate_door_destination(door)
-        steal_tiles(room)
+        setup_room(room)
         
     # Get destination door
     var destinationRoom = door.destinationRoom
@@ -116,12 +120,14 @@ func generate_door_destination(door: Door) -> Room:
     
     door.destinationRoom = newRoom
     door.destinationDoor = destinationDoor
-    
-    newRoom.coverColor = backgroundColor
     return newRoom
 
 func exit_door(door: Door) -> void:
     pass
+
+func setup_room(room: Room) -> void:
+    steal_tiles(room)
+    room.coverColor = backgroundColor
 
 func steal_tiles(room: Room) -> void:
     copy_tilemap(room, "Background", background)
@@ -130,7 +136,6 @@ func steal_tiles(room: Room) -> void:
     room.get_node("./RoomShape/Terrain").queue_free()
 
 func copy_tilemap(room: Room, fromTileMapName: String, toTileMap: TileMap) -> void:
-    var gridSize := toTileMap.rendering_quadrant_size
     var roomTileMap = room.get_node("./RoomShape/%s" % fromTileMapName) as TileMap
     var size := (room.get_node("./RoomShape") as Control).size
     var iSize := size / gridSize
@@ -145,3 +150,37 @@ func copy_tilemap(room: Room, fromTileMapName: String, toTileMap: TileMap) -> vo
                 var toCoords = toTileMap.to_local(room.to_global(roomCoords * gridSize)) / gridSize
                 if sourceId != -1:
                     toTileMap.set_cell(layer, toCoords, sourceId, atlasCoords)
+
+func delete_room(room: Room) -> void:
+    var tilemaps: Array[TileMap] = [terrain, background]
+    
+    var polygon: PackedVector2Array = room.cover.polygon
+    var size: Vector2 = room.get_node("RoomShape").size
+    var iSize: Vector2i = size / terrain.rendering_quadrant_size
+    for x in range(iSize.x):
+        for y in range(iSize.y):
+            var coords = Vector2i(x, y)
+            if Geometry2D.is_point_in_polygon(coords * gridSize, polygon):
+                for tilemap in tilemaps:
+                    for layer in range(tilemap.get_layers_count()):
+                        var tilemapCoords = tilemap.to_local(room.to_global(coords * gridSize)) / gridSize
+                        tilemap.erase_cell(layer, tilemapCoords)
+    room.queue_free()
+
+func reset_room() -> void:
+    var newRoom = reload_room(currentRoom)
+    currentRoom = newRoom
+    # Update camera
+    camera.targetRoom = currentRoom
+    camera.snap_to_room()
+
+func reload_room(room: Room) -> Room:
+    delete_room(room)
+    var scenePath = room.scene_file_path
+    print(scenePath)
+    var roomScene: PackedScene = load(scenePath)
+    var roomInstance: Room = roomScene.instantiate()
+    roomInstance.position = room.position
+    $Rooms.add_child(roomInstance)
+    setup_room(roomInstance)
+    return roomInstance
