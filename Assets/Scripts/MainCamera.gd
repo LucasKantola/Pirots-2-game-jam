@@ -1,5 +1,7 @@
 extends Camera2D
 
+class_name MainCamera
+
 #region Public variables
 @export var transitionDurationSeconds: float = 1.0
 #region Debug variables

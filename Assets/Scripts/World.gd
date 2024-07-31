@@ -13,13 +13,13 @@ class_name World
 #endregion
 
 #region References
-@onready var player := $Player
+@onready var player: Player = $Player
 @onready var playerHitbox: CollisionShape2D
-@onready var camera := $MainCamera
-@onready var worldBackground := $WorldBackground/ColorRect
+@onready var camera: MainCamera = $MainCamera
+@onready var worldBackground: ColorRect = $WorldBackground/ColorRect
 #region Tilemaps
-@onready var background := $Background as TileMap
-@onready var terrain := $Terrain as TileMap
+@onready var background: TileMap = $Background
+@onready var terrain: TileMap = $Terrain
 #endregion
 #endregion
 
@@ -28,6 +28,8 @@ var gridSize: int:
         return terrain.rendering_quadrant_size
 
 var currentRoom: Room
+var lastEnteredDoor: Door
+var startingPlayerState: PlayerState
 
 func _ready():
     # References
@@ -48,6 +50,9 @@ func _ready():
 
 func enter_door(door: Door) -> void:
     print("\nEntering room %s %s" % [door.destinationScenePath, door.name])
+    lastEnteredDoor = door
+    startingPlayerState = PlayerState.save(player)
+    
     var velocity = player.velocity
     player.stopInput = true
     # Create room if needed
@@ -71,21 +76,7 @@ func enter_door(door: Door) -> void:
     
     # Tween player to next room
     var currentPosition = player.global_position
-    var targetPosition = currentPosition
-    var playerExtents = (playerHitbox.shape as RectangleShape2D).extents
-    match door.face:
-        Door.Face.LEFT:
-            targetPosition.x = door.global_position.x
-            targetPosition.x -= playerExtents.x
-        Door.Face.RIGHT:
-            targetPosition.x = door.global_position.x
-            targetPosition.x += playerExtents.x
-        Door.Face.UP:
-            targetPosition.y = door.global_position.y
-            targetPosition.y -= playerExtents.y
-        Door.Face.DOWN:
-            targetPosition.y = door.global_position.y
-            targetPosition.y += playerExtents.y
+    var targetPosition = get_door_exit_position(door, currentPosition)
     
     var tween = create_tween()
     tween.tween_method(func(value): player.global_position = value, currentPosition, targetPosition, transitionDurationSeconds)
@@ -97,6 +88,20 @@ func enter_door(door: Door) -> void:
         velocity = Vector2(upExitForwardVelocity * (-1 if player.hflipped else 1), upExitVelocity)
     player.velocity = velocity
     player.move_and_slide()
+
+func get_door_exit_position(door: Door, enterPosition: Vector2) -> Vector2:
+    var targetPosition = enterPosition
+    var playerExtents = (playerHitbox.shape as RectangleShape2D).extents
+    match door.face:
+        Door.Face.LEFT:
+            targetPosition.x = door.global_position.x - playerExtents.x
+        Door.Face.RIGHT:
+            targetPosition.x = door.global_position.x + playerExtents.x
+        Door.Face.UP:
+            targetPosition.y = door.global_position.y - playerExtents.y
+        Door.Face.DOWN:
+            targetPosition.y = door.global_position.y + playerExtents.y
+    return targetPosition
 
 func generate_door_destination(door: Door) -> Room:
     # Intantiate scene
@@ -168,11 +173,22 @@ func delete_room(room: Room) -> void:
     room.queue_free()
 
 func reset_room() -> void:
+    player.stopInput = true
+    
     var newRoom = reload_room(currentRoom)
     currentRoom = newRoom
+    # Reset player
+    player.HP = player.maxHP
+    var lastEnteredDoorCollision = lastEnteredDoor.get_node("DoorArea/CollisionShape2D")
+    var doorMiddle = lastEnteredDoorCollision.global_position
+    var exitPosition = get_door_exit_position(lastEnteredDoor, doorMiddle)
+    player.global_position = exitPosition
+    startingPlayerState.apply(player)
     # Update camera
     camera.targetRoom = currentRoom
     camera.snap_to_room()
+    
+    player.stopInput = false
 
 func reload_room(room: Room) -> Room:
     delete_room(room)

@@ -11,6 +11,7 @@ enum PlayerEffect {
 }
 
 #region Variables
+@export var maxHP := 5
 @export var HP := 5:
     set(value):
         var oldHealth = HP
