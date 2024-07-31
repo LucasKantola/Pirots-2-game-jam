@@ -4,6 +4,8 @@ extends CanvasLayer
 class_name GUI
 
 #region Public variables
+@export var showOnStart := true
+
 @export_group("Health bar")
 @export var health: int = 3:
     set(value):
@@ -14,14 +16,17 @@ class_name GUI
 #endregion
 
 #region References
-@onready var gameOver
-@onready var healthBar
+var gameOver: Control
+var healthBar: Control
 #endregion
 
 func _ready():
     gameOver = get_node("GameOver")
     healthBar = get_node("HealthBar")
     update_health_bar()
+    
+    if not Engine.is_editor_hint():
+        visible = showOnStart
 
 func show_game_over():
     gameOver.visible = true

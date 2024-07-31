@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b1jppi031k6d5"]
+[gd_scene load_steps=8 format=3 uid="uid://b1jppi031k6d5"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/World.gd" id="1_3haea"]
 [ext_resource type="Script" path="res://Assets/Scripts/MainCamera.gd" id="1_eu8hu"]
@@ -6,6 +6,7 @@
 [ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="2_oswei"]
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="3_uhwj8"]
 [ext_resource type="PackedScene" uid="uid://c75s046wewhan" path="res://Assets/Scenes/Player.tscn" id="5_sj4lu"]
+[ext_resource type="PackedScene" uid="uid://bxhky30vwqrol" path="res://Assets/Scenes/GUI.tscn" id="7_lt7f7"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_3haea")
@@ -27,6 +28,9 @@ layer_0/z_index = 1
 
 [node name="Room1" parent="Rooms" instance=ExtResource("2_3p137")]
 position = Vector2(0, -144)
+
+[node name="GUI" parent="." instance=ExtResource("7_lt7f7")]
+visible = false
 
 [node name="Player" parent="." instance=ExtResource("5_sj4lu")]
 position = Vector2(65, -16)
