@@ -259,7 +259,7 @@ func _unhandled_input(event):
         transformTo(PlayerEffect.FISH)
     if event.is_action_pressed("debug_fire"):
         transformTo(PlayerEffect.FIRE)
-    if event.is_action_pressed("reset"):
+    if event.is_action_pressed("debug_reset_scene"):
         get_tree().reload_current_scene()
 
 

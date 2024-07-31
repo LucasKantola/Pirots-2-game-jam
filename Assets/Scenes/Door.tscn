@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" path="res://Assets/Scripts/Door.gd" id="1_yfg6p"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dm7vh"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ikayb"]
 size = Vector2(16, 32)
 
-[node name="Door" type="Node2D" groups=["door"]]
+[node name="Door" type="Node2D" groups=["RoomResetExcluded", "door"]]
 process_mode = 3
 z_index = 10
 script = ExtResource("1_yfg6p")
@@ -17,7 +17,7 @@ input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea"]
 position = Vector2(8, -16)
-shape = SubResource("RectangleShape2D_dm7vh")
+shape = SubResource("RectangleShape2D_ikayb")
 debug_color = Color(0.96, 0.6, 0.26, 0.5)
 
 [connection signal="body_shape_entered" from="DoorArea" to="." method="_on_door_entered"]

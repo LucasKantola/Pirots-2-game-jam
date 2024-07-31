@@ -22,6 +22,7 @@ extends Node2D
 #endregion
 
 var currentRoom: Room
+var currentRoomResetState: RoomState
 
 func _ready():
     # References
@@ -29,6 +30,7 @@ func _ready():
     # Pre-generated rooms
     currentRoom = $Rooms.get_children()[0] as Room
     steal_tiles(currentRoom)
+    currentRoomResetState = RoomState.get_state(currentRoom)
     currentRoom.coverColor = backgroundColor
     for room in $Rooms.get_children().slice(1):
         room = room as Room
@@ -41,6 +43,12 @@ func _ready():
     # Set background color
     worldBackground.visible = true
     worldBackground.color = backgroundColor
+
+func _process(delta):
+    if Input.is_action_just_pressed("debug_save_room"):
+        currentRoomResetState = RoomState.get_state(currentRoom)
+    if Input.is_action_just_pressed("reset"):
+        currentRoomResetState.apply(currentRoom)
 
 func enter_door(door: Door) -> void:
     print("\nEntering room %s %s" % [door.destinationScenePath, door.name])
