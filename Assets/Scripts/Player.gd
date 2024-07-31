@@ -54,8 +54,7 @@ var fireLightColor: Color = Color.hex(0xffaed7ff)
 #endregion
 
 func _ready():
-    world = get_node("/root/World")
-    tileMap = get_node("/root/World/Terrain")
+    super._ready()
     hitbox = get_node("Hitbox")
     waterParticle = get_node("WaterGun")
     fireParticle = get_node("FireGun")
@@ -71,6 +70,11 @@ func _ready():
     if not world or not sprite or not hitbox or not waterParticle:
         print("WARNING: Could not find world, tilemap or sprite")
         get_tree().quit() 
+    # Register health bar update
+    gui.health = HP
+    health_changed.connect(func(newHealth: int, oldHealth: int):
+        gui.health = newHealth
+        )
 
 func _physics_process(delta):
     #Make the color glow in the correct color for the sprite
@@ -312,9 +316,7 @@ func transformTo(effect: PlayerEffect):
     currentEffect = effect
 
 func kill() -> void:
-    var image = get_parent().get_node("CanvasLayer").get_node("GameOver")
-    image.visible = true
-
+    gui.show_game_over()
     queue_free()
 
 func killTween(tween: Tween) -> void:

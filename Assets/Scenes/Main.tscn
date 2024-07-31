@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://gypxrp8jv3nk"]
 
+[ext_resource type="PackedScene" uid="uid://bxhky30vwqrol" path="res://Assets/Scenes/GUI.tscn" id="1_iiy3p"]
 [ext_resource type="PackedScene" uid="uid://c75s046wewhan" path="res://Assets/Scenes/Player.tscn" id="2_w1t2q"]
 [ext_resource type="TileSet" uid="uid://7yyqjjb2bfyw" path="res://Assets/TileSets/Background.tres" id="3_crxsh"]
 [ext_resource type="TileSet" uid="uid://tgdajihx7sax" path="res://Assets/TileSets/Terrain.tres" id="4_1iaa4"]
 [ext_resource type="PackedScene" uid="uid://c6qtxdgygbhyg" path="res://Assets/Scenes/Enemies/Slime.tscn" id="4_pshyo"]
-[ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="4_wibtl"]
 [ext_resource type="PackedScene" uid="uid://dngnfi8yrwdev" path="res://Assets/Scenes/Plant.tscn" id="6_i4rig"]
 [ext_resource type="PackedScene" uid="uid://g70n3n5srj3p" path="res://Assets/Scenes/Enemies/Fire.tscn" id="9_5js0i"]
 [ext_resource type="PackedScene" uid="uid://re0ew76ofka5" path="res://Assets/Scenes/Lantern.tscn" id="9_bmjhr"]
@@ -26,27 +26,7 @@ environment = SubResource("Environment_74dnx")
 color = Color(0.85098, 0.85098, 0.85098, 1)
 blend_mode = 1
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="GameOver" type="Control" parent="CanvasLayer"]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="image" type="TextureRect" parent="CanvasLayer/GameOver"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_wibtl")
-metadata/_edit_use_anchors_ = true
+[node name="GUI" parent="." instance=ExtResource("1_iiy3p")]
 
 [node name="Background" type="TileMap" parent="."]
 tile_set = ExtResource("3_crxsh")

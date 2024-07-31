@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxhky30vwqrol"]
+
+[ext_resource type="Texture2D" uid="uid://bgrfov2fvj84j" path="res://Assets/Images/Untitled.png" id="1_ft1vh"]
+[ext_resource type="Script" path="res://Assets/Scenes/GUI.gd" id="1_u8na7"]
+[ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="2_2novp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gdtej"]
+atlas = ExtResource("2_2novp")
+region = Rect2(96, 208, 16, 16)
+
+[node name="GUI" type="CanvasLayer"]
+script = ExtResource("1_u8na7")
+
+[node name="HealthBar" type="HBoxContainer" parent="."]
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 72.0
+offset_bottom = 68.0
+theme_override_constants/separation = 4
+
+[node name="Heart" type="TextureRect" parent="HealthBar"]
+texture_filter = 1
+layout_mode = 2
+texture = SubResource("AtlasTexture_gdtej")
+expand_mode = 2
+
+[node name="GameOver" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="image" type="TextureRect" parent="GameOver"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ft1vh")
+metadata/_edit_use_anchors_ = true
