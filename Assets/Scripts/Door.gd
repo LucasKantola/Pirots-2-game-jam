@@ -85,7 +85,7 @@ func _on_door_exited(body_rid, body, body_shape_index, local_shape_index):
         get_node("/root/World").exit_door($".")
 
 func check_for_destination() -> bool:
-    if destinationRoom and destinationDoor:
+    if is_instance_valid(destinationRoom) and is_instance_valid(destinationDoor):
         return true
     
     for area in $DoorArea.get_overlapping_areas():

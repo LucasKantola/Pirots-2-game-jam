@@ -2,11 +2,28 @@ extends Mob
 
 class_name Player
 
+#region Public variables
+#region Health variables
+@export_group("Health")
+@export var maxHealth := 5
+@export var health := 5:
+    set(value):
+        var oldHealth = health
+        health = value
+        health_changed.emit(health, oldHealth)
+    get:
+        return health
+#endregion
+
+#region Debug variables
+@export_group("Editor")
+@export var drawHitbox := false
+#endregion
+#endregion
+
 #region Player Variables
 var stopInput = false
 var direction = 0
-var hflipped = false
-var hitbox: CollisionShape2D
 var light: PointLight2D
 
 #region WallClimb Variables
@@ -18,18 +35,9 @@ var wallCheckDistance = 12
 #region Shooting Variables
 var slowdownWhileShooting = 0.5
 var slowedDown = false
-@export var drop: PackedScene
+var drop: PackedScene
 var spawnEveryXFrames = 5
 var framesSinceSpawn = 0
-#endregion
-
-#region Sound Effects
-var jumpSound: AudioStreamPlayer
-var slimeWalkSound: AudioStreamPlayer
-var slimeTranformSound: AudioStreamPlayer
-var landSound: AudioStreamPlayer
-var waterSound: AudioStreamPlayer
-var explosionSound: AudioStreamPlayer
 #endregion
 
 #region Physics Variables
@@ -41,23 +49,42 @@ var coyoteTime = 0.1
 var wasInAirLastFrame = false
 var fallenFromY = 0
 #endregion
+#endregion
+
+#region References
+var hitbox: CollisionShape2D
+
+#region Sound Effects
+var jumpSound: AudioStreamPlayer
+var slimeWalkSound: AudioStreamPlayer
+var slimeTranformSound: AudioStreamPlayer
+var landSound: AudioStreamPlayer
+var waterSound: AudioStreamPlayer
+var explosionSound: AudioStreamPlayer
+#endregion
 
 #region Effect Variables
 var waterParticle: GPUParticles2D
 var fireParticle: GPUParticles2D
+#endregion
+#endregion
 
-#Predetermined colors for glow based on the colors of the player sprites
+#region Predetermined colors for glow based on the colors of the player sprites
 var normalGlowColor: Color = Color(2.259, 2.957, 2.686, 1)
 var fireGlowColor: Color = Color(1.5 + 1, 1.182 + 1, 1.343 + 1, 1)
 var normalLightColor: Color = Color.hex(0x42f4afff)
 var fireLightColor: Color = Color.hex(0xffaed7ff)
 #endregion
 
+#region Signals
+signal health_changed(newHealth: int, oldHealth: int)
+#endregion
+
 func _ready():
     super._ready()
     hitbox = get_node("Hitbox")
-    waterParticle = get_node("WaterGun")
-    fireParticle = get_node("FireGun")
+    waterParticle = get_node("Particles/WaterGun")
+    fireParticle = get_node("Particles/FireGun")
     drop = load("res://Assets/Scenes/Drop.tscn")
     jumpSound = get_node("SFX/Jump")
     slimeWalkSound = get_node("SFX/Slime walk")
@@ -69,9 +96,9 @@ func _ready():
     #ifall skumma saker händer så säger vi fuck det här
     if not world or not sprite or not hitbox or not waterParticle:
         print("WARNING: Could not find world, tilemap or sprite")
-        get_tree().quit() 
+        get_tree().quit()
     # Register health bar update
-    gui.health = HP
+    gui.health = health
     health_changed.connect(func(newHealth: int, oldHealth: int):
         gui.health = newHealth
         )
@@ -98,9 +125,9 @@ func _physics_process(delta):
                 Vector2(6, 32)
             ]
             for pos in checkPositions:
-                if getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Breakable"):
+                if tileMap.get_custom_data_from_tilemap(0, global_position + pos, "Breakable"):
                     tileMap.set_cell(0, tileMap.local_to_map(global_position + pos), -1)
-                    velocity.y = JUMP_VELOCITY * 0.7
+                    velocity.y = jumpVelocity * 0.7
                     explosionSound.play()
 
 
@@ -112,12 +139,12 @@ func _physics_process(delta):
         if currentEffect == PlayerEffect.FISH:
             slowedDown = true
             waterParticle.emitting = true
-            if framesSinceSpawn >= spawnEveryXFrames:	
+            if framesSinceSpawn >= spawnEveryXFrames:
                 var dropInstance = drop.instantiate()
                 dropInstance.speed = 300
                 dropInstance.gravity = 200
                 dropInstance.dropType = dropInstance.DropType.WATER
-                if not hflipped:
+                if not flip_h:
                     dropInstance.position = position + waterParticle.position
                     dropInstance.direction = Vector2(1, -0.5)
                 else:
@@ -139,7 +166,7 @@ func _physics_process(delta):
                 dropInstance.gravityDisabled = true
                 dropInstance.lifetime = 0.35
                 dropInstance.dropType = dropInstance.DropType.LAVA
-                if not hflipped:
+                if not flip_h:
                     dropInstance.position = position + fireParticle.position
                     dropInstance.direction = Vector2(1, 0)
                 else:
@@ -150,10 +177,7 @@ func _physics_process(delta):
             else:
                 framesSinceSpawn += 1
     else:
-        waterParticle.emitting = false
-        waterSound.playing = false
-        fireParticle.emitting = false
-        slowedDown = false
+        stop_shooting()
 
     if Input.is_action_just_pressed("up"):
         if not stopInput:
@@ -163,7 +187,7 @@ func _physics_process(delta):
     
     if Input.is_action_pressed("down"):
         set_collision_mask_value(5, false)
-    else: 
+    else:
         set_collision_mask_value(5, true)
 
     if not is_on_floor():
@@ -174,7 +198,7 @@ func _physics_process(delta):
     if timeSinceJumpPressed < jumpBufferTime:
         if (is_on_floor() and timeSinceJumpPressed < jumpBufferTime) or is_on_floor() or timeSinceGround < coyoteTime:
             if currentEffect != PlayerEffect.SLIME:
-                velocity.y = JUMP_VELOCITY
+                velocity.y = jumpVelocity
                 jumpSound.play()
             timeSinceJumpPressed = INF
             timeSinceGround = INF
@@ -189,38 +213,34 @@ func _physics_process(delta):
                 Vector2(xPos, 8),
             ]
             for pos in checkPositionsSlime:
-                var cellCustom = getCustomDataFromTileMap(tileMap, 0, global_position + pos, "Scalable")
+                var cellCustom = tileMap.get_custom_data_from_tilemap(0, global_position + pos, "Scalable")
                 $RayCast2D.target_position = pos
 
                 if cellCustom or $RayCast2D.is_colliding():
                     faceWall(direction)
-                    velocity.y = -SPEED * wallClimbModifier
-        velocity.x = direction * SPEED
+                    velocity.y = -speed * wallClimbModifier
+        velocity.x = direction * speed
 
         if direction == 1:
-                sprite.flip_h = false
-                hflipped = false
+                flip_h = false
                 waterParticle.process_material.set("direction", Vector2(1, -0.5))
                 waterParticle.position = Vector2(7, -9)
                 fireParticle.process_material.set("direction", Vector2(1, 0))
                 fireParticle.position = Vector2(4, -3)
         elif direction == -1:
-                sprite.flip_h = true
-                hflipped = true
+                flip_h = true
                 waterParticle.process_material.set("direction", Vector2(-1, -0.5))
                 waterParticle.position = Vector2(-7, -9)
                 fireParticle.process_material.set("direction", Vector2(-1, 0))
                 fireParticle.position = Vector2(-4, -3)
         
-        velocity.x = clamp(velocity.x, -SPEED, SPEED)
+        velocity.x = clamp(velocity.x, -speed, speed)
+        if Input.is_action_pressed("debug_sprint"):
+            velocity.x *= 3
     elif is_on_floor():
         velocity.x /= 1 + floorFriction
     else:
         velocity.x /= 1 + airFriction
-
-
-    if Input.is_action_pressed("debug_sprint"):
-        velocity.x *= 3
 
     if slowedDown:
         velocity.x *= slowdownWhileShooting
@@ -288,9 +308,10 @@ func transformTo(effect: PlayerEffect):
             PlayerEffect.SWOLLEN:
                 tween = create_tween()
                 tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.8)
-                killTween(tween)     
+                killTween(tween)
             PlayerEffect.FIRE:
                 sprite.play("Normal")
+        stop_shooting()
     # Add effect
     match effect:
         PlayerEffect.SLIME:
@@ -329,33 +350,25 @@ func killTween(tween: Tween) -> void:
 
 func faceWall(direction: float):
     if not flippedTowardsWall:
-        var tween = create_tween()  
+        var tween = create_tween()
         if direction < 0.5:
-            tween.tween_property(sprite, "rotation", PI/2, 0.05)
+            tween.tween_property(sprite, "rotation", PI / 2, 0.05)
             sprite.position = Vector2(8, 9)
             
         elif direction > 0.5:
-            tween.tween_property(sprite, "rotation", -PI/2, 0.05)
+            tween.tween_property(sprite, "rotation", -PI / 2, 0.05)
             sprite.position = Vector2(-8, 9)
         if tween:
             await tween.finished
             tween.kill()
         flippedTowardsWall = true
-
-### The getCustomDataFromTileMap function retrieves custom data from a specific tile in the tilemap. It converts the global position to a tile position and retrieves the cell data. If the cell data exists, it retrieves the custom data with the specified name. If the custom data exists, it is returned; otherwise, null is returned.
-func getCustomDataFromTileMap(tileMapOfChoice: TileMap, tileMapLayer: int, globalPositon: Vector2, dataName: String):
-    var cellCustom
-    var tilePos = tileMapOfChoice.local_to_map(globalPositon)
-    #get the celldata from the tilemap 
-    var cellData = tileMapOfChoice.get_cell_tile_data(tileMapLayer, tilePos)
-    if cellData:
-        #get the custom data from the cell
-        cellCustom = cellData.get_custom_data(dataName)
-    if cellCustom:
-        return cellCustom
     
-    return null
-
+func stop_shooting():
+    waterParticle.emitting = false
+    waterSound.playing = false
+    fireParticle.emitting = false
+    slowedDown = false
 
 func _draw():
-    draw_rect(Rect2(hitbox.position.x - hitbox.shape.size.x / 2, hitbox.position.y - hitbox.shape.size.y / 2, hitbox.shape.size.x, hitbox.shape.size.y), Color(0, 1, 0, 0.5))
+    if drawHitbox:
+        draw_rect(Rect2(hitbox.position.x - hitbox.shape.size.x / 2, hitbox.position.y - hitbox.shape.size.y / 2, hitbox.shape.size.x, hitbox.shape.size.y), Color(0, 1, 0, 0.5))

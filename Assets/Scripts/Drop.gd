@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+class_name Drop
+
 @export var velocity: Vector2 = Vector2.ZERO
 @export var direction: Vector2 = Vector2.ZERO
 @export var speed: float = 1200.0 
@@ -34,3 +36,10 @@ func _physics_process(delta):
 
 func _onTimerTimeout():
     queue_free()
+
+func _process(_delta):
+    queue_redraw()
+
+func _draw():
+    print("Draw!")
+    draw_circle($CollisionShape2D.position, 3, Color.RED)

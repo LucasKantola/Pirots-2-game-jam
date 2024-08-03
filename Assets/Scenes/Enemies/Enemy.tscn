@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://cn7ax8bjrc7rv"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_xtbhu"]
+[ext_resource type="SpriteFrames" uid="uid://dnu2pv4gswldl" path="res://Assets/Animations/Enemy.tres" id="2_dipri"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_duw05"]
+resource_local_to_scene = true
+size = Vector2(26, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ka2op"]
+resource_local_to_scene = true
+size = Vector2(10, 3)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l7s33"]
+resource_local_to_scene = true
+size = Vector2(16, 15)
+
+[sub_resource type="Gradient" id="Gradient_fnqmt"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_4tlmr"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_fnqmt")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.833333, 0.145299)
+
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+script = ExtResource("1_xtbhu")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
+sprite_frames = ExtResource("2_dipri")
+animation = &"TYPE NOT SET"
+autoplay = "TYPE NOT SET"
+
+[node name="Hitbox Area" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+
+[node name="Hitbox" type="CollisionShape2D" parent="Hitbox Area"]
+position = Vector2(0, 5.5)
+shape = SubResource("RectangleShape2D_duw05")
+debug_color = Color(1, 0, 0, 0.458824)
+
+[node name="Hurtbox Area" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+
+[node name="Hurtbox" type="CollisionShape2D" parent="Hurtbox Area"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_ka2op")
+debug_color = Color(0, 1, 0, 0.419608)
+
+[node name="WorldCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_l7s33")
+
+[node name="Light" type="PointLight2D" parent="."]
+color = Color(0.21, 0.79, 0.7, 1)
+texture = SubResource("GradientTexture2D_4tlmr")

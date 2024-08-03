@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3 uid="uid://dda7q56vyuffy"]
+
+[ext_resource type="PackedScene" uid="uid://cn7ax8bjrc7rv" path="res://Assets/Scenes/Enemies/Enemy.tscn" id="1_lim6j"]
+[ext_resource type="Script" path="res://Assets/Scripts/Fish.gd" id="2_asa7j"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_meqby"]
+resource_local_to_scene = true
+size = Vector2(26, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_80s5f"]
+resource_local_to_scene = true
+size = Vector2(10, 3)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkt2"]
+resource_local_to_scene = true
+size = Vector2(16, 16)
+
+[sub_resource type="Gradient" id="Gradient_fnqmt"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6hid6"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_fnqmt")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.833333, 0.145299)
+
+[node name="Fish" instance=ExtResource("1_lim6j")]
+script = ExtResource("2_asa7j")
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+animation = &"Fish"
+
+[node name="Hitbox" parent="Hitbox Area" index="0"]
+position = Vector2(0, 3.5)
+shape = SubResource("RectangleShape2D_meqby")
+
+[node name="Hurtbox" parent="Hurtbox Area" index="0"]
+shape = SubResource("RectangleShape2D_80s5f")
+
+[node name="WorldCollision" parent="." index="3"]
+shape = SubResource("RectangleShape2D_dqkt2")
+
+[node name="Light" parent="." index="4"]
+texture = SubResource("GradientTexture2D_6hid6")

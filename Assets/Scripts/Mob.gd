@@ -10,35 +10,42 @@ enum PlayerEffect {
     FIRE,
 }
 
-#region Variables
-@export var maxHP := 5
-@export var HP := 5:
-    set(value):
-        var oldHealth = HP
-        HP = value
-        health_changed.emit(HP, oldHealth)
-    get:
-        return HP
+#region Public variables
 #region Physics Variables
-@export var JUMP_VELOCITY := -300.0
-@export var SPEED := 100.0
-@export var floorFriction := 2.0
-@export var airFriction := 0.05
-#endregion
-#region Effect Variables
-var currentEffect := PlayerEffect.NONE
-#endregion
-#region Defaults
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-var world: Node2D
-var tileMap: TileMap
-var gui: GUI
+@export_group("Physics")
+@export var jumpVelocity: float = -300.0
+@export var speed: float = 100.0
+@export var floorFriction: float = 2.0
+@export var airFriction: float = 0.05
 #endregion
 #endregion
 
-#region Signals
-signal health_changed(newHealth: int, oldHealth: int)
+#region Effect Variables
+var currentEffect := PlayerEffect.NONE
+#endregion
+
+#region Utility
+var flip_h: bool:
+    set(value):
+        sprite.flip_h = value
+    get:
+        return sprite.flip_h
+var flip_v: bool:
+    set(value):
+        sprite.flip_v = value
+    get:
+        return sprite.flip_v
+#endregion
+
+#region References
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+var world: Node2D
+var tileMap: ExtendedTileMap
+var gui: GUI
+#endregion
+
+#region Defaults
+var GRAVITY: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 #endregion
 
 func _ready():
@@ -48,8 +55,7 @@ func _ready():
 
 func addGravity(delta: float) -> void:
     if not is_on_floor():
-        velocity.y += gravity * delta
+        velocity.y += GRAVITY * delta
 
-### Det är bara queue_free() som är skriven i finare text. Det tar bort objectet
 func kill() -> void:
     queue_free()

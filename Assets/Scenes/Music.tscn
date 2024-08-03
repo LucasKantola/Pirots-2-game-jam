@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://co2j7f4mx48ja"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Music.gd" id="1_gf02q"]
+[ext_resource type="AudioStream" uid="uid://11e0swrn6t0c" path="res://Assets/Sound/Music/remastered menu.wav" id="2_kynue"]
+[ext_resource type="AudioStream" uid="uid://c362battdachl" path="res://Assets/Sound/Music/untitled.wav" id="2_sgypo"]
+
+[node name="Music" type="Node2D"]
+script = ExtResource("1_gf02q")
+autoplaySong = 2
+
+[node name="Menu" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_kynue")
+
+[node name="Ingame" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_sgypo")
+mix_target = 1

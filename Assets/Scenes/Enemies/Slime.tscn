@@ -1,63 +1,47 @@
-[gd_scene load_steps=8 format=3 uid="uid://c6qtxdgygbhyg"]
+[gd_scene load_steps=8 format=3 uid="uid://csbg388o3gae5"]
 
-[ext_resource type="Script" path="res://Assets/Scripts/Enemy.gd" id="1_n8khh"]
-[ext_resource type="SpriteFrames" uid="uid://dnu2pv4gswldl" path="res://Assets/Animations/Enemy.tres" id="2_suiil"]
+[ext_resource type="PackedScene" uid="uid://cn7ax8bjrc7rv" path="res://Assets/Scenes/Enemies/Enemy.tscn" id="1_43lof"]
+[ext_resource type="Script" path="res://Assets/Scripts/Slime.gd" id="2_omvay"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_txcix"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nqeb1"]
+resource_local_to_scene = true
 size = Vector2(26, 6)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qt00p"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o4sd3"]
+resource_local_to_scene = true
 size = Vector2(10, 3)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5thef"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3c45g"]
+resource_local_to_scene = true
 size = Vector2(16, 12)
 
 [sub_resource type="Gradient" id="Gradient_fnqmt"]
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_mlb4u"]
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_h8jhk"]
+resource_local_to_scene = true
 gradient = SubResource("Gradient_fnqmt")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.833333, 0.145299)
 
-[node name="Slime" type="CharacterBody2D" groups=["enemy"]]
-texture_filter = 1
-position = Vector2(0, -2)
-collision_layer = 2
-script = ExtResource("1_n8khh")
-enemyType = 1
+[node name="Slime" instance=ExtResource("1_43lof")]
+script = ExtResource("2_omvay")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = ExtResource("2_suiil")
+[node name="AnimatedSprite2D" parent="." index="0"]
 animation = &"Slime"
 
-[node name="Hitbox Area" type="Area2D" parent="."]
-collision_layer = 3
-collision_mask = 3
-
-[node name="Hitbox" type="CollisionShape2D" parent="Hitbox Area"]
+[node name="Hitbox" parent="Hitbox Area" index="0"]
 position = Vector2(0, 5)
-shape = SubResource("RectangleShape2D_txcix")
-debug_color = Color(1, 0, 0, 0.458824)
+shape = SubResource("RectangleShape2D_nqeb1")
 
-[node name="Hurtbox Area" type="Area2D" parent="."]
-collision_layer = 3
-collision_mask = 3
-
-[node name="Hurtbox" type="CollisionShape2D" parent="Hurtbox Area"]
+[node name="Hurtbox" parent="Hurtbox Area" index="0"]
 position = Vector2(0, -4.5)
-shape = SubResource("RectangleShape2D_qt00p")
-debug_color = Color(0, 1, 0, 0.419608)
+shape = SubResource("RectangleShape2D_o4sd3")
 
-[node name="WorldCollision" type="CollisionShape2D" parent="."]
+[node name="WorldCollision" parent="." index="3"]
 position = Vector2(0, 2)
-shape = SubResource("RectangleShape2D_5thef")
+shape = SubResource("RectangleShape2D_3c45g")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
-color = Color(0.21, 0.79, 0.7, 1)
-texture = SubResource("GradientTexture2D_mlb4u")
-
-[connection signal="body_entered" from="Hitbox Area" to="." method="hitbox_area_entered"]
-[connection signal="body_exited" from="Hitbox Area" to="." method="hitbox_area_exited"]
-[connection signal="body_entered" from="Hurtbox Area" to="." method="hurtbox_area_entered"]
+[node name="Light" parent="." index="4"]
+texture = SubResource("GradientTexture2D_h8jhk")

@@ -1,9 +1,10 @@
-[gd_scene load_steps=22 format=3 uid="uid://c75s046wewhan"]
+[gd_scene load_steps=28 format=3 uid="uid://c75s046wewhan"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
 [ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="2_tio1s"]
 [ext_resource type="Texture2D" uid="uid://mvfdnrwo8bmv" path="res://Assets/Shaders/lightTexture.png" id="3_jekgo"]
 [ext_resource type="Gradient" uid="uid://6oy8aroykat2" path="res://Assets/Colorset/fireColor.tres" id="4_a3xnl"]
+[ext_resource type="AudioStream" uid="uid://c362battdachl" path="res://Assets/Sound/Music/untitled.wav" id="5_aa2bu"]
 [ext_resource type="AudioStream" uid="uid://bobpkiqcijur4" path="res://Assets/Sound/SFX/Jump.wav" id="6_72huq"]
 [ext_resource type="AudioStream" uid="uid://chwjimf5nxvly" path="res://Assets/Sound/SFX/Slime walk.wav" id="7_eu0uy"]
 [ext_resource type="AudioStream" uid="uid://beyvv3jbvlf6y" path="res://Assets/Sound/SFX/Land.wav" id="8_10gcx"]
@@ -113,6 +114,35 @@ color_ramp = SubResource("GradientTexture1D_b0meo")
 turbulence_noise_strength = 0.1
 collision_mode = 2
 
+[sub_resource type="Gradient" id="Gradient_wqkwp"]
+offsets = PackedFloat32Array(0, 0.537037, 1)
+colors = PackedColorArray(1, 0.282353, 0.643137, 1, 0.580392, 0.109804, 0.494118, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_47tct"]
+gradient = SubResource("Gradient_wqkwp")
+
+[sub_resource type="Curve" id="Curve_8o3s1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_o2ap1"]
+curve = SubResource("Curve_8o3s1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mtee5"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(8, 16, 1)
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 30.0
+gravity = Vector3(0, -98, 0)
+scale_min = 2.0
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_o2ap1")
+color_ramp = SubResource("GradientTexture1D_47tct")
+turbulence_enabled = true
+turbulence_noise_scale = 1.0
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 z_index = 1
 texture_filter = 1
@@ -125,11 +155,11 @@ script = ExtResource("1_a2euo")
 position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_ym5u1")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
 sprite_frames = SubResource("SpriteFrames_6v0dd")
-animation = &"Normal"
+animation = &"Fire"
 autoplay = "Normal"
 
 [node name="Light" type="PointLight2D" parent="."]
@@ -159,7 +189,18 @@ process_material = SubResource("ParticleProcessMaterial_teyc1")
 lifetime = 0.4
 fixed_fps = 60
 
+[node name="BurningParticles" type="GPUParticles2D" parent="Particles"]
+z_index = 10
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_mtee5")
+
 [node name="SFX" type="Node2D" parent="."]
+
+[node name="Music" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("5_aa2bu")
+autoplay = true
+mix_target = 1
 
 [node name="Jump" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource("6_72huq")

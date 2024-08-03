@@ -85,7 +85,7 @@ func enter_door(door: Door) -> void:
     
     player.stopInput = false
     if door.face == Door.Face.UP:
-        velocity = Vector2(upExitForwardVelocity * (-1 if player.hflipped else 1), upExitVelocity)
+        velocity = Vector2(upExitForwardVelocity * (-1 if player.flip_h else 1), upExitVelocity)
     player.velocity = velocity
     player.move_and_slide()
 
@@ -178,7 +178,7 @@ func reset_room() -> void:
     var newRoom = reload_room(currentRoom)
     currentRoom = newRoom
     # Reset player
-    player.HP = player.maxHP
+    player.health = player.maxHealth
     var lastEnteredDoorCollision = lastEnteredDoor.get_node("DoorArea/CollisionShape2D")
     var doorMiddle = lastEnteredDoorCollision.global_position
     var exitPosition = get_door_exit_position(lastEnteredDoor, doorMiddle)
