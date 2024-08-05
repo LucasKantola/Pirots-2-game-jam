@@ -95,9 +95,6 @@ var effectProperties: Dictionary = {
     PlayerEffect.SWOLLEN: {
         "scale": Vector2(1.5, 1.5),
     },
-    PlayerEffect.FIRE: {
-        "flip_v": true,
-    }
 }
 #endregion
 
