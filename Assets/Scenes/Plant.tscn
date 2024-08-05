@@ -42,4 +42,4 @@ z_index = 2
 position = Vector2(0, 16)
 texture = SubResource("AtlasTexture_cscvf")
 
-[connection signal="body_entered" from="Area2D" to="." method="bodyEntered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]

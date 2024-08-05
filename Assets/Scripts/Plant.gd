@@ -30,7 +30,7 @@ func _process(_delta):
 func _ready():
     currentHeight = stalk.get_rect().size.y
 
-func bodyEntered(body: Node2D) -> void:
+func _on_body_entered(body: Node2D) -> void:
     if body.is_in_group("Drop"):
         if body.dropType == body.DropType.WATER:
             if currentHeight < maxHeight:

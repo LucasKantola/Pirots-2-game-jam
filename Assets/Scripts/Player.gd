@@ -2,11 +2,12 @@ extends Mob
 
 class_name Player
 
-#region Public variables
-#region Health variables
+#region Variables
+#region Public Variables
+#region Health Variables
 @export_group("Health")
-@export var maxHealth := 5
-@export var health := 5:
+@export var maxHealth: int = 5
+@export var health: int = 5:
     set(value):
         var oldHealth = health
         health = value
@@ -14,22 +15,30 @@ class_name Player
     get:
         return health
 #endregion
-
-#region Debug variables
+#region Transform Variables
+@export_group("Transform")
+@export var transformDuration: float = 0.8
+#endregion
+#region Sound Variables
+@export_group("Sound")
+## How many pixels the player has to fall for the land sound to play.
+@export var landSoundDistance: float = 100
+#endregion
+#region Debug Variables
 @export_group("Editor")
 @export var drawHitbox := false
 #endregion
 #endregion
 
-#region Player Variables
+#region Movement Variables
 var stopInput = false
 var direction = 0
-var light: PointLight2D
 
 #region WallClimb Variables
 var wallClimbModifier = 0.8
 var flippedTowardsWall = false
 var wallCheckDistance = 12
+#endregion
 #endregion
 
 #region Shooting Variables
@@ -41,18 +50,14 @@ var framesSinceSpawn = 0
 #endregion
 
 #region Physics Variables
-var timeSinceGround = INF
 var timeSinceJumpPressed = INF
 var jumpBufferTime = 0.1
 var coyoteTime = 0.1
-
-var wasInAirLastFrame = false
-var fallenFromY = 0
-#endregion
 #endregion
 
 #region References
 var hitbox: CollisionShape2D
+var light: PointLight2D
 
 #region Sound Effects
 var jumpSound: AudioStreamPlayer
@@ -63,17 +68,45 @@ var waterSound: AudioStreamPlayer
 var explosionSound: AudioStreamPlayer
 #endregion
 
-#region Effect Variables
+#region Particles
 var waterParticle: GPUParticles2D
 var fireParticle: GPUParticles2D
 #endregion
 #endregion
 
-#region Predetermined colors for glow based on the colors of the player sprites
-var normalGlowColor: Color = Color(2.259, 2.957, 2.686, 1)
-var fireGlowColor: Color = Color(1.5 + 1, 1.182 + 1, 1.343 + 1, 1)
-var normalLightColor: Color = Color.hex(0x42f4afff)
-var fireLightColor: Color = Color.hex(0xffaed7ff)
+#region Player Effect Values
+## Specifies an animation to play when transforming to an effect.
+var effectTransformAnimations: Dictionary = {
+    PlayerEffect.NONE: "Normal",
+    PlayerEffect.SLIME: "Slime",
+    PlayerEffect.FISH: "Fish",
+    PlayerEffect.FIRE: "Fire"
+}
+## Specicfies an AudioStreamPlayer to play when transforming to an effect.
+var effectTransformSounds: Dictionary = {}
+## Specifies the properties to apply for each player effect. Unspecified
+## properties default to PlayerEffect.NONE.
+var effectProperties: Dictionary = {
+    PlayerEffect.SLIME: {
+        "light.position": Vector2(0, 11),
+        "hitbox.shape.size": Vector2(16, 13),
+        "hitbox.position": Vector2(0, 9.5),
+    },
+    PlayerEffect.SWOLLEN: {
+        "scale": Vector2(1.5, 1.5),
+    },
+    PlayerEffect.FIRE: {
+        "flip_v": true,
+    }
+}
+#endregion
+
+#region Glow colors based on player sprites
+var GLOW_COLOR_NORMAL := Color(2.259, 2.957, 2.686)
+var GLOW_COLOR_FIRE := Color(2.5, 2.182, 2.343)
+var LIGHT_COLOR_NORMAL := Color.hex(0x42f4afff)
+var LIGHT_COLOR_FIRE := Color.hex(0xffaed7ff)
+#endregion
 #endregion
 
 #region Signals
@@ -82,43 +115,78 @@ signal health_changed(newHealth: int, oldHealth: int)
 
 func _ready():
     super._ready()
+    
+    # Check required references
+    var requiredReferences = ["world", "sprite", "hitbox", "waterParticle"]
+    var missingReferences = requiredReferences.filter(func (name: String):
+        return not is_instance_valid(get(name))
+        )
+    assert(missingReferences.is_empty(), "%s could not find required reference(s): %s" %
+        [self.name, ", ".join(missingReferences)])
+    
+    # Register health bar update
+    gui.health = health
+    health_changed.connect(func(newHealth: int, oldHealth: int):
+        gui.health = newHealth
+        )
+    
+    # Transform prerequisites
+    apply_default_effect_properties()
+    # Must be set after assign_references() is called
+    effectTransformSounds = {
+        PlayerEffect.SLIME: slimeTranformSound
+    }
+
+func assign_references():
+    super.assign_references()
+    
     hitbox = get_node("Hitbox")
+    light = get_node("Light")
+    
+    # Particles
     waterParticle = get_node("Particles/WaterGun")
     fireParticle = get_node("Particles/FireGun")
     drop = load("res://Assets/Scenes/Drop.tscn")
+    
+    # Sounds
     jumpSound = get_node("SFX/Jump")
     slimeWalkSound = get_node("SFX/Slime walk")
     slimeTranformSound = get_node("SFX/Slime transform")
     landSound = get_node("SFX/Land")
     waterSound = get_node("SFX/Water")
     explosionSound = get_node("SFX/Explosion")
-    light = get_node("Light")
-    #ifall skumma saker händer så säger vi fuck det här
-    if not world or not sprite or not hitbox or not waterParticle:
-        print("WARNING: Could not find world, tilemap or sprite")
-        get_tree().quit()
-    # Register health bar update
-    gui.health = health
-    health_changed.connect(func(newHealth: int, oldHealth: int):
-        gui.health = newHealth
-        )
 
-func _physics_process(delta):
-    #Make the color glow in the correct color for the sprite
-    if currentEffect != PlayerEffect.FIRE:
-        modulate = normalGlowColor
-        light.color = normalLightColor
-    else:
-        modulate = fireGlowColor
-        light.color = fireLightColor
+## Assign [code]effectProperties[PlayerEffect.NONE][/code] to the player's
+## current properties. Only assigns properties present in
+## [member Player.effectProperties].
+func apply_default_effect_properties():
+    var defaults = (effectProperties[PlayerEffect.NONE]
+        if PlayerEffect.NONE in effectProperties
+        else {})
+    for effect in effectProperties:
+        if effect == PlayerEffect.NONE:
+            continue
+        for propName in effectProperties[effect]:
+            if propName in defaults:
+                continue
+            var value = get_deep(propName)
+            defaults[propName] = value
+    effectProperties[PlayerEffect.NONE] = defaults
 
+func _process(delta):
+    # Make the color glow in the correct color for the sprite
+    var isFire = currentEffect == PlayerEffect.FIRE
+    modulate = GLOW_COLOR_FIRE if isFire else GLOW_COLOR_NORMAL
+    light.color = LIGHT_COLOR_FIRE if isFire else LIGHT_COLOR_NORMAL
+
+func _physics_process(delta: float):
+    super._physics_process(delta)
     if stopInput:
         print("Input is stopped")
 
-    #Logic for stomping blocks in the swollen form
+    # Stomping blocks in the swollen form
     if currentEffect == PlayerEffect.SWOLLEN:
-        #Landed?
-        if wasInAirLastFrame and is_on_floor():
+        if has_just_landed():
             #Check the preset offsets for a block that has the breakanble custom data
             var checkPositions = [
                 Vector2(-6, 32),
@@ -132,7 +200,7 @@ func _physics_process(delta):
 
 
     # Sound effect for landing
-    if is_on_floor() and (position.y - fallenFromY) > 20:
+    if has_just_landed() and (position.y - fallenFromY) > landSoundDistance:
         landSound.play()
 
     if Input.is_action_pressed("shoot") and not stopInput:
@@ -189,11 +257,6 @@ func _physics_process(delta):
         set_collision_mask_value(5, false)
     else:
         set_collision_mask_value(5, true)
-
-    if not is_on_floor():
-        timeSinceGround += delta
-    else:
-        timeSinceGround = 0.0
     
     if timeSinceJumpPressed < jumpBufferTime:
         if (is_on_floor() and timeSinceJumpPressed < jumpBufferTime) or is_on_floor() or timeSinceGround < coyoteTime:
@@ -201,7 +264,6 @@ func _physics_process(delta):
                 velocity.y = jumpVelocity
                 jumpSound.play()
             timeSinceJumpPressed = INF
-            timeSinceGround = INF
 
     #Left right movement from the axis
     direction = Input.get_axis("left", "right")
@@ -217,7 +279,7 @@ func _physics_process(delta):
                 $RayCast2D.target_position = pos
 
                 if cellCustom or $RayCast2D.is_colliding():
-                    faceWall(direction)
+                    face_wall(direction)
                     velocity.y = -speed * wallClimbModifier
         velocity.x = direction * speed
 
@@ -260,95 +322,127 @@ func _physics_process(delta):
     else:
         slimeWalkSound.playing = false
 
-    addGravity(delta)
-    if is_on_floor() and not wasInAirLastFrame:
-        fallenFromY = position.y
-
-    wasInAirLastFrame = !is_on_floor()
+    add_gravity(delta)
+    
     move_and_slide()
     queue_redraw()
 
 func _unhandled_input(event):
     if event.is_action_pressed("debug_none"):
-        transformTo(PlayerEffect.NONE)
+        apply_effect(PlayerEffect.NONE)
     if event.is_action_pressed("debug_slime"):
-        transformTo(PlayerEffect.SLIME)
+        apply_effect(PlayerEffect.SLIME)
     if event.is_action_pressed("debug_swollen"):
-        transformTo(PlayerEffect.SWOLLEN)
+        apply_effect(PlayerEffect.SWOLLEN)
     if event.is_action_pressed("debug_fish"):
-        transformTo(PlayerEffect.FISH)
+        apply_effect(PlayerEffect.FISH)
     if event.is_action_pressed("debug_fire"):
-        transformTo(PlayerEffect.FIRE)
+        apply_effect(PlayerEffect.FIRE)
     if event.is_action_pressed("reset"):
         if world is World:
             world.reset_room()
         else:
             get_tree().reload_current_scene()
 
-
-### tranform funkar inte att ha som namn på funktionen då det är en refenrens till en bodyns transform så den fick ett finare namn
-func transformTo(effect: PlayerEffect):
-    var tween: Tween
+func apply_effect(effect: PlayerEffect) -> void:
+    print("Apply effect %s" % PlayerEffect.keys()[effect])
     if currentEffect == effect:
         # Player already has effect, do nothing
         return
-    if currentEffect != PlayerEffect.NONE:
-        # Player has another effect which must be removed first
-        stopInput = true
-        match currentEffect:
-            PlayerEffect.SLIME:
-                sprite.play("Normal")
-                hitbox.shape.size = Vector2(16, 29)
-                hitbox.position = Vector2(0, 1.15)
-                tween = create_tween()
-                tween.tween_property($Light, "position", Vector2(0, -5), 0.8)
-                killTween(tween)
-            PlayerEffect.FISH:
-                sprite.play("Normal")
-            PlayerEffect.SWOLLEN:
-                tween = create_tween()
-                tween.tween_property(self, "scale", Vector2(0.9, 0.9), 0.8)
-                killTween(tween)
-            PlayerEffect.FIRE:
-                sprite.play("Normal")
-        stop_shooting()
-    # Add effect
-    match effect:
-        PlayerEffect.SLIME:
-            print("transformTo slime")
-            sprite.play("Slime")
-            tween = create_tween()
-            tween.tween_property($Light, "position", Vector2(0, 11), 0.8)
-            slimeTranformSound.play()
-            killTween(tween)
-            hitbox.shape.size = Vector2(16, 13)
-            hitbox.position = Vector2(0, 9.5)
-        PlayerEffect.FISH:
-            print("transformTo fish")
-            sprite.play("Fish")
-        PlayerEffect.SWOLLEN:
-            sprite.play("Normal")
-            tween = create_tween()
-            tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.8)
-            killTween(tween)
-        PlayerEffect.FIRE:
-            sprite.play("Fire")
-            print("transformTo fire")
+    
+    stopInput = true
+    stop_shooting()
+    kill_current_tweens()
+    # Applying a new effect
+    if effect in effectTransformAnimations:
+        sprite.play(effectTransformAnimations[effect])
+    else:
+        sprite.play(effectTransformAnimations[PlayerEffect.NONE])
+    # Play current effect sound again when returning to normal
+    if effect == PlayerEffect.NONE:
+        if currentEffect in effectTransformSounds:
+            effectTransformSounds[currentEffect].play()
+    else:
+        if effect in effectTransformSounds:
+            effectTransformSounds[effect].play()
+    
+    # Get full properties list
+    var allPropertyNames = {}
+    for ee in effectProperties:
+        for propertyName in effectProperties[ee]:
+            # Godot does not have sets so we use dictionary keys
+            allPropertyNames[propertyName] = null
+    
+    # Apply properties
+    var properties = effectProperties[effect] if effect in effectProperties else {}
+    for propertyName in allPropertyNames:
+        var value: Variant
+        if propertyName in properties:
+            value = properties[propertyName]
+        else:
+            value = effectProperties[PlayerEffect.NONE][propertyName]
+        if value is bool or value is String:
+            set_deep(propertyName, value)
+        else:
+            tween_property_deep(propertyName, value, transformDuration)
 
     stopInput = false
-    killTween(tween)
+    currentEffect = effect
+    
+func apply_effect_instant(effect: PlayerEffect, playSound: bool = false) -> void:
+    print("Apply effect instant %s" % PlayerEffect.keys()[effect])
+    if currentEffect == effect:
+        # Player already has effect, do nothing
+        return
+    
+    stopInput = true
+    stop_shooting()
+    kill_current_tweens()
+    # Applying a new effect
+    if effect in effectTransformAnimations:
+        sprite.play(effectTransformAnimations[effect])
+    else:
+        sprite.play(effectTransformAnimations[PlayerEffect.NONE])
+    if playSound:
+        # Play current effect sound again when returning to normal
+        if effect == PlayerEffect.NONE:
+            if currentEffect in effectTransformSounds:
+                effectTransformSounds[currentEffect].play()
+        else:
+            if effect in effectTransformSounds:
+                effectTransformSounds[effect].play()
+    
+    # Get full properties list
+    var allPropertyNames = {}
+    for ee in effectProperties:
+        for propertyName in effectProperties[ee]:
+            # Godot does not have sets so we use dictionary keys
+            allPropertyNames[propertyName] = null
+    
+    # Apply properties
+    var properties = effectProperties[effect] if effect in effectProperties else {}
+    for propertyName in allPropertyNames:
+        var value: Variant
+        if propertyName in properties:
+            value = properties[propertyName]
+        else:
+            value = effectProperties[PlayerEffect.NONE][propertyName]
+        set_deep(propertyName, value)
+
+    stopInput = false
     currentEffect = effect
 
 func kill() -> void:
     gui.show_game_over()
     queue_free()
 
-func killTween(tween: Tween) -> void:
+## Wait until tween has finished, then kill it.
+func kill_tween(tween: Tween) -> void:
     if tween:
         await tween.finished
         tween.kill()
 
-func faceWall(direction: float):
+func face_wall(direction: float):
     if not flippedTowardsWall:
         var tween = create_tween()
         if direction < 0.5:

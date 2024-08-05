@@ -23,7 +23,7 @@ func _ready():
     timer = Timer.new()
     add_child(timer)
     timer.wait_time = lifetime
-    timer.connect("timeout", Callable(self, "_onTimerTimeout"))
+    timer.connect("timeout", Callable(self, "_on_timer_timeout"))
     timer.start()
     gravity_scale = 0 if gravityDisabled else 1
 
@@ -34,7 +34,7 @@ func _physics_process(delta):
     if col:
         queue_free()
 
-func _onTimerTimeout():
+func _on_timer_timeout():
     queue_free()
 
 func _process(_delta):

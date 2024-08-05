@@ -133,4 +133,4 @@ amount = 10
 process_material = SubResource("ParticleProcessMaterial_qycbu")
 lifetime = 0.5
 
-[connection signal="body_entered" from="Area2D" to="." method="bodyEntered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]

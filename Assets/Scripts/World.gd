@@ -178,12 +178,12 @@ func reset_room() -> void:
     var newRoom = reload_room(currentRoom)
     currentRoom = newRoom
     # Reset player
-    player.health = player.maxHealth
+    startingPlayerState.apply(player)
     var lastEnteredDoorCollision = lastEnteredDoor.get_node("DoorArea/CollisionShape2D")
     var doorMiddle = lastEnteredDoorCollision.global_position
     var exitPosition = get_door_exit_position(lastEnteredDoor, doorMiddle)
     player.global_position = exitPosition
-    startingPlayerState.apply(player)
+    player.health = player.maxHealth
     # Update camera
     camera.targetRoom = currentRoom
     camera.snap_to_room()

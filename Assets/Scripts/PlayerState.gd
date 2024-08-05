@@ -10,6 +10,6 @@ static func save(player: Player) -> PlayerState:
     return state
 
 func apply(player: Player) -> void:
-    player.transformTo(effect)
+    player.apply_effect_instant(effect)
     player.flip_h = flip_h
     player.sprite.flip_h = flip_h

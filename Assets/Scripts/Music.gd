@@ -28,10 +28,10 @@ func _ready():
 func play(song: Song):
     if _currentlyPlaying == song:
         return
-    print("Playing %s" % song)
     stop()
     var songPlayer = audioPlayers[song - 1]
     songPlayer.play()
+    print("Playing %s (%s)" % [Song.keys()[song], songPlayer.name])
 
 func stop():
     for audioPlayer in audioPlayers:

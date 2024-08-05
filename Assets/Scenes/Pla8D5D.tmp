@@ -1,0 +1,193 @@
+[gd_scene load_steps=22 format=3 uid="uid://c75s046wewhan"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Player.gd" id="1_a2euo"]
+[ext_resource type="Texture2D" uid="uid://dem7c4rldl2xy" path="res://Assets/Sprites/Updated_Tilesheet.png" id="2_tio1s"]
+[ext_resource type="Texture2D" uid="uid://mvfdnrwo8bmv" path="res://Assets/Shaders/lightTexture.png" id="3_jekgo"]
+[ext_resource type="Gradient" uid="uid://6oy8aroykat2" path="res://Assets/Colorset/fireColor.tres" id="4_a3xnl"]
+[ext_resource type="AudioStream" uid="uid://bobpkiqcijur4" path="res://Assets/Sound/SFX/Jump.wav" id="6_72huq"]
+[ext_resource type="AudioStream" uid="uid://chwjimf5nxvly" path="res://Assets/Sound/SFX/Slime walk.wav" id="7_eu0uy"]
+[ext_resource type="AudioStream" uid="uid://beyvv3jbvlf6y" path="res://Assets/Sound/SFX/Land.wav" id="8_10gcx"]
+[ext_resource type="AudioStream" uid="uid://bwx3e538d35f2" path="res://Assets/Sound/SFX/Slime transform.wav" id="8_dxxay"]
+[ext_resource type="AudioStream" uid="uid://st52al50h05t" path="res://Assets/Sound/SFX/Water flowing.wav" id="9_sh38a"]
+[ext_resource type="AudioStream" uid="uid://b1j2r0jf3axi7" path="res://Assets/Sound/SFX/explosion.wav" id="10_kjvnr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ym5u1"]
+resource_local_to_scene = true
+size = Vector2(14, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_46juh"]
+atlas = ExtResource("2_tio1s")
+region = Rect2(208, 224, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pfnd5"]
+atlas = ExtResource("2_tio1s")
+region = Rect2(192, 224, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_il80t"]
+atlas = ExtResource("2_tio1s")
+region = Rect2(176, 224, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4nemt"]
+atlas = ExtResource("2_tio1s")
+region = Rect2(160, 224, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6v0dd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_46juh")
+}],
+"loop": true,
+"name": &"Fire",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pfnd5")
+}],
+"loop": true,
+"name": &"Fish",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_il80t")
+}],
+"loop": true,
+"name": &"Normal",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4nemt")
+}],
+"loop": true,
+"name": &"Slime",
+"speed": 5.0
+}]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hl6mv"]
+gradient = ExtResource("4_a3xnl")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sp02y"]
+particle_flag_disable_z = true
+particle_flag_damping_as_friction = true
+emission_shape_scale = Vector3(1, 0.5, 1)
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.5, 0)
+direction = Vector3(1, -1, 0)
+spread = 15.0
+flatness = 0.42
+initial_velocity_min = 350.0
+initial_velocity_max = 380.0
+gravity = Vector3(0, 982, 0)
+damping_min = 0.1
+damping_max = 0.1
+scale_max = 3.0
+color_ramp = SubResource("GradientTexture1D_hl6mv")
+turbulence_noise_strength = 0.1
+collision_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_en1q4"]
+resource_local_to_scene = true
+colors = PackedColorArray(1, 0.282353, 0.643137, 1, 0.59, 0.11, 0.494, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b0meo"]
+gradient = SubResource("Gradient_en1q4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_teyc1"]
+resource_local_to_scene = true
+particle_flag_disable_z = true
+particle_flag_damping_as_friction = true
+emission_shape_scale = Vector3(1, 0.5, 1)
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.5, 0)
+spread = 15.0
+flatness = 0.42
+initial_velocity_min = 300.0
+initial_velocity_max = 350.0
+damping_min = 0.1
+damping_max = 0.1
+scale_max = 3.0
+color_ramp = SubResource("GradientTexture1D_b0meo")
+turbulence_noise_strength = 0.1
+collision_mode = 2
+
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+z_index = 1
+texture_filter = 1
+scale = Vector2(0.9, 0.9)
+collision_layer = 2
+collision_mask = 19
+script = ExtResource("1_a2euo")
+maxHealth = null
+health = null
+transformDuration = null
+drawHitbox = null
+jumpVelocity = null
+speed = null
+floorFriction = null
+airFriction = null
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_ym5u1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
+sprite_frames = SubResource("SpriteFrames_6v0dd")
+animation = &"Normal"
+autoplay = "Normal"
+
+[node name="Light" type="PointLight2D" parent="."]
+position = Vector2(0, -5)
+color = Color(1, 0.682353, 0.843137, 1)
+energy = 0.2
+texture = ExtResource("3_jekgo")
+
+[node name="Particles" type="Node2D" parent="."]
+
+[node name="WaterGun" type="GPUParticles2D" parent="Particles"]
+modulate = Color(1.7, 1.7, 2, 1)
+position = Vector2(7, -9)
+emitting = false
+amount = 130
+process_material = SubResource("ParticleProcessMaterial_sp02y")
+visibility_rect = Rect2(-1.34873, -28.0804, 144.663, 239.822)
+trail_enabled = true
+trail_lifetime = 0.1
+
+[node name="FireGun" type="GPUParticles2D" parent="Particles"]
+modulate = Color(12.5, 5.5, 5.5, 1)
+position = Vector2(4, -4)
+emitting = false
+amount = 80
+process_material = SubResource("ParticleProcessMaterial_teyc1")
+lifetime = 0.4
+fixed_fps = 60
+
+[node name="SFX" type="Node2D" parent="."]
+
+[node name="Jump" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("6_72huq")
+
+[node name="Slime walk" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("7_eu0uy")
+
+[node name="Slime transform" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("8_dxxay")
+
+[node name="Land" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("8_10gcx")
+
+[node name="Water" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("9_sh38a")
+mix_target = 2
+
+[node name="Explosion" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("10_kjvnr")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(0, 0)
+collision_mask = 134217728

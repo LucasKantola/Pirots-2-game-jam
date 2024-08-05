@@ -17,19 +17,19 @@ func _ready():
     if not timer or not burning or not smoke or not dust: 
         push_error("Could not find all nodes for the Vines! Check it out")
 
-func bodyEntered(body: Node) -> void:
+func _on_body_entered(body: Node) -> void:
     if body.is_in_group("Drop"):
         if body.dropType == body.DropType.LAVA:
             fireNeeded -= 1
             dust.emitting = true
             if fireNeeded <= 0:
-                if not timer.is_connected("timeout", Callable(self, "burningFinished")):
+                if not timer.is_connected("timeout", Callable(self, "_on_burning_finished")):
                     timer.start(burnTime)
-                    timer.connect("timeout", Callable(self, "burningFinished"))
+                    timer.connect("timeout", Callable(self, "_on_burning_finished"))
 
                     burning.emitting = true
 
-func burningFinished():
+func _on_burning_finished():
     smoke.emitting = true
     $Sprite2D.visible = false
     $CollisionShape2D.disabled = true

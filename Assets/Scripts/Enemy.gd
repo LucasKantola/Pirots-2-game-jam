@@ -16,6 +16,7 @@ var isPlayerMovingDeadBody = false
 var playerBody: Player
 
 func _ready():
+    super._ready()
     connect_signals()
 
 func _physics_process(delta):
@@ -24,7 +25,7 @@ func _physics_process(delta):
         if directionCorrect:
             velocity.x = speed * playerBody.direction
     if hasGravity:
-        addGravity(delta)
+        add_gravity(delta)
     if is_on_floor():
         velocity.x /= 1 + floorFriction
     else:
@@ -46,7 +47,7 @@ func hitbox_area_entered(body: Node2D) -> void:
                 print("Player hit by enemy")
                 player.health -= damage
                 if player.health > 0:
-                    player.transformTo(currentEffect)
+                    player.apply_effect(currentEffect)
                 else:
                     player.kill()
     elif body is Player:
@@ -74,7 +75,7 @@ func hurtbox_area_entered(body: Node2D) -> void:
                 print(body.name + " hit by enemy")
                 player.health -= damage
                 if player.health > 0:
-                    player.transformTo(currentEffect)
+                    player.apply_effect(currentEffect)
                 else:
                     player.kill()
 
